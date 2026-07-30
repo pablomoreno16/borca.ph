@@ -21,8 +21,10 @@ body{font-family:'Nunito Sans',sans-serif;color:var(--text-dark);background:var(
 a{text-decoration:none;color:inherit}
 /* NAVBAR */
 .navbar{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 14px rgba(0,0,0,0.08);height:90px}
-.navbar-inner{max-width:1300px;margin:0 auto;height:100%;padding:0 36px;display:flex;align-items:center;gap:24px}
+.navbar-inner{max-width:1300px;margin:0 auto;height:100%;padding:0 36px;display:flex;align-items:center;gap:24px;position:relative}
 .nav-logo{display:flex;align-items:center;flex-shrink:0;text-decoration:none}
+.nav-toggle{display:none;background:none;border:none;font-size:20px;color:var(--text-dark);cursor:pointer;padding:8px;margin-left:auto}
+.nav-collapse{display:contents}
 .logo-img{height:68px;width:auto;object-fit:contain;display:block;margin:-4px 0}
 .nav-links{display:flex;align-items:center;gap:2px;margin-left:auto}
 .nav-links a{font-size:12.5px;font-weight:600;color:var(--text-dark);padding:7px 11px;border-radius:7px;white-space:nowrap;display:flex;align-items:center;gap:4px;transition:color .2s,background .2s}
@@ -140,7 +142,14 @@ a{text-decoration:none;color:inherit}
 /* RESPONSIVE */
 @media(max-width:1024px){.footer-grid{grid-template-columns:1fr 1fr}.cards-grid-3{grid-template-columns:1fr 1fr}}
 @media(max-width:768px){
-  .navbar-inner{padding:0 18px;gap:12px}.nav-links{display:none}.logo-img{height:52px}
+  .navbar-inner{padding:0 18px;gap:12px}.logo-img{height:52px}
+  .nav-toggle{display:flex;align-items:center;justify-content:center}
+  .nav-collapse{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;background:var(--white);box-shadow:0 12px 28px rgba(0,0,0,0.14);padding:8px 18px 18px;z-index:199}
+  .navbar-inner.menu-open .nav-collapse{display:flex}
+  .nav-links{display:flex;flex-direction:column;align-items:stretch;gap:0;margin-left:0}
+  .nav-links a{padding:13px 4px;border-radius:0;border-bottom:1px solid #eef2f1}
+  .nav-links a.active{border-bottom:1px solid var(--teal)}
+  .btn-contact{justify-content:center;margin-top:14px}
   .page-hero{padding:44px 20px}.page-hero h1{font-size:30px}
   .promo-section{padding:52px 0 60px}
   .promo-carousel{padding:0 20px}

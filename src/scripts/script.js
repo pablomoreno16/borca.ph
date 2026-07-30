@@ -10,6 +10,30 @@ document.addEventListener('DOMContentLoaded', () => {
     navbar.style.boxShadow = window.scrollY > 10
       ? '0 4px 22px rgba(0,0,0,0.11)' : '0 2px 14px rgba(0,0,0,0.08)';
   });
+
+  /* ── Menú mobile (hamburguesa) ──────────────────────── */
+  const navToggle = document.getElementById('navToggle');
+  const navbarInner = document.querySelector('.navbar-inner');
+  if (navToggle && navbarInner) {
+    const closeMenu = () => {
+      navbarInner.classList.remove('menu-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+    };
+    navToggle.addEventListener('click', () => {
+      const isOpen = navbarInner.classList.toggle('menu-open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+      navToggle.innerHTML = isOpen
+        ? '<i class="fa-solid fa-xmark"></i>'
+        : '<i class="fa-solid fa-bars"></i>';
+    });
+    document.querySelectorAll('.nav-collapse a').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) closeMenu();
+    });
+  }
   const targets = document.querySelectorAll('.card,.check-item,.timeline-item,.blog-card,.stat-box,.team-card,.anim');
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)} });
