@@ -56,10 +56,18 @@ export function Footer() {
               <i className="fa-solid fa-location-dot"></i> Medellín, Colombia
             </li>
             <li>
-              <i className="fa-solid fa-phone"></i> +57 305 349 8787
+              <a
+                href="https://wa.me/573053498787?text=Hola+BORCA%2C+me+interesa+el+servicio+de+Administraci%C3%B3n+de+PH"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className="fa-solid fa-phone"></i> +57 305 349 8787
+              </a>
             </li>
             <li>
-              <i className="fa-solid fa-envelope"></i> admin@borca.ph
+              <a href="mailto:admin@borca.ph">
+                <i className="fa-solid fa-envelope"></i> admin@borca.ph
+              </a>
             </li>
             <li>
               <i className="fa-solid fa-globe"></i> borca.ph
