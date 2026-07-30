@@ -29,35 +29,9 @@
   </div>
 </header>
 
-<!-- HERO SECTION -->
-<section style="background:linear-gradient(135deg,var(--teal) 0%,var(--teal-dark) 100%);padding:0;min-height:600px;position:relative;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;align-items:center">
-  <div style="padding:56px 36px;position:relative;z-index:1">
-    <h1 style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:white;line-height:1.15;margin-bottom:16px">
-      Transformamos<br/><span style="color:var(--gold);font-style:italic">copropiedades</span>
-    </h1>
-    <p style="font-size:15px;color:rgba(255,255,255,0.85);line-height:1.8;max-width:480px;margin-bottom:32px">
-      Creamos comunidades más organizadas, sostenibles y tranquilas mediante una administración estratégica, humana y eficiente. Nuestro enfoque está orientado a la optimización de recursos, la sana convivencia y la valorización del patrimonio.
-    </p>
-    <div style="display:flex;gap:14px;flex-wrap:wrap">
-      <a href="contacto.html" class="btn-cta" style="background:var(--gold)"><i class="fa-solid fa-phone"></i> Solicita una asesoría</a>
-      <a href="servicios.html" class="btn-cta" style="background:rgba(255,255,255,0.15);border:1.5px solid white"><i class="fa-solid fa-arrow-right"></i> Conoce nuestros servicios</a>
-    </div>
-  </div>
-  <div style="position:relative;display:flex;align-items:center;justify-content:center;height:100%">
-    <img src="public/images/hero-borca.jpg" alt="Comunidad BORCA" style="width:100%;height:100%;object-fit:cover;object-position:center"/>
-  </div>
-  <div style="position:absolute;top:-60px;right:-60px;width:280px;height:280px;border-radius:50%;background:rgba(200,169,107,0.12);pointer-events:none;z-index:0"></div>
-</section>
-
-<!-- PROMOCIONES Y EVENTOS -->
-<section class="promo-section bg-gray" id="promociones">
-  <div class="section-wrap" style="margin-bottom:36px">
-    <div class="section-label"><i class="fa-solid fa-star"></i> Novedades BORCA</div>
-    <h2 class="section-title">Promociones y <span>eventos</span></h2>
-    <p class="section-lead" style="margin-bottom:0">Entérate de nuestras ofertas especiales, jornadas informativas y eventos exclusivos para copropiedades.</p>
-  </div>
-
-  <div class="promo-carousel" id="promoCarousel" role="region" aria-label="Carrusel de promociones y eventos" aria-roledescription="carousel">
+<!-- CARRUSEL DE NOVEDADES (promociones, noticias, anuncios y actualizaciones) -->
+<section class="promo-section bg-gray" id="carrusel">
+  <div class="promo-carousel" id="promoCarousel" role="region" aria-label="Carrusel de novedades, promociones y anuncios" aria-roledescription="carousel">
     <div class="promo-viewport">
       <div class="promo-track" id="promoTrack">
 
@@ -135,17 +109,37 @@
       <div class="promo-progress"><div class="promo-progress-bar" id="promoProgressBar"></div></div>
     </div>
 
-    <button class="promo-arrow promo-prev" aria-label="Promoción anterior" type="button"><i class="fa-solid fa-chevron-left"></i></button>
-    <button class="promo-arrow promo-next" aria-label="Siguiente promoción" type="button"><i class="fa-solid fa-chevron-right"></i></button>
+    <button class="promo-arrow promo-prev" aria-label="Novedad anterior" type="button"><i class="fa-solid fa-chevron-left"></i></button>
+    <button class="promo-arrow promo-next" aria-label="Siguiente novedad" type="button"><i class="fa-solid fa-chevron-right"></i></button>
   </div>
 
-  <div class="promo-dots" id="promoDots" role="tablist" aria-label="Seleccionar promoción">
-    <button class="promo-dot active" type="button" role="tab" aria-selected="true" aria-label="Ir a promoción 1"></button>
-    <button class="promo-dot" type="button" role="tab" aria-selected="false" aria-label="Ir a promoción 2"></button>
-    <button class="promo-dot" type="button" role="tab" aria-selected="false" aria-label="Ir a promoción 3"></button>
-    <button class="promo-dot" type="button" role="tab" aria-selected="false" aria-label="Ir a promoción 4"></button>
-    <button class="promo-dot" type="button" role="tab" aria-selected="false" aria-label="Ir a promoción 5"></button>
+  <div class="promo-dots" id="promoDots" role="tablist" aria-label="Seleccionar novedad">
+    <button class="promo-dot active" type="button" role="tab" aria-selected="true" aria-label="Ir a novedad 1"></button>
+    <button class="promo-dot" type="button" role="tab" aria-selected="false" aria-label="Ir a novedad 2"></button>
+    <button class="promo-dot" type="button" role="tab" aria-selected="false" aria-label="Ir a novedad 3"></button>
+    <button class="promo-dot" type="button" role="tab" aria-selected="false" aria-label="Ir a novedad 4"></button>
+    <button class="promo-dot" type="button" role="tab" aria-selected="false" aria-label="Ir a novedad 5"></button>
   </div>
+</section>
+
+<!-- HERO SECTION -->
+<section style="background:linear-gradient(135deg,var(--teal) 0%,var(--teal-dark) 100%);padding:0;min-height:600px;position:relative;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;align-items:center">
+  <div style="padding:56px 36px;position:relative;z-index:1">
+    <h1 style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:white;line-height:1.15;margin-bottom:16px">
+      Transformamos<br/><span style="color:var(--gold);font-style:italic">copropiedades</span>
+    </h1>
+    <p style="font-size:15px;color:rgba(255,255,255,0.85);line-height:1.8;max-width:480px;margin-bottom:32px">
+      Creamos comunidades más organizadas, sostenibles y tranquilas mediante una administración estratégica, humana y eficiente. Nuestro enfoque está orientado a la optimización de recursos, la sana convivencia y la valorización del patrimonio.
+    </p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <a href="contacto.html" class="btn-cta" style="background:var(--gold)"><i class="fa-solid fa-phone"></i> Solicita una asesoría</a>
+      <a href="servicios.html" class="btn-cta" style="background:rgba(255,255,255,0.15);border:1.5px solid white"><i class="fa-solid fa-arrow-right"></i> Conoce nuestros servicios</a>
+    </div>
+  </div>
+  <div style="position:relative;display:flex;align-items:center;justify-content:center;height:100%">
+    <img src="public/images/hero-borca.jpg" alt="Comunidad BORCA" style="width:100%;height:100%;object-fit:cover;object-position:center"/>
+  </div>
+  <div style="position:absolute;top:-60px;right:-60px;width:280px;height:280px;border-radius:50%;background:rgba(200,169,107,0.12);pointer-events:none;z-index:0"></div>
 </section>
 
 <!-- PILARES -->
