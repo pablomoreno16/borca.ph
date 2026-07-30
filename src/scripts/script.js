@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     el.style.transition=`opacity .45s ease ${i*50}ms,transform .45s ease ${i*50}ms`;
     obs.observe(el);
   });
-  document.querySelectorAll('.btn-cta,.btn-contact,.btn-submit').forEach(btn => {
+  document.querySelectorAll('.btn-cta,.btn-submit').forEach(btn => {
     btn.addEventListener('click', function(e) {
       const r=this.getBoundingClientRect(), s=document.createElement('span'), sz=Math.max(r.width,r.height);
       s.style.cssText=`position:absolute;width:${sz}px;height:${sz}px;border-radius:50%;
