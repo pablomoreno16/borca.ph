@@ -13,11 +13,11 @@ export default function HomePage() {
       {/* HERO SECTION */}
       <section
         id="hero"
-        className="relative overflow-hidden p-0 min-h-[600px] grid grid-cols-2 items-center"
+        className="relative overflow-hidden p-0 min-h-[600px] grid grid-cols-1 md:grid-cols-2 items-center"
         style={{ background: "linear-gradient(135deg,var(--color-teal) 0%,var(--color-teal-dark) 100%)" }}
       >
-        <div className="relative z-10 py-14 px-9">
-          <h1 className="font-serif text-[50px] font-bold text-white leading-[1.15] mb-4">
+        <div className="relative z-10 py-11 px-5 md:py-14 md:px-9">
+          <h1 className="font-serif text-[32px] md:text-[50px] font-bold text-white leading-[1.15] mb-4">
             Transformamos
             <br />
             <span className="text-gold italic">copropiedades</span>
@@ -41,7 +41,7 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-        <div className="relative flex items-center justify-center h-full">
+        <div className="relative hidden md:flex items-center justify-center h-full">
           <img
             src="/images/hero-borca.jpg"
             alt="Comunidad BORCA"

@@ -360,8 +360,12 @@
     transition: transform 0.65s cubic-bezier(0.65, 0, 0.35, 1);
   }
   .promo-slide {
-    @apply min-w-full relative grid items-center gap-8 overflow-hidden text-white px-16 py-[58px] min-h-[280px] max-md:grid-cols-1 max-md:text-center max-md:min-h-0 max-md:gap-[18px];
-    grid-template-columns: 1.15fr 0.85fr;
+    @apply min-w-full relative grid grid-cols-1 items-center gap-8 overflow-hidden text-white px-16 py-[58px] min-h-[280px] max-md:text-center max-md:min-h-0 max-md:gap-[18px];
+  }
+  @media (min-width: 768px) {
+    .promo-slide {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
   }
   @media (max-width: 767px) {
     .promo-slide {

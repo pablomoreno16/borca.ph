@@ -26,7 +26,7 @@ export default function ServiciosPage() {
       {/* SERVICIO 1 */}
       <section className="bg-white">
         <div className="section-wrap section-pad">
-          <div className="grid grid-cols-2 gap-12 items-center mb-18">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-18">
             <div>
               <div className="w-16 h-16 rounded-2xl bg-card-green flex items-center justify-center text-[26px] text-teal mb-5">
                 <i className="fa-solid fa-building"></i>
@@ -114,7 +114,7 @@ export default function ServiciosPage() {
           <div className="divider"></div>
 
           {/* SERVICIO 2 */}
-          <div className="grid grid-cols-2 gap-12 items-center mb-18">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-18">
             <div className="bg-card-beige rounded-card p-9 order-2">
               <h4 className="text-[14.5px] font-extrabold mb-[18px]">Servicios incluidos:</h4>
               <div className="flex flex-col gap-3">
@@ -169,7 +169,7 @@ export default function ServiciosPage() {
           <div className="divider"></div>
 
           {/* SERVICIO 3 */}
-          <div className="grid grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
               <div className="w-16 h-16 rounded-2xl bg-card-blue flex items-center justify-center text-[26px] text-[#1a5fa8] mb-5">
                 <i className="fa-solid fa-toolbox"></i>
