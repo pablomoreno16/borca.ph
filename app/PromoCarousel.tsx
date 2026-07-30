@@ -8,7 +8,7 @@ const AUTOPLAY_MS = 5500;
 const SLIDES = [
   {
     id: 1,
-    background: "linear-gradient(135deg,var(--teal) 0%,var(--teal-dark) 100%)",
+    background: "linear-gradient(135deg,var(--color-teal) 0%,var(--color-teal-dark) 100%)",
     isLight: false,
     badgeClass: "promo-badge-gold",
     badgeIcon: "fa-solid fa-tag",
@@ -26,7 +26,7 @@ const SLIDES = [
   },
   {
     id: 2,
-    background: "var(--card-blue)",
+    background: "var(--color-card-blue)",
     isLight: true,
     badgeClass: "promo-badge-teal",
     badgeIcon: "fa-solid fa-calendar-days",
@@ -44,7 +44,7 @@ const SLIDES = [
   },
   {
     id: 3,
-    background: "var(--card-beige)",
+    background: "var(--color-card-beige)",
     isLight: true,
     badgeClass: "promo-badge-gold",
     badgeIcon: "fa-solid fa-percent",
@@ -62,7 +62,7 @@ const SLIDES = [
   },
   {
     id: 4,
-    background: "linear-gradient(135deg,var(--teal-dark) 0%,#082e2d 100%)",
+    background: "linear-gradient(135deg,var(--color-teal-dark) 0%,#082e2d 100%)",
     isLight: false,
     badgeClass: "promo-badge-white",
     badgeIcon: "fa-solid fa-calendar-days",
@@ -80,7 +80,7 @@ const SLIDES = [
   },
   {
     id: 5,
-    background: "var(--card-lila)",
+    background: "var(--color-card-lila)",
     isLight: true,
     badgeClass: "promo-badge-gold",
     badgeIcon: "fa-solid fa-tag",

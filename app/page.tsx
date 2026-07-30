@@ -13,81 +13,49 @@ export default function HomePage() {
       {/* HERO SECTION */}
       <section
         id="hero"
-        style={{
-          background: "linear-gradient(135deg,var(--teal) 0%,var(--teal-dark) 100%)",
-          padding: 0,
-          minHeight: "600px",
-          position: "relative",
-          overflow: "hidden",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          alignItems: "center",
-        }}
+        className="relative overflow-hidden p-0 min-h-[600px] grid grid-cols-2 items-center"
+        style={{ background: "linear-gradient(135deg,var(--color-teal) 0%,var(--color-teal-dark) 100%)" }}
       >
-        <div style={{ padding: "56px 36px", position: "relative", zIndex: 1 }}>
-          <h1
-            style={{
-              fontFamily: "'Playfair Display',serif",
-              fontSize: "50px",
-              fontWeight: "700",
-              color: "white",
-              lineHeight: "1.15",
-              marginBottom: "16px",
-            }}
-          >
+        <div className="relative z-10 py-14 px-9">
+          <h1 className="font-serif text-[50px] font-bold text-white leading-[1.15] mb-4">
             Transformamos
             <br />
-            <span style={{ color: "var(--gold)", fontStyle: "italic" }}>copropiedades</span>
+            <span className="text-gold italic">copropiedades</span>
           </h1>
-          <p style={{ fontSize: "16.5px", color: "rgba(255,255,255,0.85)", lineHeight: "1.8", maxWidth: "480px", marginBottom: "32px" }}>
+          <p className="text-[16.5px] text-white/85 leading-[1.8] max-w-[480px] mb-8">
             Creamos comunidades más organizadas, sostenibles y tranquilas mediante una
             administración estratégica, humana y eficiente. Nuestro enfoque está orientado a la
             optimización de recursos, la sana convivencia y la valorización del patrimonio.
           </p>
-          <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
+          <div className="flex gap-3.5 flex-wrap">
             <a
               href="https://wa.me/573053498787?text=Hola+BORCA%2C+me+interesa+el+servicio+de+Administraci%C3%B3n+de+PH"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-cta"
-              style={{ background: "var(--gold)" }}
+              className="btn-cta bg-gold"
             >
               <ButterflyIcon /> Contáctanos
             </a>
-            <Link href="/servicios" className="btn-cta" style={{ background: "rgba(255,255,255,0.15)", border: "1.5px solid white" }}>
+            <Link href="/servicios" className="btn-cta bg-white/15 border-[1.5px] border-white">
               <i className="fa-solid fa-arrow-right"></i> Conoce nuestros servicios
             </Link>
           </div>
         </div>
-        <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
+        <div className="relative flex items-center justify-center h-full">
           <img
             src="/images/hero-borca.jpg"
             alt="Comunidad BORCA"
-            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
+            className="w-full h-full object-cover object-center"
           />
         </div>
-        <div
-          style={{
-            position: "absolute",
-            top: "-60px",
-            right: "-60px",
-            width: "280px",
-            height: "280px",
-            borderRadius: "50%",
-            background: "rgba(200,169,107,0.12)",
-            pointerEvents: "none",
-            zIndex: 0,
-          }}
-        ></div>
+        <div className="absolute -top-[60px] -right-[60px] w-[280px] h-[280px] rounded-full bg-[rgba(200,169,107,0.12)] pointer-events-none z-0"></div>
       </section>
 
       {/* PILARES */}
       <section className="bg-white" id="pilares">
         <div className="section-wrap section-pad">
-          <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <p className="section-label" style={{ justifyContent: "center" }}>
-              Nuestros pilares
-            </p>
+          <div className="text-center mb-12">
+            <p className="section-label justify-center">Nuestros pilares</p>
             <h2 className="section-title">
               6 valores que guían <span>cada decisión</span>
             </h2>
@@ -142,42 +110,40 @@ export default function HomePage() {
       {/* SERVICIOS PREVIEW */}
       <section className="bg-gray" id="servicios-preview">
         <div className="section-wrap section-pad">
-          <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <p className="section-label" style={{ justifyContent: "center" }}>
-              Soluciones integrales
-            </p>
+          <div className="text-center mb-12">
+            <p className="section-label justify-center">Soluciones integrales</p>
             <h2 className="section-title">
               ¿Qué ofrecemos <span>a nuestros clientes?</span>
             </h2>
           </div>
           <div className="cards-grid-3">
-            <Link href="/servicios" className="card card-border" style={{ textDecoration: "none", cursor: "pointer", transition: "all .2s" }}>
+            <Link href="/servicios" className="card card-border no-underline cursor-pointer transition-all">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-building"></i>
               </div>
               <h3>Administración de PH</h3>
               <p>Gestión integral de copropiedades residenciales, comerciales, mixtas.</p>
-              <div style={{ color: "var(--teal)", fontWeight: "700", fontSize: "14.5px", marginTop: "12px", display: "flex", alignItems: "center", gap: "6px" }}>
+              <div className="text-teal font-bold text-[14.5px] mt-3 flex items-center gap-1.5">
                 Conocer más <i className="fa-solid fa-arrow-right"></i>
               </div>
             </Link>
-            <Link href="/servicios" className="card card-border" style={{ textDecoration: "none", cursor: "pointer", transition: "all .2s" }}>
+            <Link href="/servicios" className="card card-border no-underline cursor-pointer transition-all">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-scale-balanced"></i>
               </div>
               <h3>Consultoría PH</h3>
               <p>Acompañamiento técnico, jurídico y administrativo en procesos especializados.</p>
-              <div style={{ color: "var(--teal)", fontWeight: "700", fontSize: "14.5px", marginTop: "12px", display: "flex", alignItems: "center", gap: "6px" }}>
+              <div className="text-teal font-bold text-[14.5px] mt-3 flex items-center gap-1.5">
                 Conocer más <i className="fa-solid fa-arrow-right"></i>
               </div>
             </Link>
-            <Link href="/servicios" className="card card-border" style={{ textDecoration: "none", cursor: "pointer", transition: "all .2s" }}>
+            <Link href="/servicios" className="card card-border no-underline cursor-pointer transition-all">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-toolbox"></i>
               </div>
               <h3>Servicios Especializados</h3>
               <p>Contabilidad, mantenimiento, facturación, aseo, jardinería, seguros y más a través de alianzas.</p>
-              <div style={{ color: "var(--teal)", fontWeight: "700", fontSize: "14.5px", marginTop: "12px", display: "flex", alignItems: "center", gap: "6px" }}>
+              <div className="text-teal font-bold text-[14.5px] mt-3 flex items-center gap-1.5">
                 Conocer más <i className="fa-solid fa-arrow-right"></i>
               </div>
             </Link>
@@ -188,10 +154,8 @@ export default function HomePage() {
       {/* POR QUÉ ELEGIRNOS */}
       <section className="bg-gray" id="por-que-elegirnos">
         <div className="section-wrap section-pad">
-          <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <p className="section-label" style={{ justifyContent: "center" }}>
-              Nuestra diferencia
-            </p>
+          <div className="text-center mb-12">
+            <p className="section-label justify-center">Nuestra diferencia</p>
             <h2 className="section-title">
               ¿Por qué<span> elegirnos?</span>
             </h2>
@@ -219,7 +183,7 @@ export default function HomePage() {
               <p>Anticipamos problemas para proteger el valor de tu propiedad a largo plazo.</p>
             </div>
           </div>
-          <div style={{ textAlign: "center", marginTop: "36px" }}>
+          <div className="text-center mt-9">
             <Link href="/por-que-elegirnos" className="btn-cta">
               <i className="fa-solid fa-arrow-right"></i> Ver más razones
             </Link>

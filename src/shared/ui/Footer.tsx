@@ -8,7 +8,7 @@ export function Footer() {
           <img
             src="/images/borca.png"
             alt="BORCA"
-            style={{ width: 100, height: 100, objectFit: "contain", marginBottom: 14 }}
+            className="w-[100px] h-[100px] object-contain mb-3.5"
           />
           <p>
             Transformamos copropiedades en comunidades organizadas, sostenibles y tranquilas

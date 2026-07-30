@@ -27,10 +27,8 @@ export default function PorQueElegirnosPage() {
       {/* DIFERENCIADORES */}
       <section className="bg-white">
         <div className="section-wrap section-pad">
-          <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <p className="section-label" style={{ justifyContent: "center" }}>
-              Lo que nos hace únicos
-            </p>
+          <div className="text-center mb-12">
+            <p className="section-label justify-center">Lo que nos hace únicos</p>
             <h2 className="section-title">
               6 razones para <span>elegirnos</span>
             </h2>
@@ -94,84 +92,76 @@ export default function PorQueElegirnosPage() {
       {/* TESTIMONIOS */}
       <section className="bg-gray">
         <div className="section-wrap section-pad">
-          <div style={{ textAlign: "center", marginBottom: "44px" }}>
-            <p className="section-label" style={{ justifyContent: "center" }}>
-              Lo que dicen nuestros clientes
-            </p>
+          <div className="text-center mb-11">
+            <p className="section-label justify-center">Lo que dicen nuestros clientes</p>
             <h2 className="section-title">
               Testimonios <span>reales</span>
             </h2>
           </div>
           <div className="cards-grid-3">
             <div className="card card-border">
-              <div style={{ display: "flex", gap: "3px", color: "var(--gold)", marginBottom: "14px", fontSize: "14px" }}>
+              <div className="flex gap-[3px] text-gold mb-3.5 text-sm">
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
               </div>
-              <p style={{ fontSize: "14.5px", color: "var(--text-body)", lineHeight: "1.75", marginBottom: "18px", fontStyle: "italic" }}>
+              <p className="text-[14.5px] text-text-body leading-[1.75] mb-[18px] italic">
                 &quot;BORCA transformó la organización financiera de nuestra copropiedad. Ahora
                 sabemos exactamente en qué se gasta cada peso.&quot;
               </p>
-              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <div
-                  style={{ width: "40px", height: "40px", borderRadius: "50%", background: "var(--teal)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: "800", fontSize: "15px" }}
-                >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-teal flex items-center justify-center text-white font-extrabold text-[15px]">
                   C
                 </div>
                 <div>
-                  <strong style={{ fontSize: "14.5px", display: "block" }}>Cliente Copropiedad</strong>
-                  <span style={{ fontSize: "12px", color: "#999" }}>Medellín, Antioquia</span>
+                  <strong className="text-[14.5px] block">Cliente Copropiedad</strong>
+                  <span className="text-xs text-[#999]">Medellín, Antioquia</span>
                 </div>
               </div>
             </div>
             <div className="card card-border">
-              <div style={{ display: "flex", gap: "3px", color: "var(--gold)", marginBottom: "14px", fontSize: "14px" }}>
+              <div className="flex gap-[3px] text-gold mb-3.5 text-sm">
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
               </div>
-              <p style={{ fontSize: "14.5px", color: "var(--text-body)", lineHeight: "1.75", marginBottom: "18px", fontStyle: "italic" }}>
+              <p className="text-[14.5px] text-text-body leading-[1.75] mb-[18px] italic">
                 &quot;La comunicación y el acompañamiento han sido excelentes. Sentimos que
                 realmente nos entienden.&quot;
               </p>
-              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <div
-                  style={{ width: "40px", height: "40px", borderRadius: "50%", background: "var(--gold)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: "800", fontSize: "15px" }}
-                >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gold flex items-center justify-center text-white font-extrabold text-[15px]">
                   J
                 </div>
                 <div>
-                  <strong style={{ fontSize: "14.5px", display: "block" }}>Junta Directiva</strong>
-                  <span style={{ fontSize: "12px", color: "#999" }}>Bogotá, Cundinamarca</span>
+                  <strong className="text-[14.5px] block">Junta Directiva</strong>
+                  <span className="text-xs text-[#999]">Bogotá, Cundinamarca</span>
                 </div>
               </div>
             </div>
             <div className="card card-border">
-              <div style={{ display: "flex", gap: "3px", color: "var(--gold)", marginBottom: "14px", fontSize: "14px" }}>
+              <div className="flex gap-[3px] text-gold mb-3.5 text-sm">
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
               </div>
-              <p style={{ fontSize: "14.5px", color: "var(--text-body)", lineHeight: "1.75", marginBottom: "18px", fontStyle: "italic" }}>
+              <p className="text-[14.5px] text-text-body leading-[1.75] mb-[18px] italic">
                 &quot;BORCA transformó por completo la cultura de nuestra copropiedad. Ahora es un
                 mejor lugar para vivir.&quot;
               </p>
-              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <div
-                  style={{ width: "40px", height: "40px", borderRadius: "50%", background: "#1a5fa8", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: "800", fontSize: "15px" }}
-                >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#1a5fa8] flex items-center justify-center text-white font-extrabold text-[15px]">
                   P
                 </div>
                 <div>
-                  <strong style={{ fontSize: "14.5px", display: "block" }}>Propietario</strong>
-                  <span style={{ fontSize: "12px", color: "#999" }}>Cali, Valle del Cauca</span>
+                  <strong className="text-[14.5px] block">Propietario</strong>
+                  <span className="text-xs text-[#999]">Cali, Valle del Cauca</span>
                 </div>
               </div>
             </div>
@@ -182,49 +172,41 @@ export default function PorQueElegirnosPage() {
       {/* PROCESO */}
       <section className="bg-white">
         <div className="section-wrap section-pad">
-          <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <p className="section-label" style={{ justifyContent: "center" }}>
-              Cómo trabajamos
-            </p>
+          <div className="text-center mb-12">
+            <p className="section-label justify-center">Cómo trabajamos</p>
             <h2 className="section-title">
               Proceso de <span>vinculación en 3 pasos</span>
             </h2>
-            <p style={{ color: "var(--text-body)", fontSize: "16.5px", maxWidth: "520px", margin: "0 auto", lineHeight: "1.8" }}>
+            <p className="text-text-body text-[16.5px] max-w-[520px] mx-auto leading-[1.8]">
               Vincularse a BORCA es simple, rápido y sin complicaciones. Te acompañamos en cada
               paso.
             </p>
           </div>
           {/* nota: el sitio original no envolvía estas 3 tarjetas en cards-grid-3 (bug visual corregido en esta migración) */}
           <div className="cards-grid-3">
-            <div className="card card-border" style={{ textAlign: "center" }}>
-              <div style={{ fontFamily: "'Playfair Display',serif", fontSize: "42px", fontWeight: "700", color: "var(--gold)", opacity: ".25", lineHeight: "1", marginBottom: "-4px" }}>
-                01
-              </div>
-              <div className="card-icon-lg" style={{ margin: "0 auto 14px" }}>
+            <div className="card card-border text-center">
+              <div className="font-serif text-[42px] font-bold text-gold opacity-25 leading-none -mb-1">01</div>
+              <div className="card-icon-lg mx-auto mb-3.5">
                 <i className="fa-solid fa-file-signature"></i>
               </div>
-              <h3 style={{ fontSize: "16.5px" }}>Propuesta personalizada</h3>
-              <p style={{ fontSize: "14px" }}>Plan diseñado según necesidades de tu conjunto.</p>
+              <h3 className="text-[16.5px]">Propuesta personalizada</h3>
+              <p className="text-sm">Plan diseñado según necesidades de tu conjunto.</p>
             </div>
-            <div className="card card-border" style={{ textAlign: "center" }}>
-              <div style={{ fontFamily: "'Playfair Display',serif", fontSize: "42px", fontWeight: "700", color: "var(--gold)", opacity: ".25", lineHeight: "1", marginBottom: "-4px" }}>
-                02
-              </div>
-              <div className="card-icon-lg" style={{ margin: "0 auto 14px" }}>
+            <div className="card card-border text-center">
+              <div className="font-serif text-[42px] font-bold text-gold opacity-25 leading-none -mb-1">02</div>
+              <div className="card-icon-lg mx-auto mb-3.5">
                 <i className="fa-solid fa-people-group"></i>
               </div>
-              <h3 style={{ fontSize: "16.5px" }}>Presentación a asamblea o consejo de administración</h3>
-              <p style={{ fontSize: "14px" }}>Acompañamos la presentación para aprobación en caso de ser requerida.</p>
+              <h3 className="text-[16.5px]">Presentación a asamblea o consejo de administración</h3>
+              <p className="text-sm">Acompañamos la presentación para aprobación en caso de ser requerida.</p>
             </div>
-            <div className="card card-border" style={{ textAlign: "center" }}>
-              <div style={{ fontFamily: "'Playfair Display',serif", fontSize: "42px", fontWeight: "700", color: "var(--gold)", opacity: ".25", lineHeight: "1", marginBottom: "-4px" }}>
-                03
-              </div>
-              <div className="card-icon-lg" style={{ margin: "0 auto 14px" }}>
+            <div className="card card-border text-center">
+              <div className="font-serif text-[42px] font-bold text-gold opacity-25 leading-none -mb-1">03</div>
+              <div className="card-icon-lg mx-auto mb-3.5">
                 <i className="fa-solid fa-rocket"></i>
               </div>
-              <h3 style={{ fontSize: "16.5px" }}>Inicio de operaciones</h3>
-              <p style={{ fontSize: "14px" }}>Transición ordenada.</p>
+              <h3 className="text-[16.5px]">Inicio de operaciones</h3>
+              <p className="text-sm">Transición ordenada.</p>
             </div>
           </div>
         </div>

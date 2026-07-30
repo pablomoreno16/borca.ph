@@ -69,29 +69,24 @@ export default function QuienesSomosPage() {
       {/* TEXTO QUIÉNES SOMOS */}
       <section className="bg-gray">
         <div className="section-wrap section-pad">
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "56px", alignItems: "start" }}
-          >
+          <div className="grid grid-cols-2 gap-14 items-start">
             <div>
               <p className="section-label">Nuestra trayectoria</p>
               <h2 className="section-title">
                 Una empresa con <span>experiencia y vocación</span>
               </h2>
-              <p
-                className="section-lead"
-                style={{ borderLeft: "3px solid var(--gold)", paddingLeft: "18px", marginBottom: "24px" }}
-              >
+              <p className="section-lead border-l-[3px] border-gold pl-[18px] mb-6">
                 BORCA es una empresa especializada en la administración integral de propiedades
                 horizontales. Contamos con un equipo interdisciplinario y aliados estratégicos
                 que nos permiten brindar soluciones ágiles, efectivas y profesionales.
               </p>
-              <p style={{ fontSize: "15.5px", color: "var(--text-body)", lineHeight: "1.8", marginBottom: "20px" }}>
+              <p className="text-[15.5px] text-text-body leading-[1.8] mb-5">
                 Nuestro enfoque está orientado a la optimización de recursos, la sana
                 convivencia y la valorización del patrimonio de cada copropiedad. Trabajamos con
                 cada comunidad como si fuera la nuestra, comprometidos con su transformación y
                 bienestar a largo plazo.
               </p>
-              <p style={{ fontSize: "15.5px", color: "var(--text-body)", lineHeight: "1.8" }}>
+              <p className="text-[15.5px] text-text-body leading-[1.8]">
                 Con más de 10 años de experiencia en el sector, hemos aprendido que administrar
                 una copropiedad no es solo manejar números y procesos. Es cuidar comunidades,
                 proteger patrimonios y crear espacios donde las personas quieren vivir.
@@ -101,14 +96,7 @@ export default function QuienesSomosPage() {
               <img
                 src="/images/team.jpg"
                 alt="Equipo BORCA"
-                style={{
-                  width: "100%",
-                  borderRadius: "22px",
-                  boxShadow: "var(--shadow-soft)",
-                  objectFit: "cover",
-                  height: "380px",
-                  objectPosition: "center top",
-                }}
+                className="w-full rounded-card shadow-soft object-cover h-[380px] object-[center_top]"
               />
             </div>
           </div>
@@ -118,17 +106,15 @@ export default function QuienesSomosPage() {
       {/* PILARES EXPANDIDO */}
       <section className="bg-white">
         <div className="section-wrap section-pad">
-          <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <p className="section-label" style={{ justifyContent: "center" }}>
-              Lo que nos define
-            </p>
+          <div className="text-center mb-12">
+            <p className="section-label justify-center">Lo que nos define</p>
             <h2 className="section-title">
               Nuestros 6 <span>pilares fundamentales</span>
             </h2>
           </div>
           <div className="cards-grid-3">
             <div className="card card-border">
-              <div className="card-icon-lg" style={{ background: "var(--card-green)", color: "var(--teal)" }}>
+              <div className="card-icon-lg bg-card-green text-teal">
                 <i className="fa-solid fa-people-group"></i>
               </div>
               <h3>Participación</h3>
@@ -138,35 +124,35 @@ export default function QuienesSomosPage() {
               </p>
             </div>
             <div className="card card-border">
-              <div className="card-icon-lg" style={{ background: "var(--card-beige)", color: "#a07840" }}>
+              <div className="card-icon-lg bg-card-beige text-[#a07840]">
                 <i className="fa-solid fa-heart"></i>
               </div>
               <h3>Pasión</h3>
               <p>Amamos lo que hacemos y trabajamos con compromiso, entrega y vocación genuina de servicio.</p>
             </div>
             <div className="card card-border">
-              <div className="card-icon-lg" style={{ background: "var(--card-blue)", color: "#1a5fa8" }}>
+              <div className="card-icon-lg bg-card-blue text-[#1a5fa8]">
                 <i className="fa-solid fa-brain"></i>
               </div>
               <h3>Experiencia</h3>
               <p>Nuestra trayectoria nos permite tomar decisiones estratégicas y efectivas en cada situación.</p>
             </div>
             <div className="card card-border">
-              <div className="card-icon-lg" style={{ background: "var(--card-lila)", color: "#7a4eb0" }}>
+              <div className="card-icon-lg bg-card-lila text-[#7a4eb0]">
                 <i className="fa-solid fa-rocket"></i>
               </div>
               <h3>Proactividad</h3>
               <p>Nos anticipamos a las necesidades para generar soluciones oportunas y prevenir problemas.</p>
             </div>
             <div className="card card-border">
-              <div className="card-icon-lg" style={{ background: "var(--card-green)", color: "var(--teal)" }}>
+              <div className="card-icon-lg bg-card-green text-teal">
                 <i className="fa-solid fa-handshake"></i>
               </div>
               <h3>Profesionalismo</h3>
               <p>Actuamos con ética, responsabilidad, respeto y transparencia en cada proceso y decisión.</p>
             </div>
             <div className="card card-border">
-              <div className="card-icon-lg" style={{ background: "var(--card-beige)", color: "#a07840" }}>
+              <div className="card-icon-lg bg-card-beige text-[#a07840]">
                 <i className="fa-solid fa-chart-line"></i>
               </div>
               <h3>Progreso</h3>
@@ -179,104 +165,50 @@ export default function QuienesSomosPage() {
       {/* EQUIPO */}
       <section className="bg-gray">
         <div className="section-wrap section-pad">
-          <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <p className="section-label" style={{ justifyContent: "center" }}>
-              Talento humano
-            </p>
+          <div className="text-center mb-12">
+            <p className="section-label justify-center">Talento humano</p>
             <h2 className="section-title">
               Un equipo comprometido <span>con tu comunidad</span>
             </h2>
-            <p style={{ color: "var(--text-body)", fontSize: "16.5px", maxWidth: "560px", margin: "0 auto", lineHeight: "1.8" }}>
+            <p className="text-text-body text-[16.5px] max-w-[560px] mx-auto leading-[1.8]">
               Contamos con profesionales interdisciplinarios especializados en administración,
               finanzas, derecho y operación de copropiedades.
             </p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "24px" }}>
-            <div className="card card-gray" style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  width: "64px",
-                  height: "64px",
-                  borderRadius: "50%",
-                  background: "var(--teal)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "26px",
-                  color: "white",
-                  margin: "0 auto 16px",
-                }}
-              >
+          <div className="grid grid-cols-4 gap-6">
+            <div className="card card-gray text-center">
+              <div className="w-16 h-16 rounded-full bg-teal flex items-center justify-center text-[26px] text-white mx-auto mb-4">
                 <i className="fa-solid fa-user-tie"></i>
               </div>
-              <h4 style={{ fontSize: "15.5px", fontWeight: "800", marginBottom: "4px" }}>Gestores dedicados</h4>
-              <p style={{ fontSize: "14px", color: "var(--text-body)", lineHeight: "1.65" }}>
+              <h4 className="text-[15.5px] font-extrabold mb-1">Gestores dedicados</h4>
+              <p className="text-sm text-text-body leading-[1.65]">
                 Profesional asignado a cada copropiedad conoce su realidad en profundidad.
               </p>
             </div>
-            <div className="card card-gray" style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  width: "64px",
-                  height: "64px",
-                  borderRadius: "50%",
-                  background: "var(--teal)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "26px",
-                  color: "white",
-                  margin: "0 auto 16px",
-                }}
-              >
+            <div className="card card-gray text-center">
+              <div className="w-16 h-16 rounded-full bg-teal flex items-center justify-center text-[26px] text-white mx-auto mb-4">
                 <i className="fa-solid fa-gavel"></i>
               </div>
-              <h4 style={{ fontSize: "15.5px", fontWeight: "800", marginBottom: "4px" }}>Especialistas jurídicos</h4>
-              <p style={{ fontSize: "14px", color: "var(--text-body)", lineHeight: "1.65" }}>
+              <h4 className="text-[15.5px] font-extrabold mb-1">Especialistas jurídicos</h4>
+              <p className="text-sm text-text-body leading-[1.65]">
                 Asesoría en Ley 675 y normativa de Propiedad Horizontal aplicable.
               </p>
             </div>
-            <div className="card card-gray" style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  width: "64px",
-                  height: "64px",
-                  borderRadius: "50%",
-                  background: "var(--teal)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "26px",
-                  color: "white",
-                  margin: "0 auto 16px",
-                }}
-              >
+            <div className="card card-gray text-center">
+              <div className="w-16 h-16 rounded-full bg-teal flex items-center justify-center text-[26px] text-white mx-auto mb-4">
                 <i className="fa-solid fa-chart-bar"></i>
               </div>
-              <h4 style={{ fontSize: "15.5px", fontWeight: "800", marginBottom: "4px" }}>Analistas financieros</h4>
-              <p style={{ fontSize: "14px", color: "var(--text-body)", lineHeight: "1.65" }}>
+              <h4 className="text-[15.5px] font-extrabold mb-1">Analistas financieros</h4>
+              <p className="text-sm text-text-body leading-[1.65]">
                 Gestión de presupuestos, estados financieros y control de cartera.
               </p>
             </div>
-            <div className="card card-gray" style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  width: "64px",
-                  height: "64px",
-                  borderRadius: "50%",
-                  background: "var(--teal)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "26px",
-                  color: "white",
-                  margin: "0 auto 16px",
-                }}
-              >
+            <div className="card card-gray text-center">
+              <div className="w-16 h-16 rounded-full bg-teal flex items-center justify-center text-[26px] text-white mx-auto mb-4">
                 <i className="fa-solid fa-wrench"></i>
               </div>
-              <h4 style={{ fontSize: "15.5px", fontWeight: "800", marginBottom: "4px" }}>Coordinadores operativos</h4>
-              <p style={{ fontSize: "14px", color: "var(--text-body)", lineHeight: "1.65" }}>
+              <h4 className="text-[15.5px] font-extrabold mb-1">Coordinadores operativos</h4>
+              <p className="text-sm text-text-body leading-[1.65]">
                 Supervisión de mantenimiento y servicios especializados.
               </p>
             </div>
