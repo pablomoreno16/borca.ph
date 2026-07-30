@@ -1,0 +1,768 @@
+/* ============================================================
+   BORCA – style.css  (with real images)
+   ============================================================ */
+
+/* ── Reset & base ─────────────────────────────────────────── */
+*, *::before, *::after {
+   box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+ }
+ 
+ :root {
+   --teal:        #0B5D5B;
+   --teal-dark:   #063B3A;
+   --gold:        #C8A96B;
+   --gold-dark:   #a8863f;
+   --white:       #FFFFFF;
+   --gray-bg:     #F5F7F8;
+   --text-dark:   #1a2e2e;
+   --text-body:   #4a5a5a;
+   --card-green:  #EAF5F0;
+   --card-beige:  #FBF5EC;
+   --card-blue:   #EAF1FB;
+   --card-lila:   #F3EEFB;
+   --shadow-soft: 0 4px 28px rgba(11,93,91,0.11);
+   --shadow-card: 0 2px 14px rgba(11,93,91,0.08);
+   --radius-xl:   24px;
+   --radius-lg:   18px;
+   --radius-md:   13px;
+   --radius-sm:   9px;
+ }
+ 
+ html { scroll-behavior: smooth; }
+ 
+ body {
+   font-family: 'Nunito Sans', sans-serif;
+   color: var(--text-dark);
+   background: var(--white);
+   line-height: 1.6;
+   overflow-x: hidden;
+ }
+ 
+ a { text-decoration: none; color: inherit; }
+ 
+ /* ============================================================
+    NAVBAR
+    ============================================================ */
+ .navbar {
+   position: sticky;
+   top: 0;
+   z-index: 200;
+   background: var(--white);
+   box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+   height: 90px;
+ }
+ 
+ .navbar-inner {
+   max-width: 1300px;
+   margin: 0 auto;
+   height: 100%;
+   padding: 0 36px;
+   display: flex;
+   align-items: center;
+   gap: 28px;
+ }
+ 
+ /* ── Logo ── */
+ .nav-logo {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   flex-shrink: 0;
+   text-decoration: none;
+ }
+ 
+ /* The PNG has a transparent background – show it at controlled height */
+ .logo-img {
+   height: 54px;
+   width: auto;
+   object-fit: contain;
+   /* PNG is gold on transparent – no filter needed */
+ }
+ 
+ .logo-text-block {
+   display: flex;
+   flex-direction: column;
+   line-height: 1.15;
+   border-left: 1.5px solid #e0d0b0;
+   padding-left: 10px;
+   margin-left: 2px;
+ }
+ 
+ .logo-name {
+   font-family: 'Playfair Display', serif;
+   font-size: 19px;
+   font-weight: 700;
+   color: var(--gold);
+   letter-spacing: 3px;
+ }
+ 
+ .logo-tagline {
+   font-size: 9px;
+   font-weight: 600;
+   color: var(--text-body);
+   letter-spacing: 0.4px;
+   line-height: 1.35;
+   text-transform: uppercase;
+ }
+ 
+ /* ── Nav links ── */
+ .nav-links {
+   display: flex;
+   align-items: center;
+   gap: 2px;
+   margin-left: auto;
+ }
+ 
+ .nav-links a {
+   font-size: 12.5px;
+   font-weight: 600;
+   color: var(--text-dark);
+   padding: 7px 11px;
+   border-radius: 7px;
+   white-space: nowrap;
+   transition: color 0.2s, background 0.2s;
+   display: flex;
+   align-items: center;
+   gap: 4px;
+ }
+ 
+ .nav-links a:hover,
+ .nav-links a.active {
+   color: var(--teal);
+   background: rgba(11,93,91,0.06);
+ }
+ 
+ .nav-links a .fa-chevron-down {
+   font-size: 8px;
+   opacity: 0.55;
+ }
+ 
+ /* ── CTA ── */
+ .btn-contact {
+   display: inline-flex;
+   align-items: center;
+   gap: 7px;
+   padding: 10px 22px;
+   background: var(--teal);
+   color: var(--white);
+   border-radius: 50px;
+   font-size: 12.5px;
+   font-weight: 700;
+   white-space: nowrap;
+   flex-shrink: 0;
+   transition: background 0.2s, transform 0.15s, box-shadow 0.15s;
+   box-shadow: 0 3px 14px rgba(11,93,91,0.22);
+ }
+ 
+ .btn-contact:hover {
+   background: var(--teal-dark);
+   transform: translateY(-1px);
+   box-shadow: 0 5px 18px rgba(11,93,91,0.30);
+ }
+ 
+ /* ============================================================
+    HERO
+    ============================================================ */
+ .hero {
+   background: var(--gray-bg);
+   overflow: hidden;
+   position: relative;
+ }
+ 
+ .hero-inner {
+   max-width: 1300px;
+   margin: 0 auto;
+   display: grid;
+   grid-template-columns: 42% 58%;
+   min-height: 520px;
+ }
+ 
+ /* ── Hero left ── */
+ .hero-left {
+   padding: 54px 38px 64px 36px;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   position: relative;
+   z-index: 2;
+ }
+ 
+ .hero-title {
+   line-height: 1.02;
+   margin-bottom: 18px;
+   display: flex;
+   flex-direction: column;
+   gap: 4px;
+ }
+ 
+ .title-green {
+   font-family: 'Nunito Sans', sans-serif;
+   font-size: 36px;
+   font-weight: 800;
+   color: var(--teal);
+   letter-spacing: -0.5px;
+ }
+ 
+ .title-gold {
+   font-family: 'Playfair Display', serif;
+   font-size: 50px;
+   font-weight: 700;
+   font-style: italic;
+   color: var(--gold);
+   letter-spacing: -1.5px;
+   line-height: 1;
+ }
+ 
+ .hero-desc {
+   font-size: 13.5px;
+   color: var(--text-body);
+   line-height: 1.75;
+   max-width: 380px;
+   margin-bottom: 28px;
+ }
+ 
+ .hero-btns {
+   display: flex;
+   gap: 12px;
+   flex-wrap: wrap;
+   align-items: center;
+ }
+ 
+ .btn-primary {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   padding: 12px 22px;
+   background: var(--teal);
+   color: var(--white);
+   border-radius: 50px;
+   font-size: 13px;
+   font-weight: 700;
+   transition: background 0.2s, transform 0.15s, box-shadow 0.15s;
+   box-shadow: 0 4px 14px rgba(11,93,91,0.26);
+   position: relative;
+   overflow: hidden;
+ }
+ 
+ .btn-primary:hover {
+   background: var(--teal-dark);
+   transform: translateY(-1px);
+   box-shadow: 0 6px 20px rgba(11,93,91,0.32);
+ }
+ 
+ .btn-secondary {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   padding: 11px 20px;
+   background: transparent;
+   color: var(--teal);
+   border: 1.8px solid var(--teal);
+   border-radius: 50px;
+   font-size: 13px;
+   font-weight: 700;
+   transition: all 0.2s;
+   position: relative;
+   overflow: hidden;
+ }
+ 
+ .btn-secondary:hover {
+   background: var(--teal);
+   color: var(--white);
+ }
+ 
+ .birds-deco {
+   margin-top: 20px;
+   opacity: 0.7;
+ }
+ 
+ /* ── Hero right ── */
+ .hero-right {
+   position: relative;
+   display: flex;
+   align-items: stretch;
+ }
+ 
+ .hero-img-wrapper {
+   width: 100%;
+   padding: 22px 28px 22px 0;
+   display: flex;
+   align-items: stretch;
+ }
+ 
+ .hero-img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+   border-radius: var(--radius-xl);
+   box-shadow: 0 8px 40px rgba(11,93,91,0.18);
+   display: block;
+ }
+ 
+ /* ============================================================
+    BENEFITS BAR  (floating overlap)
+    ============================================================ */
+ .benefits-bar {
+   position: relative;
+   z-index: 10;
+   margin-top: -38px;
+   padding: 0 36px;
+ }
+ 
+ .benefits-inner {
+   max-width: 1180px;
+   margin: 0 auto;
+   background: var(--white);
+   border-radius: var(--radius-xl);
+   box-shadow: 0 8px 44px rgba(11,93,91,0.14);
+   display: flex;
+   align-items: center;
+   padding: 24px 36px;
+ }
+ 
+ .benefit-item {
+   flex: 1;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   text-align: center;
+   gap: 10px;
+   padding: 0 14px;
+ }
+ 
+ .benefit-icon {
+   width: 46px;
+   height: 46px;
+   border-radius: 50%;
+   background: var(--gray-bg);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: var(--teal);
+   font-size: 19px;
+   flex-shrink: 0;
+ }
+ 
+ .benefit-item span {
+   font-size: 12px;
+   font-weight: 700;
+   color: var(--text-dark);
+   line-height: 1.45;
+ }
+ 
+ .benefit-divider {
+   width: 1px;
+   height: 56px;
+   background: #dde6e6;
+   flex-shrink: 0;
+ }
+ 
+ /* ============================================================
+    SERVICES + WHY BORCA
+    ============================================================ */
+ .services-section {
+   padding: 62px 36px 56px;
+   background: var(--white);
+ }
+ 
+ .services-inner {
+   max-width: 1300px;
+   margin: 0 auto;
+   display: grid;
+   grid-template-columns: 1fr 390px;
+   gap: 44px;
+   align-items: start;
+ }
+ 
+ /* ── Section title ── */
+ .section-title {
+   font-family: 'Playfair Display', serif;
+   font-size: 26px;
+   font-weight: 700;
+   color: var(--text-dark);
+   margin-bottom: 24px;
+ }
+ 
+ /* ── Services grid ── */
+ .services-grid {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 16px;
+ }
+ 
+ .service-card {
+   border-radius: var(--radius-lg);
+   padding: 24px 20px 22px;
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+   box-shadow: var(--shadow-card);
+   transition: transform 0.22s, box-shadow 0.22s;
+   position: relative;
+   overflow: hidden;
+ }
+ 
+ .service-card::before {
+   content: '';
+   position: absolute;
+   top: -20px;
+   right: -20px;
+   width: 70px;
+   height: 70px;
+   border-radius: 50%;
+   opacity: 0.07;
+ }
+ 
+ .card-green { background: var(--card-green); }
+ .card-green::before { background: var(--teal); }
+ 
+ .card-beige { background: var(--card-beige); }
+ .card-beige::before { background: var(--gold); }
+ 
+ .card-blue  { background: var(--card-blue); }
+ .card-blue::before  { background: #3a6ea8; }
+ 
+ .card-lila  { background: var(--card-lila); }
+ .card-lila::before  { background: #7a4eb0; }
+ 
+ .service-card:hover {
+   transform: translateY(-4px);
+   box-shadow: 0 10px 28px rgba(11,93,91,0.13);
+ }
+ 
+ .card-icon {
+   width: 44px;
+   height: 44px;
+   border-radius: var(--radius-sm);
+   background: rgba(255,255,255,0.75);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 19px;
+   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+ }
+ 
+ .icon-teal { color: var(--teal); }
+ .icon-gold { color: #a07840; }
+ .icon-blue { color: #3a6ea8; }
+ .icon-lila { color: #7a4eb0; }
+ 
+ .service-card h3 {
+   font-size: 13.5px;
+   font-weight: 800;
+   color: var(--text-dark);
+   line-height: 1.3;
+ }
+ 
+ .service-card p {
+   font-size: 12px;
+   color: var(--text-body);
+   line-height: 1.65;
+ }
+ 
+ /* ── Why BORCA ── */
+ .why-col {
+   position: relative;
+ }
+ 
+ .why-box {
+   background: var(--gray-bg);
+   border-radius: var(--radius-xl);
+   padding: 30px 28px 26px;
+   box-shadow: var(--shadow-card);
+ }
+ 
+ .why-title {
+   font-family: 'Playfair Display', serif;
+   font-size: 22px;
+   font-weight: 700;
+   color: var(--text-dark);
+   margin-bottom: 24px;
+   line-height: 1.3;
+ }
+ 
+ .why-borca {
+   color: var(--teal);
+ }
+ 
+ .why-list {
+   list-style: none;
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+ }
+ 
+ .why-list li {
+   display: flex;
+   gap: 13px;
+   align-items: flex-start;
+ }
+ 
+ .check-circle {
+   width: 27px;
+   height: 27px;
+   min-width: 27px;
+   border-radius: 50%;
+   background: var(--teal);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: var(--white);
+   font-size: 11px;
+   margin-top: 1px;
+ }
+ 
+ .why-list li strong {
+   font-size: 13px;
+   font-weight: 800;
+   color: var(--text-dark);
+   display: block;
+   margin-bottom: 3px;
+ }
+ 
+ .why-list li p {
+   font-size: 11.5px;
+   color: var(--text-body);
+   line-height: 1.6;
+ }
+ 
+ .why-butterfly {
+   position: absolute;
+   bottom: -12px;
+   right: -8px;
+   opacity: 0.5;
+   pointer-events: none;
+ }
+ 
+ /* ============================================================
+    BOTTOM BANNER
+    ============================================================ */
+ .bottom-banner {
+   background: var(--gray-bg);
+   padding: 36px 36px 40px;
+ }
+ 
+ .banner-inner {
+   max-width: 1300px;
+   margin: 0 auto;
+   display: grid;
+   grid-template-columns: 1fr 1.1fr 1fr;
+   gap: 20px;
+   align-items: center;
+ }
+ 
+ .banner-card {
+   border-radius: var(--radius-xl);
+   padding: 30px 28px;
+   min-height: 170px;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   position: relative;
+   overflow: hidden;
+ }
+ 
+ .banner-left {
+   background: var(--teal);
+   color: var(--white);
+ }
+ 
+ .banner-right {
+   background: var(--gold);
+   color: var(--white);
+ }
+ 
+ .banner-leaf-deco {
+   position: absolute;
+   bottom: -4px;
+   right: -4px;
+   pointer-events: none;
+ }
+ 
+ .banner-butterfly-deco {
+   position: absolute;
+   top: 10px;
+   right: 10px;
+   pointer-events: none;
+ }
+ 
+ .banner-quote {
+   font-size: 14.5px;
+   line-height: 1.65;
+   position: relative;
+   z-index: 1;
+ }
+ 
+ .banner-quote strong {
+   font-weight: 800;
+ }
+ 
+ .btn-banner {
+   display: inline-flex;
+   align-items: center;
+   margin-top: 16px;
+   padding: 9px 20px;
+   background: rgba(255,255,255,0.22);
+   color: var(--white);
+   border-radius: 50px;
+   font-size: 12px;
+   font-weight: 700;
+   border: 1.5px solid rgba(255,255,255,0.45);
+   transition: background 0.2s;
+   width: fit-content;
+   position: relative;
+   z-index: 1;
+ }
+ 
+ .btn-banner:hover {
+   background: rgba(255,255,255,0.36);
+ }
+ 
+ /* ── Real team image ── */
+ .banner-center {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
+ 
+ .team-img {
+   width: 100%;
+   height: 200px;
+   object-fit: cover;
+   object-position: center top;
+   border-radius: var(--radius-xl);
+   box-shadow: var(--shadow-soft);
+   display: block;
+ }
+ 
+ /* ============================================================
+    FOOTER
+    ============================================================ */
+ .footer {
+   background: var(--teal);
+ }
+ 
+ .footer-inner {
+   max-width: 1300px;
+   margin: 0 auto;
+   padding: 18px 36px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 20px;
+ }
+ 
+ .footer-info {
+   display: flex;
+   align-items: center;
+   gap: 26px;
+   flex-wrap: wrap;
+ }
+ 
+ .footer-info span {
+   display: flex;
+   align-items: center;
+   gap: 7px;
+   font-size: 12.5px;
+   color: rgba(255,255,255,0.88);
+   font-weight: 500;
+ }
+ 
+ .footer-info span i {
+   font-size: 13px;
+   color: var(--gold);
+ }
+ 
+ .footer-social {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+ }
+ 
+ .footer-social a {
+   width: 33px;
+   height: 33px;
+   border-radius: 50%;
+   background: rgba(255,255,255,0.13);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: var(--white);
+   font-size: 13px;
+   transition: background 0.2s, transform 0.15s;
+ }
+ 
+ .footer-social a:hover {
+   background: var(--gold);
+   transform: translateY(-2px);
+ }
+ 
+ /* ============================================================
+    RIPPLE ANIMATION (used in script.js)
+    ============================================================ */
+ @keyframes ripple {
+   to { transform: scale(2.8); opacity: 0; }
+ }
+ 
+ /* ============================================================
+    RESPONSIVE
+    ============================================================ */
+ @media (max-width: 1100px) {
+   .services-inner {
+     grid-template-columns: 1fr;
+   }
+   .why-col {
+     max-width: 560px;
+   }
+ }
+ 
+ @media (max-width: 900px) {
+   .banner-inner {
+     grid-template-columns: 1fr 1fr;
+   }
+   .banner-center {
+     grid-column: 1 / -1;
+     order: -1;
+   }
+   .team-img {
+     height: 220px;
+   }
+ }
+ 
+ @media (max-width: 768px) {
+   .navbar-inner { padding: 0 18px; gap: 12px; }
+   .nav-links { display: none; }
+   .logo-text-block { display: none; }
+ 
+   .hero-inner { grid-template-columns: 1fr; }
+   .hero-right { display: none; }
+   .hero-left { padding: 40px 20px 52px; }
+   .title-green { font-size: 28px; }
+   .title-gold { font-size: 38px; }
+ 
+   .benefits-bar { padding: 0 16px; }
+   .benefits-inner {
+     flex-wrap: wrap;
+     gap: 16px;
+     padding: 20px 18px;
+   }
+   .benefit-divider { display: none; }
+   .benefit-item { flex: 1 1 calc(50% - 16px); }
+ 
+   .services-section { padding: 50px 18px 44px; }
+   .services-grid { grid-template-columns: 1fr; }
+ 
+   .bottom-banner { padding: 28px 18px; }
+   .banner-inner { grid-template-columns: 1fr; }
+   .banner-center { order: 0; }
+ 
+   .footer-inner {
+     flex-direction: column;
+     align-items: flex-start;
+     padding: 18px;
+     gap: 14px;
+   }
+   .footer-info { gap: 12px; }
+ }
