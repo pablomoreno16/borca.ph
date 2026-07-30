@@ -1,0 +1,10 @@
+# Redirige las URLs .html que el sitio anterior servía (y que pueden estar
+# indexadas o guardadas como marcadores) hacia las nuevas rutas limpias.
+# Las rutas limpias (ej. /servicios/) las resuelve Apache de forma nativa,
+# sirviendo el index.html de esa carpeta — no requieren regla adicional.
+RewriteEngine On
+RewriteRule ^index\.html$ / [R=301,L]
+RewriteRule ^servicios\.html$ /servicios/ [R=301,L]
+RewriteRule ^quienes-somos\.html$ /quienes-somos/ [R=301,L]
+RewriteRule ^por-que-elegirnos\.html$ /por-que-elegirnos/ [R=301,L]
+RewriteRule ^contacto\.html$ /contacto/ [R=301,L]

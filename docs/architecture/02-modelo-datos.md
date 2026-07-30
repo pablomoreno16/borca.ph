@@ -1,0 +1,279 @@
+# Modelo de datos
+
+## Principios de modelado
+
+1. **Multi-tenant por columna, no por base de datos.** Toda tabla que
+   pertenece a una copropiedad tiene `copropiedad_id`. Nunca se crea una base
+   de datos ni un esquema por copropiedad (no escala operacionalmente a
+   miles).
+2. **Normalización estándar (3FN)** para las entidades maestras
+   (copropiedades, personas, unidades). Se acepta desnormalización puntual
+   solo donde el tiempo real lo exige (ver "peso del voto" más abajo), y
+   siempre documentada.
+3. **Todo `many-to-many` se modela con tabla intermedia explícita** (nunca
+   arrays/JSON para relaciones que necesitan integridad referencial,
+   auditoría o consultas eficientes).
+4. **Fechas de vigencia (`fecha_inicio`/`fecha_fin`)** en las relaciones que
+   cambian con el tiempo (propietario de una unidad, representación en una
+   asamblea) en vez de borrar filas — así se conserva historial para
+   auditoría legal.
+5. **Snapshots donde la ley exige trazabilidad.** El peso de un voto se
+   guarda como valor fijo en el momento de votar, no se recalcula después
+   aunque el coeficiente de la unidad cambie más adelante.
+
+## Entidades principales
+
+### Copropiedad
+La unidad de negocio (tenant). `nit`, `nombre`, `direccion`, `ciudad`,
+`fecha_registro`, `estado` (activa/inactiva).
+
+### UnidadPrivada
+Una unidad dentro de una copropiedad (apartamento, parqueadero, depósito,
+local). `copropiedad_id`, `identificador` (ej. "Apto 501"), `tipo`,
+`coeficiente` (decimal, participación sobre el total — la suma de todos los
+coeficientes de una copropiedad debe ser 1.0 / 100%, según Ley 675 art. 3).
+
+### Persona
+Cualquier individuo que el sistema conoce: propietario, apoderado, personal
+administrativo. `tipo_documento`, `numero_documento` (único junto con
+`tipo_documento`), `nombre`, `email`, `telefono`.
+
+### Propietario (tabla intermedia Persona ↔ UnidadPrivada)
+Relación muchos-a-muchos: una unidad puede tener varios copropietarios, y una
+persona puede ser propietaria de varias unidades (incluso en distintas
+copropiedades). `persona_id`, `unidad_privada_id`, `porcentaje_participacion`
+(cuando la unidad tiene más de un dueño), `fecha_inicio`, `fecha_fin`
+(nullable — nulo significa vigente).
+
+### Perfil (usuario del sistema)
+Vincula un usuario autenticado (Supabase Auth) con una `Persona` y un rol.
+`auth_user_id` (FK a `auth.users` de Supabase), `persona_id`, `copropiedad_id`
+(nullable — nulo para roles globales tipo super-admin), `rol`. Detalle
+completo de roles en [03-autenticacion-autorizacion.md](03-autenticacion-autorizacion.md).
+
+### Asamblea
+`copropiedad_id`, `tipo` (ordinaria/extraordinaria), `fecha_hora`, `estado`
+(convocada / en_curso / cerrada), `quorum_minimo` (fracción requerida, ej.
+0.51 por defecto — configurable porque los reglamentos internos pueden
+exigir más).
+
+### Convocatoria
+`asamblea_id`, `fecha_envio`, `medio` (email; SMS/WhatsApp quedan para
+cuando exista el módulo de mensajería), `orden_del_dia` (texto o tabla
+`ConvocatoriaItem` si se necesita estructura).
+
+### Asistente
+Un check-in de una `Persona` en una `Asamblea` específica — es la entidad
+clave para el cálculo de quórum y para votar. `asamblea_id`, `persona_id`,
+`fecha_registro`, `medio_verificacion` (email/sms), `estado`
+(registrado/retirado).
+
+### Representacion (Poder) — tabla intermedia Asistente ↔ UnidadPrivada
+Un asistente puede representar varias unidades (las propias más las que
+recibe por poder). `asistente_id`, `unidad_privada_id`,
+`coeficiente_representado` (snapshot del coeficiente de la unidad al momento
+del registro), `documento_poder_url` (nullable — soporte legal del poder,
+cuando aplique), `fecha_registro`.
+
+### Votacion
+`asamblea_id`, `titulo`, `estado` (abierta/cerrada), `fecha_apertura`,
+`fecha_cierre`.
+
+### Pregunta
+`votacion_id`, `texto`, `tipo` (`si_no` | `seleccion_unica` |
+`opcion_multiple`), `orden`.
+
+### OpcionRespuesta
+`pregunta_id`, `texto`, `orden`. Para `si_no` se generan automáticamente dos
+opciones ("Sí"/"No") para mantener el mismo modelo en todos los tipos.
+
+### Voto
+`pregunta_id`, `asistente_id`, `opcion_respuesta_id`,
+**`peso_coeficiente`** (snapshot: suma de los `coeficiente_representado` del
+asistente al momento de votar — no se recalcula si después cambian los
+poderes), `fecha_hora`.
+**Restricción única:** `UNIQUE(pregunta_id, asistente_id)` — garantiza a
+nivel de base de datos que nadie vote dos veces en la misma pregunta, sin
+depender de que el frontend se comporte bien.
+
+### AuditLog (bitácora)
+`tabla`, `registro_id`, `accion` (insert/update/delete), `usuario_id`,
+`valores_antes` (jsonb), `valores_despues` (jsonb), `fecha_hora`. Se llena
+mediante triggers de Postgres en las tablas sensibles (Asamblea, Votacion,
+Voto, Propietario, Representacion), no desde código de aplicación — así
+ningún camino de escritura se puede saltar la auditoría.
+
+## Diagrama entidad-relación
+
+```mermaid
+erDiagram
+    COPROPIEDAD ||--o{ UNIDAD_PRIVADA : contiene
+    COPROPIEDAD ||--o{ ASAMBLEA : convoca
+    COPROPIEDAD ||--o{ PERFIL : tiene
+
+    PERSONA ||--o{ PROPIETARIO : es
+    UNIDAD_PRIVADA ||--o{ PROPIETARIO : tiene_duenos
+
+    PERSONA ||--o{ PERFIL : autentica_como
+    PERSONA ||--o{ ASISTENTE : participa_como
+
+    ASAMBLEA ||--o{ CONVOCATORIA : genera
+    ASAMBLEA ||--o{ ASISTENTE : registra
+    ASAMBLEA ||--o{ VOTACION : contiene
+
+    ASISTENTE ||--o{ REPRESENTACION : representa
+    UNIDAD_PRIVADA ||--o{ REPRESENTACION : es_representada
+
+    VOTACION ||--o{ PREGUNTA : incluye
+    PREGUNTA ||--o{ OPCION_RESPUESTA : ofrece
+    PREGUNTA ||--o{ VOTO : recibe
+    ASISTENTE ||--o{ VOTO : emite
+    OPCION_RESPUESTA ||--o{ VOTO : elegida_en
+
+    COPROPIEDAD {
+        uuid id PK
+        text nit
+        text nombre
+        text ciudad
+        text estado
+    }
+    UNIDAD_PRIVADA {
+        uuid id PK
+        uuid copropiedad_id FK
+        text identificador
+        text tipo
+        numeric coeficiente
+    }
+    PERSONA {
+        uuid id PK
+        text tipo_documento
+        text numero_documento
+        text nombre
+        text email
+        text telefono
+    }
+    PROPIETARIO {
+        uuid id PK
+        uuid persona_id FK
+        uuid unidad_privada_id FK
+        numeric porcentaje_participacion
+        date fecha_inicio
+        date fecha_fin
+    }
+    PERFIL {
+        uuid id PK
+        uuid auth_user_id FK
+        uuid persona_id FK
+        uuid copropiedad_id FK
+        text rol
+    }
+    ASAMBLEA {
+        uuid id PK
+        uuid copropiedad_id FK
+        text tipo
+        timestamptz fecha_hora
+        text estado
+        numeric quorum_minimo
+    }
+    CONVOCATORIA {
+        uuid id PK
+        uuid asamblea_id FK
+        timestamptz fecha_envio
+        text medio
+        text orden_del_dia
+    }
+    ASISTENTE {
+        uuid id PK
+        uuid asamblea_id FK
+        uuid persona_id FK
+        timestamptz fecha_registro
+        text medio_verificacion
+        text estado
+    }
+    REPRESENTACION {
+        uuid id PK
+        uuid asistente_id FK
+        uuid unidad_privada_id FK
+        numeric coeficiente_representado
+        text documento_poder_url
+    }
+    VOTACION {
+        uuid id PK
+        uuid asamblea_id FK
+        text titulo
+        text estado
+        timestamptz fecha_apertura
+        timestamptz fecha_cierre
+    }
+    PREGUNTA {
+        uuid id PK
+        uuid votacion_id FK
+        text texto
+        text tipo
+        int orden
+    }
+    OPCION_RESPUESTA {
+        uuid id PK
+        uuid pregunta_id FK
+        text texto
+        int orden
+    }
+    VOTO {
+        uuid id PK
+        uuid pregunta_id FK
+        uuid asistente_id FK
+        uuid opcion_respuesta_id FK
+        numeric peso_coeficiente
+        timestamptz fecha_hora
+    }
+```
+
+## Cálculo de quórum y resultados (vistas, no lógica de aplicación)
+
+El quórum y los resultados de una votación se calculan con **vistas SQL**
+(o funciones), nunca sumando en memoria desde el backend — así el número
+mostrado es siempre consistente con lo que hay realmente en la base de
+datos, incluso con múltiples votos llegando al mismo tiempo:
+
+```sql
+-- Quórum representado en una asamblea, en tiempo real
+create view quorum_asamblea as
+select
+  a.id as asamblea_id,
+  coalesce(sum(r.coeficiente_representado), 0) as coeficiente_representado,
+  (select sum(u.coeficiente) from unidad_privada u where u.copropiedad_id = a.copropiedad_id) as coeficiente_total
+from asamblea a
+left join asistente asi on asi.asamblea_id = a.id and asi.estado = 'registrado'
+left join representacion r on r.asistente_id = asi.id
+group by a.id;
+```
+
+Supabase Realtime escucha cambios en `asistente` y `representacion` para
+refrescar esta vista en el frontend sin recargar la página (detalle completo
+en [04-api-y-tiempo-real.md](04-api-y-tiempo-real.md)).
+
+## Restricciones e índices clave
+
+- `UNIQUE(pregunta_id, asistente_id)` en `voto` — un asistente, un voto por
+  pregunta.
+- `UNIQUE(persona_id, unidad_privada_id, fecha_inicio)` en `propietario` —
+  evita duplicar el mismo período de propiedad.
+- `UNIQUE(asistente_id, unidad_privada_id)` en `representacion` — una unidad
+  no puede ser representada dos veces por el mismo asistente.
+- `CHECK` en `unidad_privada.coeficiente` y `representacion.coeficiente_representado`
+  para que sean `>= 0`.
+- Índice compuesto `(copropiedad_id, ...)` en toda tabla tenant-scoped — es
+  la columna por la que filtra RLS en cada consulta, así que debe estar
+  indexada siempre.
+- Índice en `voto(pregunta_id)` y `asistente(asamblea_id)` — son las
+  consultas más frecuentes durante una votación en vivo.
+
+## Pendiente de validar con el negocio antes de implementar
+
+- ¿Una copropiedad puede tener más de un `quorum_minimo` según el tipo de
+  decisión (ordinaria vs. reforma de reglamento, que en la Ley 675 exige
+  mayorías calificadas distintas)? Si es así, `Votacion` necesita su propio
+  `mayoria_requerida` en vez de heredar solo el de `Asamblea`.
+- ¿Los poderes (`documento_poder_url`) requieren aprobación de un admin antes
+  de contar en el quórum, o se aceptan al momento del registro? Afecta si
+  `Representacion` necesita un campo `estado` (pendiente/aprobado).
