@@ -12,8 +12,12 @@ const NAV_LINKS = [
   { href: "/contacto", label: "Contacto" },
 ];
 
+// Con trailingSlash:true las URLs reales terminan en "/" (ej. "/servicios/"),
+// así que se normaliza antes de comparar contra NAV_LINKS.
+const stripTrailingSlash = (path: string) => (path.length > 1 ? path.replace(/\/$/, "") : path);
+
 export function Header() {
-  const pathname = usePathname();
+  const pathname = stripTrailingSlash(usePathname());
   const [menuOpen, setMenuOpen] = useState(false);
   const navbarRef = useRef<HTMLElement>(null);
 
