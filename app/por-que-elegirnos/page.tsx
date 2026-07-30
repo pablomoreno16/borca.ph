@@ -1,5 +1,5 @@
+import { ButterflyIcon } from "@/shared/ui/ButterflyIcon";
 import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "¿Por qué elegirnos? – BORCA",
@@ -216,9 +216,14 @@ export default function PorQueElegirnosPage() {
       <section className="cta-strip">
         <h2>Comencemos a transformar tu copropiedad.</h2>
         <p>Estamos listos para acompañarte.</p>
-        <Link href="/contacto" className="btn-cta">
-          <i className="fa-solid fa-magnifying-glass"></i> Contáctanos
-        </Link>
+        <a
+          href="https://wa.me/573053498787?text=Hola+BORCA%2C+me+interesa+el+servicio+de+Administraci%C3%B3n+de+PH"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-cta"
+        >
+          <ButterflyIcon /> Contáctanos
+        </a>
       </section>
     </>
   );

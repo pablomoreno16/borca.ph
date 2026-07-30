@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Servicios – BORCA",
@@ -157,12 +156,6 @@ export default function ServiciosPage() {
                 acompañamiento técnico, jurídico y administrativo en procesos complejos de
                 gestión de copropiedades.
               </p>
-              <Link
-                href="/contacto"
-                className="btn-cta text-[14.5px] py-[11px] px-6 bg-card-beige text-[#a07840] border-[1.5px] border-[#e0c88a]"
-              >
-                <i className="fa-solid fa-phone"></i> Solicitar consulta
-              </Link>
             </div>
           </div>
 
@@ -252,9 +245,14 @@ export default function ServiciosPage() {
       <section className="cta-strip">
         <h2>¿Cuál servicio necesita tu copropiedad?</h2>
         <p>Cuéntanos sobre tu comunidad y diseñamos una propuesta a la medida.</p>
-        <Link href="/contacto" className="btn-cta">
+        <a
+          href="https://wa.me/573053498787?text=Hola+BORCA%2C+me+interesa+el+servicio+de+Administraci%C3%B3n+de+PH"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-cta"
+        >
           <i className="fa-solid fa-paper-plane"></i> Solicita tu propuesta
-        </Link>
+        </a>
       </section>
     </>
   );

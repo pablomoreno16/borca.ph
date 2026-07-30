@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Quiénes somos – BORCA",
@@ -220,9 +219,14 @@ export default function QuienesSomosPage() {
       <section className="cta-strip">
         <h2>¿Quieres conocernos en persona?</h2>
         <p>Agenda una reunión con nuestro equipo y descubre cómo transformamos copropiedades.</p>
-        <Link href="/contacto" className="btn-cta">
+        <a
+          href="https://wa.me/573053498787?text=Hola+BORCA%2C+me+interesa+el+servicio+de+Administraci%C3%B3n+de+PH"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-cta"
+        >
           <i className="fa-solid fa-calendar-check"></i> Agenda una reunión
-        </Link>
+        </a>
       </section>
     </>
   );
