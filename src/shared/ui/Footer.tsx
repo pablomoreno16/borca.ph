@@ -39,13 +39,13 @@ export function Footer() {
           <h4>Servicios</h4>
           <ul>
             <li>
-              <Link href="/servicios">Administración PH</Link>
+              <Link href="/servicios/#administracion-ph">Administración PH</Link>
             </li>
             <li>
-              <Link href="/servicios">Consultoría PH</Link>
+              <Link href="/servicios/#consultoria-ph">Consultoría PH</Link>
             </li>
             <li>
-              <Link href="/servicios">Servicios Especializados</Link>
+              <Link href="/servicios/#servicios-especializados">Servicios Especializados</Link>
             </li>
           </ul>
         </div>
