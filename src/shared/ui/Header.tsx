@@ -38,6 +38,14 @@ export function Header() {
         <Link href="/" className="nav-logo">
           <img src="/images/logo-borca.png" alt="BORCA" className="logo-img" />
         </Link>
+        <div className="leading-[1.1] text-teal">
+          <p className="font-['Montserrat'] font-medium uppercase text-[10px] tracking-[0.5px] md:text-[15px] md:tracking-[1px]">
+            Transformamos
+          </p>
+          <p className="font-['Cormorant_Garamond'] italic text-[15px] md:text-[22px]">
+            copropiedades
+          </p>
+        </div>
         <button
           className="nav-toggle"
           id="navToggle"

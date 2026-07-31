@@ -6,9 +6,9 @@ export function Footer() {
       <div className="footer-grid">
         <div className="footer-brand">
           <img
-            src="/images/borca.png"
+            src="/images/logo-borca.png"
             alt="BORCA"
-            className="w-[100px] h-[100px] object-contain mb-3.5"
+            className="w-[130px] h-auto object-contain mb-3.5"
           />
           <p>
             Transformamos copropiedades en comunidades organizadas, sostenibles y tranquilas
