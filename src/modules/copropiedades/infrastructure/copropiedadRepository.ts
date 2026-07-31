@@ -1,14 +1,31 @@
 import { supabase } from "@/shared/supabase/client";
 import type { Tables } from "@/shared/supabase/database.types";
-import type { Copropiedad, CopropiedadInput, FilaImportada, PaginaUnidades, UnidadPrivada } from "../domain/types";
+import type {
+  Copropiedad,
+  CopropiedadInput,
+  FilaImportada,
+  PaginaUnidades,
+  UnidadPrivada,
+  UnidadPrivadaInput,
+} from "../domain/types";
 
 type Fila = Tables<"copropiedad">;
 type FilaUnidad = Tables<"unidad_privada">;
+
+// Selección con el propietario actual embebido (join a través de la FK
+// propietario.unidad_privada_id) para mostrar su nombre sin una consulta
+// aparte por unidad.
+const SELECT_UNIDAD_CON_PROPIETARIO = "*, propietario(fecha_fin, fecha_inicio, persona(nombre))";
+
+type FilaUnidadConPropietario = FilaUnidad & {
+  propietario: { fecha_fin: string | null; fecha_inicio: string; persona: { nombre: string } | null }[] | null;
+};
 
 function aDominio(fila: Fila): Copropiedad {
   return {
     id: fila.id,
     nombre: fila.nombre,
+    tipo: fila.tipo as Copropiedad["tipo"],
     nit: fila.nit,
     direccion: fila.direccion,
     ciudad: fila.ciudad,
@@ -24,6 +41,7 @@ function aDominio(fila: Fila): Copropiedad {
 function aFila(input: CopropiedadInput) {
   return {
     nombre: input.nombre,
+    tipo: input.tipo,
     nit: input.nit,
     direccion: input.direccion,
     ciudad: input.ciudad,
@@ -36,7 +54,13 @@ function aFila(input: CopropiedadInput) {
   };
 }
 
-function unidadADominio(fila: FilaUnidad): UnidadPrivada {
+// El propietario "actual" es el que no tiene fecha_fin; si por algún motivo
+// hay más de uno sin cerrar, se toma el de fecha_inicio más reciente.
+function unidadADominio(fila: FilaUnidadConPropietario): UnidadPrivada {
+  const propietarios = fila.propietario ?? [];
+  const actual =
+    propietarios.find((p) => p.fecha_fin === null) ??
+    [...propietarios].sort((a, b) => b.fecha_inicio.localeCompare(a.fecha_inicio))[0];
   return {
     id: fila.id,
     copropiedadId: fila.copropiedad_id,
@@ -44,6 +68,7 @@ function unidadADominio(fila: FilaUnidad): UnidadPrivada {
     identificador: fila.identificador,
     tipo: fila.tipo as UnidadPrivada["tipo"],
     coeficiente: fila.coeficiente,
+    propietarioNombre: actual?.persona?.nombre ?? null,
   };
 }
 
@@ -76,26 +101,45 @@ export async function actualizarCopropiedad(id: string, input: CopropiedadInput)
   return aDominio(data);
 }
 
+type FilaUnidadVista = Tables<"unidad_privada_detalle">;
+
+function unidadVistaADominio(fila: FilaUnidadVista): UnidadPrivada {
+  return {
+    id: fila.id!,
+    copropiedadId: fila.copropiedad_id!,
+    bloque: fila.bloque!,
+    identificador: fila.identificador!,
+    tipo: fila.tipo as UnidadPrivada["tipo"],
+    coeficiente: fila.coeficiente!,
+    propietarioNombre: fila.nombre_propietario,
+  };
+}
+
 interface OpcionesPaginaUnidades {
   pagina: number;
   porPagina: number;
-  filtroApartamento?: string;
+  filtro?: string;
 }
 
+// unidad_privada_detalle: vista que ya trae el nombre del propietario actual
+// aplanado en la fila — PostgREST no permite un .or() que combine una
+// columna propia con una del embed relacionado, así que filtrar por
+// "# de apartamento o nombre del propietario" a la vez necesita esta vista.
 export async function listarUnidadesPaginadas(
   copropiedadId: string,
-  { pagina, porPagina, filtroApartamento }: OpcionesPaginaUnidades
+  { pagina, porPagina, filtro }: OpcionesPaginaUnidades
 ): Promise<PaginaUnidades> {
   const desde = (pagina - 1) * porPagina;
   const hasta = desde + porPagina - 1;
 
   let consulta = supabase
-    .from("unidad_privada")
+    .from("unidad_privada_detalle")
     .select("*", { count: "exact" })
     .eq("copropiedad_id", copropiedadId);
 
-  if (filtroApartamento?.trim()) {
-    consulta = consulta.ilike("identificador", `%${filtroApartamento.trim()}%`);
+  const termino = filtro?.trim().replace(/[,()]/g, "");
+  if (termino) {
+    consulta = consulta.or(`identificador.ilike.%${termino}%,nombre_propietario.ilike.%${termino}%`);
   }
 
   const { data, error, count } = await consulta
@@ -104,7 +148,49 @@ export async function listarUnidadesPaginadas(
     .range(desde, hasta);
   if (error) throw error;
 
-  return { items: (data ?? []).map(unidadADominio), total: count ?? 0 };
+  return { items: (data ?? []).map(unidadVistaADominio), total: count ?? 0 };
+}
+
+export async function obtenerSumaCoeficientes(copropiedadId: string): Promise<number> {
+  const { data, error } = await supabase.from("unidad_privada").select("coeficiente").eq("copropiedad_id", copropiedadId);
+  if (error) throw error;
+  return (data ?? []).reduce((acc, fila) => acc + fila.coeficiente, 0);
+}
+
+export async function obtenerUnidad(id: string): Promise<UnidadPrivada> {
+  const { data, error } = await supabase
+    .from("unidad_privada")
+    .select(SELECT_UNIDAD_CON_PROPIETARIO)
+    .eq("id", id)
+    .single();
+  if (error) throw error;
+  return unidadADominio(data);
+}
+
+export async function actualizarUnidad(id: string, input: UnidadPrivadaInput): Promise<UnidadPrivada> {
+  const { data, error } = await supabase
+    .from("unidad_privada")
+    .update({
+      bloque: input.bloque,
+      identificador: input.identificador,
+      tipo: input.tipo,
+      coeficiente: input.coeficiente,
+    })
+    .eq("id", id)
+    .select(SELECT_UNIDAD_CON_PROPIETARIO)
+    .single();
+  if (error) throw error;
+  return unidadADominio(data);
+}
+
+// Borra primero los propietario ligados a la unidad (la FK no tiene cascade)
+// y luego la unidad. No borra la persona: podría tener otras unidades.
+export async function eliminarUnidad(id: string): Promise<void> {
+  const { error: errorPropietarios } = await supabase.from("propietario").delete().eq("unidad_privada_id", id);
+  if (errorPropietarios) throw errorPropietarios;
+
+  const { error } = await supabase.from("unidad_privada").delete().eq("id", id);
+  if (error) throw error;
 }
 
 // Crea persona + unidad_privada + propietario para cada fila del Excel, en

@@ -1,8 +1,15 @@
-import type { CopropiedadInput, FilaImportada, ResumenImportacion } from "./types";
+import type { CopropiedadInput, FilaImportada, ResumenImportacion, UnidadPrivadaInput } from "./types";
 
 export function validarCopropiedad(input: CopropiedadInput): string[] {
   const errores: string[] = [];
   if (!input.nombre.trim()) errores.push("El nombre es obligatorio.");
+  return errores;
+}
+
+export function validarUnidad(input: UnidadPrivadaInput): string[] {
+  const errores: string[] = [];
+  if (!input.identificador.trim()) errores.push("El número de la unidad es obligatorio.");
+  if (!(input.coeficiente > 0)) errores.push("El coeficiente debe ser mayor a 0.");
   return errores;
 }
 

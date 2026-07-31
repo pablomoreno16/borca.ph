@@ -1,9 +1,11 @@
 export type EstadoCopropiedad = "activa" | "inactiva";
 export type TipoCuenta = "ahorros" | "corriente";
+export type TipoCopropiedad = "residencial" | "comercial" | "mixta";
 
 export interface Copropiedad {
   id: string;
   nombre: string;
+  tipo: TipoCopropiedad;
   nit: string | null;
   direccion: string | null;
   ciudad: string | null;
@@ -42,7 +44,10 @@ export interface UnidadPrivada {
   identificador: string;
   tipo: TipoUnidad;
   coeficiente: number;
+  propietarioNombre: string | null;
 }
+
+export type UnidadPrivadaInput = Pick<UnidadPrivada, "bloque" | "identificador" | "tipo" | "coeficiente">;
 
 export interface PaginaUnidades {
   items: UnidadPrivada[];

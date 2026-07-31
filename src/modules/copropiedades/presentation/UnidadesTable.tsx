@@ -1,16 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useUnidadesPaginadas } from "../application/useUnidadesPaginadas";
+import { useSumaCoeficientes } from "../application/useSumaCoeficientes";
+import { TIPO_UNIDAD_LABEL } from "../domain/etiquetas";
 
 const OPCIONES_POR_PAGINA = [10, 20, 50, 100];
-
-const TIPO_LABEL: Record<string, string> = {
-  apartamento: "Apartamento",
-  parqueadero: "Parqueadero",
-  deposito: "Depósito",
-  local: "Local",
-  oficina: "Oficina",
-};
 
 interface Props {
   copropiedadId: string;
@@ -30,14 +25,20 @@ export function UnidadesTable({ copropiedadId }: Props) {
     cambiarPorPagina,
     cambiarFiltro,
   } = useUnidadesPaginadas(copropiedadId);
+  const sumaCoeficientes = useSumaCoeficientes(copropiedadId);
 
   return (
     <div className="flex flex-col gap-3.5">
+      {sumaCoeficientes !== null && (
+        <p className="text-sm font-semibold text-text-body">
+          Total coeficientes: {(sumaCoeficientes * 100).toFixed(2)}%
+        </p>
+      )}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <input
           value={filtro}
           onChange={(e) => cambiarFiltro(e.target.value)}
-          placeholder="Filtrar por # de apartamento"
+          placeholder="Filtrar por # o propietario"
           className="rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[14px] w-[240px]"
         />
         <div className="flex items-center gap-2 text-sm text-text-body">
@@ -71,7 +72,8 @@ export function UnidadesTable({ copropiedadId }: Props) {
             <thead>
               <tr className="border-b border-[#e5e9e8] text-text-body">
                 <th className="py-2 pr-3">Bloque</th>
-                <th className="py-2 pr-3">Apartamento</th>
+                <th className="py-2 pr-3">#</th>
+                <th className="py-2 pr-3">Propietario</th>
                 <th className="py-2 pr-3">Tipo</th>
                 <th className="py-2 pr-3">Coeficiente</th>
               </tr>
@@ -80,8 +82,13 @@ export function UnidadesTable({ copropiedadId }: Props) {
               {items.map((unidad) => (
                 <tr key={unidad.id} className="border-b border-[#eef2f1]">
                   <td className="py-2 pr-3">{unidad.bloque}</td>
-                  <td className="py-2 pr-3 font-semibold">{unidad.identificador}</td>
-                  <td className="py-2 pr-3 text-text-body">{TIPO_LABEL[unidad.tipo] ?? unidad.tipo}</td>
+                  <td className="py-2 pr-3 font-semibold">
+                    <Link href={`/admin/copropiedades/unidad?id=${unidad.id}`} className="text-teal hover:underline">
+                      {unidad.identificador}
+                    </Link>
+                  </td>
+                  <td className="py-2 pr-3 text-text-body">{unidad.propietarioNombre ?? "—"}</td>
+                  <td className="py-2 pr-3 text-text-body">{TIPO_UNIDAD_LABEL[unidad.tipo] ?? unidad.tipo}</td>
                   <td className="py-2 pr-3 text-text-body">{(unidad.coeficiente * 100).toFixed(2)}%</td>
                 </tr>
               ))}

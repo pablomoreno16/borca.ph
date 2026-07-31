@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import type { Copropiedad, CopropiedadInput, EstadoCopropiedad, TipoCuenta } from "../domain/types";
+import type { Copropiedad, CopropiedadInput, EstadoCopropiedad, TipoCopropiedad, TipoCuenta } from "../domain/types";
 
 interface Props {
   itemInicial?: Copropiedad;
@@ -11,6 +11,7 @@ interface Props {
 
 export function CopropiedadForm({ itemInicial, onGuardar, onCancelar }: Props) {
   const [nombre, setNombre] = useState(itemInicial?.nombre ?? "");
+  const [tipo, setTipo] = useState<TipoCopropiedad>(itemInicial?.tipo ?? "residencial");
   const [nit, setNit] = useState(itemInicial?.nit ?? "");
   const [estado, setEstado] = useState<EstadoCopropiedad>(itemInicial?.estado ?? "activa");
   const [direccion, setDireccion] = useState(itemInicial?.direccion ?? "");
@@ -31,6 +32,7 @@ export function CopropiedadForm({ itemInicial, onGuardar, onCancelar }: Props) {
       await onGuardar(
         {
           nombre,
+          tipo,
           nit: nit.trim() ? nit : null,
           estado,
           direccion: direccion.trim() ? direccion : null,
@@ -62,6 +64,18 @@ export function CopropiedadForm({ itemInicial, onGuardar, onCancelar }: Props) {
             onChange={(e) => setNombre(e.target.value)}
             className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
           />
+        </div>
+        <div>
+          <label className="block text-sm font-bold mb-1">Tipo</label>
+          <select
+            value={tipo}
+            onChange={(e) => setTipo(e.target.value as TipoCopropiedad)}
+            className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
+          >
+            <option value="residencial">Residencial</option>
+            <option value="comercial">Comercial</option>
+            <option value="mixta">Mixta</option>
+          </select>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>

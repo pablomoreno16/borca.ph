@@ -125,6 +125,7 @@ export type Database = {
           nombre: string
           numero_cuenta: string | null
           telefono: string | null
+          tipo: string
           tipo_cuenta: string | null
           updated_at: string
         }
@@ -140,6 +141,7 @@ export type Database = {
           nombre: string
           numero_cuenta?: string | null
           telefono?: string | null
+          tipo?: string
           tipo_cuenta?: string | null
           updated_at?: string
         }
@@ -155,6 +157,7 @@ export type Database = {
           nombre?: string
           numero_cuenta?: string | null
           telefono?: string | null
+          tipo?: string
           tipo_cuenta?: string | null
           updated_at?: string
         }
@@ -300,6 +303,13 @@ export type Database = {
             referencedRelation: "unidad_privada"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "propietario_unidad_privada_id_fkey"
+            columns: ["unidad_privada_id"]
+            isOneToOne: false
+            referencedRelation: "unidad_privada_detalle"
+            referencedColumns: ["id"]
+          },
         ]
       }
       unidad_privada: {
@@ -345,7 +355,26 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      unidad_privada_detalle: {
+        Row: {
+          bloque: string | null
+          coeficiente: number | null
+          copropiedad_id: string | null
+          id: string | null
+          identificador: string | null
+          nombre_propietario: string | null
+          tipo: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "unidad_privada_copropiedad_id_fkey"
+            columns: ["copropiedad_id"]
+            isOneToOne: false
+            referencedRelation: "copropiedad"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       fn_tiene_rol: { Args: { rol_buscado: string }; Returns: boolean }

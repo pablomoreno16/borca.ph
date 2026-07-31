@@ -16,7 +16,7 @@ export function useUnidadesPaginadas(copropiedadId: string) {
   // en el cuerpo del efecto), como pide react-hooks/set-state-in-effect.
   useEffect(() => {
     let activo = true;
-    listarUnidadesPaginadas(copropiedadId, { pagina, porPagina, filtroApartamento: filtro })
+    listarUnidadesPaginadas(copropiedadId, { pagina, porPagina, filtro })
       .then((resultado) => {
         if (activo) setDatos(resultado);
       })
