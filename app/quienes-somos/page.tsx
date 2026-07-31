@@ -28,16 +28,16 @@ export default function QuienesSomosPage() {
       {/* MISIÓN / VISIÓN / VALORES */}
       <section className="bg-white">
         <div className="section-wrap section-pad">
-          <div className="cards-grid-3">
+          <div className="cards-grid-2">
             <div className="card card-teal">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-bullseye"></i>
               </div>
               <h3>Nuestra Misión</h3>
               <p>
-                Transformar copropiedades mediante una gestión integral eficiente, transparente
-                y humana, enfocada en la protección del patrimonio, la optimización de recursos
-                y el fortalecimiento de las comunidades.
+                Transformamos copropiedades mediante una administración estratégica, transparente, humana
+                y eficiente, creando comunidades más organizadas, sostenibles y tranquilas. Trabajamos para
+                proteger el patrimonio, optimizar los recursos y generar confianza en cada decisión.
               </p>
             </div>
             <div className="card card-gray">
@@ -46,19 +46,9 @@ export default function QuienesSomosPage() {
               </div>
               <h3>Nuestra Visión</h3>
               <p>
-                Ser una empresa líder en transformación y administración de Propiedad
-                Horizontal en Colombia, reconocida por excelencia operativa, innovación y
-                capacidad para generar bienestar y valorización.
-              </p>
-            </div>
-            <div className="card card-border">
-              <div className="card-icon-lg">
-                <i className="fa-solid fa-gem"></i>
-              </div>
-              <h3>Nuestro Propósito</h3>
-              <p>
-                Transformar comunidades mediante una administración consciente que promueva
-                convivencia, sostenibilidad y valorización de los inmuebles.
+                Ser la empresa líder en administración y transformación de propiedad horizontal,
+                reconocida por su excelencia operativa, innovación, transparencia y compromiso con
+                la creación de comunidades organizadas, sostenibles y de alto valor patrimonial.
               </p>
             </div>
           </div>
@@ -83,7 +73,7 @@ export default function QuienesSomosPage() {
                 Nuestro enfoque está orientado a la optimización de recursos, la sana
                 convivencia y la valorización del patrimonio de cada copropiedad. Trabajamos con
                 cada comunidad como si fuera la nuestra, comprometidos con su transformación y
-                bienestar a largo plazo.
+                bienestar.
               </p>
               <p className="text-[15.5px] text-text-body leading-[1.8]">
                 Con más de 10 años de experiencia en el sector, hemos aprendido que administrar
@@ -155,7 +145,7 @@ export default function QuienesSomosPage() {
                 <i className="fa-solid fa-chart-line"></i>
               </div>
               <h3>Progreso</h3>
-              <p>Trabajamos por el crecimiento, sostenibilidad y valorización de cada comunidad a largo plazo.</p>
+              <p>Trabajamos por el crecimiento, sostenibilidad y valorización de cada copropiedad.</p>
             </div>
           </div>
         </div>
@@ -181,7 +171,8 @@ export default function QuienesSomosPage() {
               </div>
               <h4 className="text-[15.5px] font-extrabold mb-1">Gestores dedicados</h4>
               <p className="text-sm text-text-body leading-[1.65]">
-                Profesional asignado a cada copropiedad conoce su realidad en profundidad.
+                Un administrador delegado para cada copropiedad, que comprende su realidad, identifica sus 
+                necesidades y brinda un acompañamiento cercano y permanente.
               </p>
             </div>
             <div className="card card-gray text-center">

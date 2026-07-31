@@ -12,12 +12,18 @@ export default function ServiciosPage() {
         <div className="page-hero-inner">
           <p className="page-hero-label">Lo que ofrecemos</p>
           <h1>
-            Soluciones integrales <span>para tu copropiedad</span>
+            Soluciones integrales 
+            <br />
+            <span>para tu copropiedad</span>
           </h1>
           <p>
-            Brindamos servicios especializados para la administración y fortalecimiento de
-            propiedades horizontales, mediante una gestión estratégica enfocada en eficiencia,
-            tranquilidad y protección del patrimonio.
+            Ponemos a su disposición un portafolio de servicios diseñado para atender las
+            necesidades administrativas, financieras, operativas, legales y de mantenimiento
+            de copropiedades residenciales, comerciales y mixtas.
+          </p>
+          <p>
+            Ofrecemos un servicio integral, respaldado por procesos especializados y soluciones
+            adaptadas a las necesidades de cada copropiedad.
           </p>
         </div>
       </section>
@@ -37,9 +43,9 @@ export default function ServiciosPage() {
                 <span>Propiedad Horizontal</span>
               </h2>
               <p className="text-[15px] text-text-body leading-[1.8] mb-6">
-                Gerencia integral de copropiedades residenciales, comerciales, mixtas,
-                corporativas e industriales, mediante planes de trabajo diseñados según las
-                necesidades específicas de cada comunidad.
+                Gerencia integral de copropiedades residenciales, comerciales y mixtas,
+                mediante planes de trabajo diseñados según las necesidades específicas
+                de cada copropiedad.
               </p>
               <h4 className="text-[15.5px] font-extrabold mb-3.5">Nuestra gestión está enfocada en:</h4>
               <div className="check-item">
@@ -47,8 +53,24 @@ export default function ServiciosPage() {
                   <i className="fa-solid fa-check"></i>
                 </span>
                 <div>
+                  <strong>Recuperación de cartera</strong>
+                  <p>
+                    Implementación de estrategias de cobro preventivo, persuasivo, prejurídico y jurídico para
+                    fortalecer el recaudo y garantizar el adecuado funcionamiento de la copropiedad.
+                  </p>
+                </div>
+              </div>
+              <div className="check-item">
+                <span className="check-dot">
+                  <i className="fa-solid fa-check"></i>
+                </span>
+                <div>
                   <strong>Optimización financiera</strong>
-                  <p>Control riguroso de presupuestos e ingresos.</p>
+                  <p>
+                    Elaboración de informes financieros claros y detallados, acompañados de un
+                    seguimiento permanente al presupuesto, para facilitar la toma de decisiones y
+                    el control eficiente de los recursos de la copropiedad.
+                  </p>
                 </div>
               </div>
               <div className="check-item">
@@ -57,7 +79,11 @@ export default function ServiciosPage() {
                 </span>
                 <div>
                   <strong>Control administrativo</strong>
-                  <p>Procesos ágiles y documentación completa.</p>
+                  <p>Gestión integral de los procesos administrativos, documentales y legales de la
+                    copropiedad, incluyendo el seguimiento a contratos, pólizas de seguros, obligaciones
+                    normativas y cumplimiento de la Ley 675 de 2001, para garantizar el correcto funcionamiento
+                    y la sostenibilidad de la copropiedad.
+                  </p>
                 </div>
               </div>
               <div className="check-item">
@@ -65,8 +91,11 @@ export default function ServiciosPage() {
                   <i className="fa-solid fa-check"></i>
                 </span>
                 <div>
-                  <strong>Mantenimiento preventivo</strong>
-                  <p>Cuidado integral de bienes comunes.</p>
+                  <strong>Mantenimientos</strong>
+                  <p>
+                    Planificación, coordinación y supervisión del mantenimiento preventivo de las áreas
+                    y bienes comunes, prolongando su vida útil, reduciendo costos y previniendo fallas.
+                  </p>
                 </div>
               </div>
               <div className="check-item">
@@ -75,7 +104,10 @@ export default function ServiciosPage() {
                 </span>
                 <div>
                   <strong>Seguridad y convivencia</strong>
-                  <p>Ambientes seguros y armónicos para todos.</p>
+                  <p>
+                    Promoción de entornos seguros y armónicos mediante campañas de cultura ciudadana, estrategias
+                    preventivas, el cumplimiento del Reglamento de Propiedad Horizontal y el Manual de Convivencia.
+                  </p>
                 </div>
               </div>
             </div>
@@ -83,10 +115,10 @@ export default function ServiciosPage() {
               <div className="card card-border bg-white">
                 <div className="flex items-center gap-3 mb-2">
                   <i className="fa-solid fa-file-invoice-dollar text-teal text-xl"></i>
-                  <strong className="text-[14.5px]">Informes financieros detallados</strong>
+                  <strong className="text-[14.5px]">Administrador delegado</strong>
                 </div>
                 <p className="text-sm text-text-body leading-[1.6]">
-                  Estados de cuenta precisos con todos los movimientos económicos.
+                  Acompañamiento permanente por un profesional que conoce las necesidades de su copropiedad y lidera su gestión.
                 </p>
               </div>
               <div className="card card-border bg-white">
@@ -95,7 +127,7 @@ export default function ServiciosPage() {
                   <strong className="text-[14.5px]">Portal digital para propietarios</strong>
                 </div>
                 <p className="text-sm text-text-body leading-[1.6]">
-                  Acceso en línea a recibos, actas y comunicados.
+                  Acceso en línea a RPH, manual de convivencia, facturación, recibos, actas, estados financieros, reservas de zonas comunes y comunicados.
                 </p>
               </div>
               <div className="card card-border bg-white">
@@ -120,7 +152,7 @@ export default function ServiciosPage() {
                 <div className="card card-border bg-white py-3.5 px-4">
                   <div className="flex items-center gap-2.5">
                     <i className="fa-solid fa-gavel text-[#a07840] text-lg"></i>
-                    <span className="text-sm font-bold">Interpretación Ley 675</span>
+                    <span className="text-sm font-bold">Interpretación de la Ley 675 de 2001</span>
                   </div>
                 </div>
                 <div className="card card-border bg-white py-3.5 px-4">
@@ -181,7 +213,7 @@ export default function ServiciosPage() {
                 </span>
                 <div>
                   <strong>Contabilidad y cartera</strong>
-                  <p>Gestión completa de cuentas y cobro de cuotas morosas.</p>
+                  <p>Administración contable, gestión financiera, elaboración de estados financieros, proyectos de presupuesto y facturación.</p>
                 </div>
               </div>
               <div className="check-item">
@@ -190,7 +222,7 @@ export default function ServiciosPage() {
                 </span>
                 <div>
                   <strong>Mantenimiento locativo</strong>
-                  <p>Reparación y mantenimiento preventivo de infraestructuras.</p>
+                  <p>Mantenimiento preventivo y correctivo de las instalaciones, reparaciones locativas y conservación de las áreas comunes.</p>
                 </div>
               </div>
               <div className="check-item">
@@ -199,7 +231,7 @@ export default function ServiciosPage() {
                 </span>
                 <div>
                   <strong>Aseo, jardinería y seguridad</strong>
-                  <p>Servicios operativos continuos para bienes comunes.</p>
+                  <p>Servicios operativos que garantizan espacios limpios, seguros y en óptimas condiciones.</p>
                 </div>
               </div>
               <div className="check-item">
@@ -207,8 +239,20 @@ export default function ServiciosPage() {
                   <i className="fa-solid fa-check"></i>
                 </span>
                 <div>
-                  <strong>Seguros y asesoría legal</strong>
-                  <p>Cobertura de riesgos y acompañamiento jurídico especializado.</p>
+                  <strong>Seguros</strong>
+                  <p>Asesoría en la contratación, renovación y administración de pólizas, acompañamiento en reclamaciones y gestión de siniestros.</p>
+                </div>
+              </div>
+              <div className="check-item">
+                <span className="check-dot bg-[#1a5fa8]">
+                  <i className="fa-solid fa-check"></i>
+                </span>
+                <div>
+                  <strong>Asesoría legal</strong>
+                  <p>
+                    Acompañamiento jurídico especializado, recuperación de cartera de difícil cobro, representación en procesos judiciales y 
+                    extrajudiciales, elaboración y revisión de documentos legales y atención de consultas en materia civil, laboral y administrativa.
+                  </p>
                 </div>
               </div>
             </div>
@@ -224,7 +268,7 @@ export default function ServiciosPage() {
                   Vigilancia
                 </span>
                 <span className="bg-white rounded-full py-[5px] px-3 text-xs font-bold text-[#1a5fa8]">
-                  Mantenimiento
+                  Mantenimiento y aseo
                 </span>
                 <span className="bg-white rounded-full py-[5px] px-3 text-xs font-bold text-[#1a5fa8]">
                   Jardinería
@@ -234,6 +278,15 @@ export default function ServiciosPage() {
                 </span>
                 <span className="bg-white rounded-full py-[5px] px-3 text-xs font-bold text-[#1a5fa8]">
                   Seguros
+                </span>
+                <span className="bg-white rounded-full py-[5px] px-3 text-xs font-bold text-[#1a5fa8]">
+                  Asesoría jurídica
+                </span>
+                <span className="bg-white rounded-full py-[5px] px-3 text-xs font-bold text-[#1a5fa8]">
+                  SG-SST
+                </span>
+                <span className="bg-white rounded-full py-[5px] px-3 text-xs font-bold text-[#1a5fa8]">
+                  Proyectos de infraestructura
                 </span>
               </div>
             </div>

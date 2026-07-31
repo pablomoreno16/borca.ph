@@ -108,7 +108,7 @@ export default function HomePage() {
                 <i className="fa-solid fa-chart-line"></i>
               </div>
               <h3>Progreso</h3>
-              <p>Trabajamos por crecimiento, sostenibilidad y valorización de cada comunidad.</p>
+              <p>Trabajamos por el crecimiento, la sostenibilidad y la valorización de cada comunidad.</p>
             </div>
           </div>
         </div>
@@ -180,14 +180,14 @@ export default function HomePage() {
                 <i className="fa-solid fa-people-roof"></i>
               </div>
               <h3>Gestión humanizada</h3>
-              <p>Un gestor dedicado a cada copropiedad que conoce su historia y necesidades.</p>
+              <p>Cada copropiedad cuenta con un administrador delegado que comprende su realidad, identifica sus necesidades y lidera una gestión cercana, eficiente y permanente.</p>
             </div>
             <div className="card card-teal">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-shield-halved"></i>
               </div>
               <h3>Enfoque preventivo</h3>
-              <p>Anticipamos problemas para proteger el valor de tu propiedad a largo plazo.</p>
+              <p>La prevención es parte de nuestra gestión. Planificamos, supervisamos y actuamos oportunamente para proteger el patrimonio de la copropiedad.</p>
             </div>
           </div>
           <div className="text-center mt-9">

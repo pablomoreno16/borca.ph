@@ -22,8 +22,9 @@ export default function PorQueElegirnosPage() {
             <span>BORCA?</span>
           </h1>
           <p>
-            No somos solo administradores. Somos aliados estratégicos que transforman el día a
-            día de tu comunidad con compromiso real, transparencia total y resultados medibles.
+            Porque entendemos que administrar una copropiedad es gestionar su patrimonio, fortalecer
+            su funcionamiento y generar confianza. En BORCA lo hacemos con compromiso, transparencia
+            y un acompañamiento cercano en cada decisión.
           </p>
         </div>
       </section>
@@ -43,51 +44,36 @@ export default function PorQueElegirnosPage() {
                 <i className="fa-solid fa-chart-line"></i>
               </div>
               <h3>Transparencia administrativa</h3>
-              <p>
-                Cada peso ingresado y gastado está documentado. Informes mensuales claros,
-                acceso digital en tiempo real.
-              </p>
             </div>
             <div className="card card-gray">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-people-roof"></i>
               </div>
               <h3>Atención personalizada</h3>
-              <p>Asignamos un gestor dedicado que conoce tu conjunto, su historia y necesidades particulares.</p>
             </div>
             <div className="card card-gray">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-shield-halved"></i>
               </div>
               <h3>Enfoque preventivo</h3>
-              <p>
-                Anticipamos problemas antes de que ocurran para proteger el valor de tu propiedad
-                a largo plazo.
-              </p>
             </div>
             <div className="card card-gray">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-handshake"></i>
               </div>
               <h3>Red de aliados expertos</h3>
-              <p>Contamos con proveedores verificados en todas las áreas para ofrecer siempre la mejor solución.</p>
             </div>
             <div className="card card-gray">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-map-location-dot"></i>
               </div>
-              <h3>Cobertura real</h3>
-              <p>Cobertura en Medellín, Área Metropolitana, Oriente Antioqueño.</p>
+              <h3>Respuesta oportuna</h3>
             </div>
             <div className="card card-gray">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-heart"></i>
               </div>
               <h3>Vocación de servicio</h3>
-              <p>
-                Trabajamos con pasión y compromiso genuino para el bienestar de cada comunidad
-                que administramos.
-              </p>
             </div>
           </div>
         </div>
