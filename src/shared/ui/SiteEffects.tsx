@@ -7,16 +7,16 @@ const FADE_IN_SELECTOR = ".card,.check-item,.timeline-item,.blog-card,.stat-box,
 const RIPPLE_SELECTOR = ".btn-cta, .btn-submit";
 
 /**
- * Efectos globales compartidos por todas las páginas (equivalentes a los que
- * antes vivían en script.js): fade-in de tarjetas al entrar en el viewport,
- * y el efecto ripple al hacer clic en los botones principales.
+ * Efectos del sitio público (equivalentes a los que antes vivían en
+ * script.js): fade-in de tarjetas al entrar en el viewport, y el efecto
+ * ripple al hacer clic en los botones principales. Se monta desde
+ * app/(sitio)/layout.tsx — /admin no lo usa (tarjetas visibles de
+ * inmediato, sin animación).
  */
 export function SiteEffects() {
   const pathname = usePathname();
-  const esAdmin = pathname?.startsWith("/admin");
 
   useEffect(() => {
-    if (esAdmin) return;
     const targets = document.querySelectorAll<HTMLElement>(FADE_IN_SELECTOR);
     const observer = new IntersectionObserver(
       (entries) => {
@@ -36,7 +36,7 @@ export function SiteEffects() {
       observer.observe(el);
     });
     return () => observer.disconnect();
-  }, [pathname, esAdmin]);
+  }, [pathname]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {

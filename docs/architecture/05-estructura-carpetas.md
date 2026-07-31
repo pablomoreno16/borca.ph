@@ -5,14 +5,24 @@
 ```
 borca.ph/
 ├── app/                          # Next.js App Router — solo rutas, delgadas
-│   ├── layout.tsx                 # Layout raíz: <Header/> + <Footer/> compartidos
-│   ├── page.tsx                   # Home (marketing)
-│   ├── servicios/page.tsx
-│   ├── quienes-somos/page.tsx
-│   ├── por-que-elegirnos/page.tsx
-│   ├── contacto/page.tsx
+│   ├── layout.tsx                 # Layout raíz: mínimo (html/body), sin chrome propio
+│   ├── not-found.tsx              # 404 global — vive en la raíz por requisito de Next.js,
+│   │                                 renderiza <Header/>/<Footer/> directamente (no hereda
+│   │                                 el layout de (sitio), ver nota abajo)
+│   ├── (sitio)/                   # Route group: páginas con el header/footer público.
+│   │   │                            Los paréntesis no agregan segmento a la URL.
+│   │   ├── layout.tsx              # <Header/> + {children} + <Footer/> + <SiteEffects/>
+│   │   ├── page.tsx                # Home (marketing) -> "/"
+│   │   ├── servicios/page.tsx
+│   │   ├── quienes-somos/page.tsx
+│   │   ├── por-que-elegirnos/page.tsx
+│   │   ├── contacto/page.tsx
+│   │   └── login/page.tsx          # -> "/login" (no "/admin/login"): entrada única para
+│   │                                  cualquier usuario (admin hoy; a futuro también
+│   │                                  copropietarios/residentes), redirige según rol
 │   ├── admin/
-│   │   ├── layout.tsx              # Guard de sesión (rol admin_copropiedad/super_admin)
+│   │   ├── layout.tsx              # Guard de sesión (rol super_admin/site_owner) + sidebar
+│   │   │                             propio — fuera de (sitio), sin header/footer público
 │   │   ├── page.tsx                # Dashboard
 │   │   ├── carrusel/page.tsx       # CRUD del carrusel de novedades
 │   │   ├── copropiedades/page.tsx  # (fase futura)
@@ -64,6 +74,17 @@ borca.ph/
 
 ## Por qué esta forma y no otra
 
+- **`(sitio)` es un route group, no una carpeta con "app" propia.** Agrupa
+  las páginas que comparten header/footer público (marketing + login) sin
+  agregar segmento a la URL (`(sitio)/login/page.tsx` sigue siendo
+  `/login`). La alternativa evaluada — un componente `SiteChrome` que
+  decide en tiempo de ejecución si mostrar el header/footer según
+  `pathname` — funcionaba pero era un hack: Next.js ya resuelve esto de
+  forma nativa con layouts por grupo, sin lógica condicional en el cliente.
+  `/admin` y `/votaciones` quedan fuera de `(sitio)` a propósito — cada
+  "app" (sitio público, admin, votaciones, y a futuro el portal de
+  copropietarios) define su propio layout/shell, sin heredar el del sitio
+  de marketing.
 - **`app/` se mantiene delgado a propósito.** Cada archivo de ruta importa y
   compone piezas de `src/modules/*/presentation` — así una página nunca
   concentra lógica de negocio, solo layout y composición. Esto es lo que

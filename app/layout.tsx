@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "@/styles/style.css";
-import { SiteChrome } from "@/shared/ui/SiteChrome";
-import { SiteEffects } from "@/shared/ui/SiteEffects";
 
 export const metadata: Metadata = {
   title: "Inicio – BORCA",
@@ -24,10 +22,7 @@ export default function RootLayout({
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         />
       </head>
-      <body suppressHydrationWarning>
-        <SiteChrome>{children}</SiteChrome>
-        <SiteEffects />
-      </body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
