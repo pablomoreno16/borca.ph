@@ -212,7 +212,7 @@ export default function ServiciosPage() {
                   <i className="fa-solid fa-check"></i>
                 </span>
                 <div>
-                  <strong>Contabilidad y cartera</strong>
+                  <strong>Contabilidad</strong>
                   <p>Administración contable, gestión financiera, elaboración de estados financieros, proyectos de presupuesto y facturación.</p>
                 </div>
               </div>
