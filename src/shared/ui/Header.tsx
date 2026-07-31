@@ -57,6 +57,14 @@ export function Header() {
         >
           <i className={`fa-solid ${menuOpen ? "fa-xmark" : "fa-bars"}`}></i>
         </button>
+        <Link
+          href="/login"
+          title="Acceder"
+          aria-label="Acceder"
+          className="flex items-center justify-center text-[18px] text-text-dark p-2 md:hidden no-underline"
+        >
+          <i className="fa-solid fa-user"></i>
+        </Link>
         <div className="nav-collapse" id="navCollapse">
           <nav className="nav-links">
             {NAV_LINKS.map((link) => (
@@ -69,6 +77,15 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+            <Link
+              href="/login"
+              title="Acceder"
+              aria-label="Acceder"
+              className="max-md:hidden flex items-center justify-center px-[11px] py-[7px] rounded-[7px] text-text-dark transition-colors hover:text-teal"
+              onClick={() => setMenuOpen(false)}
+            >
+              <i className="fa-solid fa-user text-[16px]"></i>
+            </Link>
           </nav>
         </div>
       </div>
