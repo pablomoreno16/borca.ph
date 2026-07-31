@@ -10,9 +10,20 @@ import { cerrarSesion } from "@/modules/auth/infrastructure/authRepository";
 const ROLES_CON_ACCESO_ADMIN = ["super_admin", "site_owner"] as const;
 
 const ADMIN_NAV_ITEMS = [
-  { href: "/admin", label: "Panel", icon: "fa-solid fa-gauge" },
-  { href: "/admin/carrusel", label: "Carrusel de novedades", icon: "fa-solid fa-images" },
-];
+  { href: "/admin", label: "Panel", icon: "fa-solid fa-gauge", roles: ["super_admin", "site_owner"] },
+  {
+    href: "/admin/carrusel",
+    label: "Carrusel de novedades",
+    icon: "fa-solid fa-images",
+    roles: ["super_admin", "site_owner"],
+  },
+  {
+    href: "/admin/copropiedades",
+    label: "Copropiedades",
+    icon: "fa-solid fa-building",
+    roles: ["super_admin"],
+  },
+] as const;
 
 const stripTrailingSlash = (path: string) => (path.length > 1 ? path.replace(/\/$/, "") : path);
 
@@ -41,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-gray">
       <aside className="group/sidebar fixed inset-y-0 left-0 z-20 w-16 hover:w-64 bg-teal-dark transition-[width] duration-200 ease-in-out overflow-hidden">
         <nav className="flex flex-col gap-1 py-5">
-          {ADMIN_NAV_ITEMS.map((item) => {
+          {ADMIN_NAV_ITEMS.filter((item) => tieneAlgunRol(sesion, [...item.roles])).map((item) => {
             const activo = pathnameNormalizado === item.href;
             return (
               <Link

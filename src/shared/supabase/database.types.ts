@@ -112,6 +112,48 @@ export type Database = {
         }
         Relationships: []
       }
+      copropiedad: {
+        Row: {
+          ciudad: string | null
+          correo: string | null
+          created_at: string
+          cuenta_bancaria: string | null
+          direccion: string | null
+          estado: string
+          id: string
+          nit: string | null
+          nombre: string
+          telefono: string | null
+          updated_at: string
+        }
+        Insert: {
+          ciudad?: string | null
+          correo?: string | null
+          created_at?: string
+          cuenta_bancaria?: string | null
+          direccion?: string | null
+          estado?: string
+          id?: string
+          nit?: string | null
+          nombre: string
+          telefono?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ciudad?: string | null
+          correo?: string | null
+          created_at?: string
+          cuenta_bancaria?: string | null
+          direccion?: string | null
+          estado?: string
+          id?: string
+          nit?: string | null
+          nombre?: string
+          telefono?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       perfil: {
         Row: {
           auth_user_id: string
@@ -179,9 +221,9 @@ export type Database = {
           email: string | null
           id: string
           nombre: string
-          numero_documento: string
+          numero_documento: string | null
           telefono: string | null
-          tipo_documento: string
+          tipo_documento: string | null
           updated_at: string
         }
         Insert: {
@@ -189,9 +231,9 @@ export type Database = {
           email?: string | null
           id?: string
           nombre: string
-          numero_documento: string
+          numero_documento?: string | null
           telefono?: string | null
-          tipo_documento: string
+          tipo_documento?: string | null
           updated_at?: string
         }
         Update: {
@@ -199,12 +241,101 @@ export type Database = {
           email?: string | null
           id?: string
           nombre?: string
-          numero_documento?: string
+          numero_documento?: string | null
           telefono?: string | null
-          tipo_documento?: string
+          tipo_documento?: string | null
           updated_at?: string
         }
         Relationships: []
+      }
+      propietario: {
+        Row: {
+          created_at: string
+          fecha_fin: string | null
+          fecha_inicio: string
+          id: string
+          persona_id: string
+          porcentaje_participacion: number | null
+          unidad_privada_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          fecha_fin?: string | null
+          fecha_inicio?: string
+          id?: string
+          persona_id: string
+          porcentaje_participacion?: number | null
+          unidad_privada_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          fecha_fin?: string | null
+          fecha_inicio?: string
+          id?: string
+          persona_id?: string
+          porcentaje_participacion?: number | null
+          unidad_privada_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "propietario_persona_id_fkey"
+            columns: ["persona_id"]
+            isOneToOne: false
+            referencedRelation: "persona"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "propietario_unidad_privada_id_fkey"
+            columns: ["unidad_privada_id"]
+            isOneToOne: false
+            referencedRelation: "unidad_privada"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      unidad_privada: {
+        Row: {
+          bloque: string
+          coeficiente: number
+          copropiedad_id: string
+          created_at: string
+          id: string
+          identificador: string
+          tipo: string
+          updated_at: string
+        }
+        Insert: {
+          bloque?: string
+          coeficiente: number
+          copropiedad_id: string
+          created_at?: string
+          id?: string
+          identificador: string
+          tipo?: string
+          updated_at?: string
+        }
+        Update: {
+          bloque?: string
+          coeficiente?: number
+          copropiedad_id?: string
+          created_at?: string
+          id?: string
+          identificador?: string
+          tipo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "unidad_privada_copropiedad_id_fkey"
+            columns: ["copropiedad_id"]
+            isOneToOne: false
+            referencedRelation: "copropiedad"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
