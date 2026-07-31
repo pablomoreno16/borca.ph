@@ -27,7 +27,7 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run build
-      - uses: SamKirkland/FTP-Deploy-Action@v4
+      - uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.GODADDY_FTP_SERVER }}
           port: ${{ secrets.GODADDY_FTP_PORT }}
