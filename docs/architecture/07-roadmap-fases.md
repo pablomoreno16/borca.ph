@@ -114,10 +114,22 @@ ahora habría sido diseñar para un tenant que no existe todavía.
 - [x] Un usuario puede tener múltiples roles simultáneos y las políticas
       RLS los combinan correctamente (verificado con un perfil
       `site_owner` + `super_admin` a la vez).
-- [ ] No es posible ver ninguna pantalla de `/admin` sin sesión válida.
-- [ ] Cambios en el carrusel desde `/admin` se reflejan en la home sin
-      despliegue manual.
-- [ ] Todo cambio en `perfil_rol` o `carrusel_item` queda en `audit_log`.
+- [x] No es posible ver ninguna pantalla de `/admin` sin sesión válida
+      (verificado con Playwright: guard redirige a `/login`; un usuario
+      autenticado pero sin rol admin también es rechazado).
+- [x] Cambios en el carrusel desde `/admin` se reflejan en la home sin
+      despliegue manual (verificado extremo a extremo con Playwright).
+- [x] Todo cambio en `perfil_rol` o `carrusel_item` queda en `audit_log`
+      (verificado: filas reales de insert/update/delete en la tabla tras
+      las pruebas de CRUD).
+
+**Fase 1: completa (2026-07-31).** Los 5 criterios de aceptación están
+cumplidos y verificados. Pendiente real, fuera del alcance técnico de la
+fase: cargar contenido real en el carrusel de producción (hoy vacío) y,
+más adelante, decidir si se agregan las pruebas automatizadas formales
+(Vitest/Playwright committeadas) que la sección "Pruebas" describe —
+por ahora la verificación se hizo con scripts de Playwright ad-hoc, no
+con una suite de tests versionada en el repo.
 
 ---
 
