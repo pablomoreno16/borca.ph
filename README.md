@@ -70,6 +70,22 @@ disponible en [http://127.0.0.1:54323](http://127.0.0.1:54323).
 `.env.local` nunca se sube al repositorio (está en `.gitignore`) — cada
 desarrollador usa su propia copia local.
 
+### Proyecto en la nube
+
+El proyecto real vive en Supabase Cloud (ref `ebnpsvlcfjmumllwiahp`). Para
+vincular tu máquina a él (solo hace falta una vez, el token queda guardado en
+el Keychain de macOS y sobrevive a reinicios):
+
+```bash
+supabase login   # abre el navegador para autorizar el CLI
+supabase link --project-ref ebnpsvlcfjmumllwiahp
+```
+
+Las credenciales del proyecto en la nube (URL + publishable key) se guardan
+en `.env.production.local` (también gitignored) y se usan solo para probar
+builds de producción localmente o para configurarlas como variables del
+workflow de CI/CD — el desarrollo del día a día sigue usando el stack local.
+
 ## Otros comandos
 
 | Comando | Qué hace |
