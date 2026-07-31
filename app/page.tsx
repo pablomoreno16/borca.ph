@@ -124,7 +124,7 @@ export default function HomePage() {
             </h2>
           </div>
           <div className="cards-grid-3">
-            <Link href="/servicios" className="card card-border no-underline cursor-pointer transition-all">
+            <Link href="/servicios/#administracion-ph" className="card card-border no-underline cursor-pointer transition-all">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-building"></i>
               </div>
@@ -134,7 +134,7 @@ export default function HomePage() {
                 Conocer más <i className="fa-solid fa-arrow-right"></i>
               </div>
             </Link>
-            <Link href="/servicios" className="card card-border no-underline cursor-pointer transition-all">
+            <Link href="/servicios/#consultoria-ph" className="card card-border no-underline cursor-pointer transition-all">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-scale-balanced"></i>
               </div>
@@ -144,7 +144,7 @@ export default function HomePage() {
                 Conocer más <i className="fa-solid fa-arrow-right"></i>
               </div>
             </Link>
-            <Link href="/servicios" className="card card-border no-underline cursor-pointer transition-all">
+            <Link href="/servicios/#servicios-especializados" className="card card-border no-underline cursor-pointer transition-all">
               <div className="card-icon-lg">
                 <i className="fa-solid fa-toolbox"></i>
               </div>
