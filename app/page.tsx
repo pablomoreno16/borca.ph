@@ -1,21 +1,14 @@
 import Link from "next/link";
-import { PromoCarousel } from "./PromoCarousel";
+import { PromoCarousel } from "@/modules/carrusel/presentation/PromoCarousel";
 import { ButterflyIcon } from "@/shared/ui/ButterflyIcon";
-
-// Pendiente: el carrusel tiene datos estáticos hardcodeados. Se oculta hasta
-// conectarlo a Supabase (Fase 1, ver docs/architecture/07-roadmap-fases.md).
-// Reactivar cambiando esto a true una vez esté conectado a datos reales.
-const CARRUSEL_HABILITADO = false;
 
 export default function HomePage() {
   return (
     <>
-      {/* CARRUSEL DE NOVEDADES (promociones, noticias, anuncios y actualizaciones) */}
-      {CARRUSEL_HABILITADO && (
-        <section className="promo-section bg-gray" id="carrusel">
-          <PromoCarousel />
-        </section>
-      )}
+      {/* CARRUSEL DE NOVEDADES (promociones, noticias, anuncios y actualizaciones):
+          se conecta a Supabase y decide solo si mostrarse (no hay ítems
+          activos/vigentes -> no renderiza nada, ver PromoCarousel.tsx) */}
+      <PromoCarousel />
 
       {/* HERO SECTION */}
       <section

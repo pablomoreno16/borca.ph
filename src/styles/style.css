@@ -431,7 +431,7 @@
     @apply text-base leading-[1.75] max-w-[440px] mb-5 max-md:mx-auto max-md:mb-[18px];
   }
   .promo-meta {
-    @apply inline-flex items-center gap-2 text-sm font-bold mb-6 max-md:mx-auto max-md:mb-5;
+    @apply flex items-center gap-2 text-sm font-bold mb-6 max-md:mx-auto max-md:mb-5;
   }
   .promo-visual {
     @apply relative z-10 flex items-center justify-center max-md:order-[-1];

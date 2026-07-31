@@ -13,8 +13,10 @@ const RIPPLE_SELECTOR = ".btn-cta, .btn-submit";
  */
 export function SiteEffects() {
   const pathname = usePathname();
+  const esAdmin = pathname?.startsWith("/admin");
 
   useEffect(() => {
+    if (esAdmin) return;
     const targets = document.querySelectorAll<HTMLElement>(FADE_IN_SELECTOR);
     const observer = new IntersectionObserver(
       (entries) => {
@@ -34,7 +36,7 @@ export function SiteEffects() {
       observer.observe(el);
     });
     return () => observer.disconnect();
-  }, [pathname]);
+  }, [pathname, esAdmin]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {

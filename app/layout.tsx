@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/style.css";
-import { Header } from "@/shared/ui/Header";
-import { Footer } from "@/shared/ui/Footer";
+import { SiteChrome } from "@/shared/ui/SiteChrome";
 import { SiteEffects } from "@/shared/ui/SiteEffects";
 
 export const metadata: Metadata = {
@@ -26,9 +25,7 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning>
-        <Header />
-        {children}
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
         <SiteEffects />
       </body>
     </html>
