@@ -14,10 +14,6 @@ export function Footer() {
             alt="BORCA"
             className="w-[130px] h-auto object-contain mb-3.5"
           />
-          <p>
-            Transformamos copropiedades en comunidades organizadas, sostenibles y tranquilas
-            mediante una administración estratégica, humana y eficiente.
-          </p>
         </div>
         <div className="footer-col">
           <h4>Navegación</h4>

@@ -173,7 +173,10 @@ export default function HomePage() {
                 <i className="fa-solid fa-chart-line"></i>
               </div>
               <h3>Transparencia</h3>
-              <p>Cada peso ingresado está documentado. Informes claros y acceso digital en tiempo real.</p>
+              <p>
+                Cada movimiento financiero de su copropiedad queda debidamente documentado y respaldado,
+                garantizando transparencia, trazabilidad y confianza en la administración.
+              </p>
             </div>
             <div className="card card-teal">
               <div className="card-icon-lg">
