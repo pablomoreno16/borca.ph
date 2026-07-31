@@ -69,7 +69,7 @@ export function ImportarUnidadesForm({ copropiedadId, copropiedadNombre, onImpor
             analizando || importando ? "opacity-60" : "cursor-pointer hover:bg-[#f4f7f6]"
           }`}
         >
-          <i className="fa-solid fa-upload"></i> Click aquí para subir archivo
+          <i className="fa-solid fa-upload"></i> Selecciona archivo
         </label>
         <input
           id="archivo-unidades"
