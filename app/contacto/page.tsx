@@ -15,7 +15,10 @@ export default function ContactoPage() {
             Comencemos a transformar tu <br />
             <span>copropiedad</span>
           </h1>
-          <p>Contacta directamente con nuestro equipo.</p>
+          <p>
+            Permítenos conocer las necesidades de tu copropiedad. Nuestro equipo está listo para
+            brindarte el acompañamiento y las soluciones que necesitas.
+          </p>
         </div>
       </section>
 
