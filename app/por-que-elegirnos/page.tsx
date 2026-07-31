@@ -182,14 +182,14 @@ export default function PorQueElegirnosPage() {
                 <i className="fa-solid fa-file-signature"></i>
               </div>
               <h3 className="text-[16.5px]">Propuesta personalizada</h3>
-              <p className="text-sm">Plan diseñado según necesidades de tu conjunto.</p>
+              <p className="text-sm">Plan diseñado según necesidades de tu copropiedad.</p>
             </div>
             <div className="card card-border text-center">
               <div className="font-serif text-[42px] font-bold text-gold opacity-25 leading-none -mb-1">02</div>
               <div className="card-icon-lg mx-auto mb-3.5">
                 <i className="fa-solid fa-people-group"></i>
               </div>
-              <h3 className="text-[16.5px]">Presentación a asamblea o consejo de administración</h3>
+              <h3 className="text-[16.5px]">Presentación ante la asamblea o consejo de administración</h3>
               <p className="text-sm">Acompañamos la presentación para aprobación en caso de ser requerida.</p>
             </div>
             <div className="card card-border text-center">
