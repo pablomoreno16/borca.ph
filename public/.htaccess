@@ -1,6 +1,9 @@
-# Página 404 personalizada (generada por Next.js en 404.html) — sin esto,
-# Apache muestra su propio "404 Not Found" genérico en vez de la nuestra.
-ErrorDocument 404 /404.html
+# Nota: la página 404 personalizada NO se sirve vía ErrorDocument aquí —
+# en este hosting de GoDaddy, AllowOverride no permite que .htaccess anule
+# el manejo de errores (probado y confirmado 2026-07-31). El 404 real se
+# configura en cPanel → Error Pages → 404, con una página HTML standalone
+# (estilos en línea, sin depender de los archivos con hash de Next.js que
+# cambian en cada build).
 
 # Redirige las URLs .html que el sitio anterior servía (y que pueden estar
 # indexadas o guardadas como marcadores) hacia las nuevas rutas limpias.
