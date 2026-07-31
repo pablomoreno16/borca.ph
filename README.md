@@ -10,8 +10,13 @@ los módulos futuros (administración, asambleas, votaciones), ver
 
 ## Requisitos previos
 
-- [Node.js](https://nodejs.org/) 20 o superior
+- [Node.js](https://nodejs.org/) 20 o superior (el CI usa 24; localmente basta con 20+)
 - npm (viene incluido con Node.js)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) — solo
+  necesario si vas a trabajar en `/admin` u otra funcionalidad que dependa de
+  Supabase (Fase 1 en adelante)
+- [Supabase CLI](https://supabase.com/docs/guides/cli) — `brew install
+  supabase/tap/supabase` en macOS
 
 Verifica tu versión con:
 
@@ -38,6 +43,32 @@ npm run dev
 Abre [http://localhost:3000](http://localhost:3000) en el navegador. Cualquier
 cambio en `app/` o `src/` se refleja al instante (hot reload), sin necesidad
 de reiniciar el servidor.
+
+## Backend local (Supabase)
+
+A partir de la Fase 1 (login, perfiles, carrusel administrable) el proyecto
+depende de Supabase. En vez de apuntar a producción durante el desarrollo, se
+levanta una réplica completa del stack (Postgres, Auth, Storage, Studio) en
+Docker, corriendo 100% en tu máquina:
+
+```bash
+supabase start   # levanta el stack local (la primera vez descarga las imágenes de Docker)
+supabase stop    # lo apaga cuando termines
+```
+
+Al iniciar, la terminal imprime las credenciales locales (`API URL`,
+`ANON_KEY`, etc. — son credenciales de desarrollo fijas, no reales). Copia
+`.env.local.example` a `.env.local` y complétalo con esos valores:
+
+```bash
+cp .env.local.example .env.local
+```
+
+Supabase Studio (panel de administración de la base de datos local) queda
+disponible en [http://127.0.0.1:54323](http://127.0.0.1:54323).
+
+`.env.local` nunca se sube al repositorio (está en `.gitignore`) — cada
+desarrollador usa su propia copia local.
 
 ## Otros comandos
 
@@ -66,5 +97,6 @@ src/
   styles/              CSS del sitio
   modules/             Módulos de negocio futuros (auth, carrusel, etc.)
 public/                Imágenes y archivos estáticos (servidos en /)
+supabase/              Configuración y migraciones del stack local de Supabase
 docs/architecture/     Documentación de arquitectura y decisiones técnicas
 ```

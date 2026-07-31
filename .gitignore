@@ -10,3 +10,8 @@ next-env.d.ts
 # Supabase local
 supabase/.branches/
 supabase/.temp/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
