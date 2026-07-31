@@ -6,11 +6,31 @@ export function validarCopropiedad(input: CopropiedadInput): string[] {
   return errores;
 }
 
+// Muchos reglamentos de propiedad horizontal en Colombia expresan el
+// coeficiente como porcentaje (1 a 100, ej. "2.35678") en vez de fracción
+// (0 a 1, ej. "0.0235678"). El sistema siempre guarda la fracción (0-1) —
+// es la convención que necesitan los cálculos de quórum/voto más adelante
+// — así que si la suma cruda da mucho más que 1, se asume escala 1-100 y
+// se normaliza dividiendo entre 100.
+const UMBRAL_ESCALA_PORCENTAJE = 10;
+
+export function normalizarEscalaCoeficientes(filas: FilaImportada[]): {
+  filas: FilaImportada[];
+  escalaConvertida: boolean;
+} {
+  const sumaCruda = filas.reduce((acc, fila) => acc + fila.coeficiente, 0);
+  if (sumaCruda <= UMBRAL_ESCALA_PORCENTAJE) return { filas, escalaConvertida: false };
+  return {
+    filas: filas.map((fila) => ({ ...fila, coeficiente: fila.coeficiente / 100 })),
+    escalaConvertida: true,
+  };
+}
+
 // La suma de coeficientes de las unidades de una copropiedad debe dar 1.0
 // (Ley 675 art. 3). Se acepta un margen pequeño por redondeo del Excel.
 const TOLERANCIA_COEFICIENTES = 0.01;
 
-export function validarFilasImportadas(filas: FilaImportada[]): ResumenImportacion {
+export function validarFilasImportadas(filas: FilaImportada[], escalaConvertida = false): ResumenImportacion {
   const errores: string[] = [];
 
   if (filas.length === 0) {
@@ -38,5 +58,6 @@ export function validarFilasImportadas(filas: FilaImportada[]): ResumenImportaci
     diferencia,
     esValida: errores.length === 0,
     errores,
+    escalaConvertida,
   };
 }

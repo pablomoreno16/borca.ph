@@ -10,6 +10,7 @@ import { guardarCopropiedad } from "@/modules/copropiedades/application/guardarC
 import { CopropiedadForm } from "@/modules/copropiedades/presentation/CopropiedadForm";
 import { ImportarUnidadesForm } from "@/modules/copropiedades/presentation/ImportarUnidadesForm";
 import { UnidadesTable } from "@/modules/copropiedades/presentation/UnidadesTable";
+import { Modal } from "@/shared/ui/Modal";
 import type { Copropiedad, CopropiedadInput } from "@/modules/copropiedades/domain/types";
 
 // Ruta estática con el id como query param (no un segmento dinámico [id]):
@@ -94,15 +95,17 @@ export default function AdminCopropiedadDetallePage() {
           />
 
           {importando && (
-            <ImportarUnidadesForm
-              copropiedadId={copropiedad.id}
-              copropiedadNombre={copropiedad.nombre}
-              onImportado={() => {
-                setImportando(false);
-                setRefrescarUnidades((n) => n + 1);
-              }}
-              onCancelar={() => setImportando(false)}
-            />
+            <Modal onClose={() => setImportando(false)}>
+              <ImportarUnidadesForm
+                copropiedadId={copropiedad.id}
+                copropiedadNombre={copropiedad.nombre}
+                onImportado={() => {
+                  setImportando(false);
+                  setRefrescarUnidades((n) => n + 1);
+                }}
+                onCancelar={() => setImportando(false)}
+              />
+            </Modal>
           )}
 
           <div>

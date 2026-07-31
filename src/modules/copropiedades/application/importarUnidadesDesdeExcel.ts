@@ -1,13 +1,14 @@
 import type { FilaImportada, ResumenImportacion } from "../domain/types";
-import { validarFilasImportadas } from "../domain/validacion";
+import { normalizarEscalaCoeficientes, validarFilasImportadas } from "../domain/validacion";
 import { parsearExcelUnidades } from "../infrastructure/excelParser";
 import { importarUnidades } from "../infrastructure/copropiedadRepository";
 
 export async function analizarExcelUnidades(
   archivo: File
 ): Promise<{ filas: FilaImportada[]; resumen: ResumenImportacion }> {
-  const filas = await parsearExcelUnidades(archivo);
-  const resumen = validarFilasImportadas(filas);
+  const filasCrudas = await parsearExcelUnidades(archivo);
+  const { filas, escalaConvertida } = normalizarEscalaCoeficientes(filasCrudas);
+  const resumen = validarFilasImportadas(filas, escalaConvertida);
   return { filas, resumen };
 }
 

@@ -30,6 +30,7 @@ export interface ResumenImportacion {
   diferencia: number;
   esValida: boolean;
   errores: string[];
+  escalaConvertida: boolean;
 }
 
 export type TipoUnidad = "apartamento" | "parqueadero" | "deposito" | "local" | "oficina";

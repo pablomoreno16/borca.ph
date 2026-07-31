@@ -82,7 +82,7 @@ export function UnidadesTable({ copropiedadId }: Props) {
                   <td className="py-2 pr-3">{unidad.bloque}</td>
                   <td className="py-2 pr-3 font-semibold">{unidad.identificador}</td>
                   <td className="py-2 pr-3 text-text-body">{TIPO_LABEL[unidad.tipo] ?? unidad.tipo}</td>
-                  <td className="py-2 pr-3 text-text-body">{unidad.coeficiente}</td>
+                  <td className="py-2 pr-3 text-text-body">{(unidad.coeficiente * 100).toFixed(2)}%</td>
                 </tr>
               ))}
             </tbody>
