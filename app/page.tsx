@@ -2,13 +2,20 @@ import Link from "next/link";
 import { PromoCarousel } from "./PromoCarousel";
 import { ButterflyIcon } from "@/shared/ui/ButterflyIcon";
 
+// Pendiente: el carrusel tiene datos estáticos hardcodeados. Se oculta hasta
+// conectarlo a Supabase (Fase 1, ver docs/architecture/07-roadmap-fases.md).
+// Reactivar cambiando esto a true una vez esté conectado a datos reales.
+const CARRUSEL_HABILITADO = false;
+
 export default function HomePage() {
   return (
     <>
       {/* CARRUSEL DE NOVEDADES (promociones, noticias, anuncios y actualizaciones) */}
-      <section className="promo-section bg-gray" id="carrusel">
-        <PromoCarousel />
-      </section>
+      {CARRUSEL_HABILITADO && (
+        <section className="promo-section bg-gray" id="carrusel">
+          <PromoCarousel />
+        </section>
+      )}
 
       {/* HERO SECTION */}
       <section

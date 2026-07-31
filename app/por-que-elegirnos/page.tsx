@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "¿Por qué elegirnos? – BORCA",
 };
 
+// Pendiente: los testimonios son datos dummy. Se ocultan hasta tener
+// testimonios reales de clientes. Reactivar cambiando esto a true.
+const TESTIMONIOS_HABILITADOS = false;
+
 export default function PorQueElegirnosPage() {
   return (
     <>
@@ -90,6 +94,7 @@ export default function PorQueElegirnosPage() {
       </section>
 
       {/* TESTIMONIOS */}
+      {TESTIMONIOS_HABILITADOS && (
       <section className="bg-gray">
         <div className="section-wrap section-pad">
           <div className="text-center mb-11">
@@ -168,6 +173,7 @@ export default function PorQueElegirnosPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* PROCESO */}
       <section className="bg-white">
