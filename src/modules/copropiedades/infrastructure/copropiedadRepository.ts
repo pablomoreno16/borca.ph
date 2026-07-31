@@ -1,8 +1,9 @@
 import { supabase } from "@/shared/supabase/client";
 import type { Tables } from "@/shared/supabase/database.types";
-import type { Copropiedad, CopropiedadInput, FilaImportada } from "../domain/types";
+import type { Copropiedad, CopropiedadInput, FilaImportada, PaginaUnidades, UnidadPrivada } from "../domain/types";
 
 type Fila = Tables<"copropiedad">;
+type FilaUnidad = Tables<"unidad_privada">;
 
 function aDominio(fila: Fila): Copropiedad {
   return {
@@ -12,7 +13,9 @@ function aDominio(fila: Fila): Copropiedad {
     direccion: fila.direccion,
     ciudad: fila.ciudad,
     telefono: fila.telefono,
-    cuentaBancaria: fila.cuenta_bancaria,
+    banco: fila.banco,
+    tipoCuenta: fila.tipo_cuenta as Copropiedad["tipoCuenta"],
+    numeroCuenta: fila.numero_cuenta,
     correo: fila.correo,
     estado: fila.estado as Copropiedad["estado"],
   };
@@ -25,9 +28,22 @@ function aFila(input: CopropiedadInput) {
     direccion: input.direccion,
     ciudad: input.ciudad,
     telefono: input.telefono,
-    cuenta_bancaria: input.cuentaBancaria,
+    banco: input.banco,
+    tipo_cuenta: input.tipoCuenta,
+    numero_cuenta: input.numeroCuenta,
     correo: input.correo,
     estado: input.estado,
+  };
+}
+
+function unidadADominio(fila: FilaUnidad): UnidadPrivada {
+  return {
+    id: fila.id,
+    copropiedadId: fila.copropiedad_id,
+    bloque: fila.bloque,
+    identificador: fila.identificador,
+    tipo: fila.tipo as UnidadPrivada["tipo"],
+    coeficiente: fila.coeficiente,
   };
 }
 
@@ -35,6 +51,12 @@ export async function listarCopropiedades(): Promise<Copropiedad[]> {
   const { data, error } = await supabase.from("copropiedad").select("*").order("nombre", { ascending: true });
   if (error) throw error;
   return (data ?? []).map(aDominio);
+}
+
+export async function obtenerCopropiedad(id: string): Promise<Copropiedad> {
+  const { data, error } = await supabase.from("copropiedad").select("*").eq("id", id).single();
+  if (error) throw error;
+  return aDominio(data);
 }
 
 export async function crearCopropiedad(input: CopropiedadInput): Promise<Copropiedad> {
@@ -54,13 +76,35 @@ export async function actualizarCopropiedad(id: string, input: CopropiedadInput)
   return aDominio(data);
 }
 
-export async function contarUnidades(copropiedadId: string): Promise<number> {
-  const { count, error } = await supabase
+interface OpcionesPaginaUnidades {
+  pagina: number;
+  porPagina: number;
+  filtroApartamento?: string;
+}
+
+export async function listarUnidadesPaginadas(
+  copropiedadId: string,
+  { pagina, porPagina, filtroApartamento }: OpcionesPaginaUnidades
+): Promise<PaginaUnidades> {
+  const desde = (pagina - 1) * porPagina;
+  const hasta = desde + porPagina - 1;
+
+  let consulta = supabase
     .from("unidad_privada")
-    .select("id", { count: "exact", head: true })
+    .select("*", { count: "exact" })
     .eq("copropiedad_id", copropiedadId);
+
+  if (filtroApartamento?.trim()) {
+    consulta = consulta.ilike("identificador", `%${filtroApartamento.trim()}%`);
+  }
+
+  const { data, error, count } = await consulta
+    .order("bloque", { ascending: true })
+    .order("identificador", { ascending: true })
+    .range(desde, hasta);
   if (error) throw error;
-  return count ?? 0;
+
+  return { items: (data ?? []).map(unidadADominio), total: count ?? 0 };
 }
 
 // Crea persona + unidad_privada + propietario para cada fila del Excel, en

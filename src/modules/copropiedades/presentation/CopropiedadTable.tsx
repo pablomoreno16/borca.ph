@@ -1,14 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import type { Copropiedad } from "../domain/types";
 
 interface Props {
   items: Copropiedad[];
-  onEditar: (item: Copropiedad) => void;
-  onImportar: (item: Copropiedad) => void;
 }
 
-export function CopropiedadTable({ items, onEditar, onImportar }: Props) {
+export function CopropiedadTable({ items }: Props) {
   if (items.length === 0) {
     return <p className="text-text-body">Todavía no hay copropiedades registradas.</p>;
   }
@@ -22,7 +21,7 @@ export function CopropiedadTable({ items, onEditar, onImportar }: Props) {
             <th className="py-2 pr-3">NIT</th>
             <th className="py-2 pr-3">Ciudad</th>
             <th className="py-2 pr-3">Estado</th>
-            <th className="py-2 pr-3">Acciones</th>
+            <th className="py-2 pr-3"></th>
           </tr>
         </thead>
         <tbody>
@@ -39,22 +38,12 @@ export function CopropiedadTable({ items, onEditar, onImportar }: Props) {
                 )}
               </td>
               <td className="py-2 pr-3">
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() => onEditar(item)}
-                    className="text-teal font-semibold hover:underline"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onImportar(item)}
-                    className="text-teal font-semibold hover:underline"
-                  >
-                    Importar unidades
-                  </button>
-                </div>
+                <Link
+                  href={`/admin/copropiedades/detalle?id=${item.id}`}
+                  className="text-teal font-semibold hover:underline"
+                >
+                  Ver <i className="fa-solid fa-arrow-right"></i>
+                </Link>
               </td>
             </tr>
           ))}

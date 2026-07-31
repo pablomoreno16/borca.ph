@@ -10,7 +10,6 @@ import { cerrarSesion } from "@/modules/auth/infrastructure/authRepository";
 const ROLES_CON_ACCESO_ADMIN = ["super_admin", "site_owner"] as const;
 
 const ADMIN_NAV_ITEMS = [
-  { href: "/admin", label: "Panel", icon: "fa-solid fa-gauge", roles: ["super_admin", "site_owner"] },
   {
     href: "/admin/carrusel",
     label: "Carrusel de novedades",
@@ -50,7 +49,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-gray">
-      <aside className="group/sidebar fixed inset-y-0 left-0 z-20 w-16 hover:w-64 bg-teal-dark transition-[width] duration-200 ease-in-out overflow-hidden">
+      <header className="fixed inset-x-0 top-0 z-30 h-16 bg-white border-b border-[#e5e9e8] px-5 flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <img src="/images/logo-borca.png" alt="BORCA" className="h-9 w-auto object-contain" />
+          <span className="font-serif font-bold text-teal">Admin</span>
+        </div>
+        <div className="flex items-center gap-4 text-sm">
+          <span className="text-text-body">{sesion?.email}</span>
+          <button type="button" onClick={() => cerrarSesion()} className="text-teal font-semibold hover:underline">
+            Cerrar sesión
+          </button>
+        </div>
+      </header>
+      <aside className="group/sidebar fixed left-0 top-16 bottom-0 z-20 w-16 hover:w-64 bg-teal-dark transition-[width] duration-200 ease-in-out overflow-hidden">
         <nav className="flex flex-col gap-1 py-5">
           {ADMIN_NAV_ITEMS.filter((item) => tieneAlgunRol(sesion, [...item.roles])).map((item) => {
             const activo = pathnameNormalizado === item.href;
@@ -72,22 +83,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
       </aside>
-      <div className="pl-16 flex flex-col min-h-screen">
-        <header className="bg-white border-b border-[#e5e9e8] px-5 py-3.5 flex items-center justify-between">
-          <span className="font-serif font-bold text-teal">BORCA · Admin</span>
-          <div className="flex items-center gap-4 text-sm">
-            <span className="text-text-body">{sesion?.email}</span>
-            <button
-              type="button"
-              onClick={() => cerrarSesion()}
-              className="text-teal font-semibold hover:underline"
-            >
-              Cerrar sesión
-            </button>
-          </div>
-        </header>
-        <main className="max-w-[1300px] py-9 px-9 max-md:px-5 flex-1">{children}</main>
-      </div>
+      <main className="pl-16 pt-16 max-w-[1300px] flex flex-col min-h-screen">
+        <div className="py-9 px-9 max-md:px-5 flex-1">{children}</div>
+      </main>
     </div>
   );
 }

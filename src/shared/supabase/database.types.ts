@@ -114,42 +114,48 @@ export type Database = {
       }
       copropiedad: {
         Row: {
+          banco: string | null
           ciudad: string | null
           correo: string | null
           created_at: string
-          cuenta_bancaria: string | null
           direccion: string | null
           estado: string
           id: string
           nit: string | null
           nombre: string
+          numero_cuenta: string | null
           telefono: string | null
+          tipo_cuenta: string | null
           updated_at: string
         }
         Insert: {
+          banco?: string | null
           ciudad?: string | null
           correo?: string | null
           created_at?: string
-          cuenta_bancaria?: string | null
           direccion?: string | null
           estado?: string
           id?: string
           nit?: string | null
           nombre: string
+          numero_cuenta?: string | null
           telefono?: string | null
+          tipo_cuenta?: string | null
           updated_at?: string
         }
         Update: {
+          banco?: string | null
           ciudad?: string | null
           correo?: string | null
           created_at?: string
-          cuenta_bancaria?: string | null
           direccion?: string | null
           estado?: string
           id?: string
           nit?: string | null
           nombre?: string
+          numero_cuenta?: string | null
           telefono?: string | null
+          tipo_cuenta?: string | null
           updated_at?: string
         }
         Relationships: []

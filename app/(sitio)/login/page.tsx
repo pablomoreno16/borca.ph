@@ -15,7 +15,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (cargando || !sesion) return;
     if (tieneAlgunRol(sesion, [...ROLES_ADMIN])) {
-      router.replace("/admin");
+      router.replace("/admin/carrusel");
       return;
     }
     // Futuro: portal de copropietarios/residentes. Todavía no existe una

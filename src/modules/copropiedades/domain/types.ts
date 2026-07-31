@@ -1,4 +1,5 @@
 export type EstadoCopropiedad = "activa" | "inactiva";
+export type TipoCuenta = "ahorros" | "corriente";
 
 export interface Copropiedad {
   id: string;
@@ -7,7 +8,9 @@ export interface Copropiedad {
   direccion: string | null;
   ciudad: string | null;
   telefono: string | null;
-  cuentaBancaria: string | null;
+  banco: string | null;
+  tipoCuenta: TipoCuenta | null;
+  numeroCuenta: string | null;
   correo: string | null;
   estado: EstadoCopropiedad;
 }
@@ -27,4 +30,20 @@ export interface ResumenImportacion {
   diferencia: number;
   esValida: boolean;
   errores: string[];
+}
+
+export type TipoUnidad = "apartamento" | "parqueadero" | "deposito" | "local" | "oficina";
+
+export interface UnidadPrivada {
+  id: string;
+  copropiedadId: string;
+  bloque: string;
+  identificador: string;
+  tipo: TipoUnidad;
+  coeficiente: number;
+}
+
+export interface PaginaUnidades {
+  items: UnidadPrivada[];
+  total: number;
 }

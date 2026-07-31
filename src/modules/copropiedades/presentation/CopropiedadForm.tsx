@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import type { Copropiedad, CopropiedadInput, EstadoCopropiedad } from "../domain/types";
+import type { Copropiedad, CopropiedadInput, EstadoCopropiedad, TipoCuenta } from "../domain/types";
 
 interface Props {
   itemInicial?: Copropiedad;
@@ -12,12 +12,14 @@ interface Props {
 export function CopropiedadForm({ itemInicial, onGuardar, onCancelar }: Props) {
   const [nombre, setNombre] = useState(itemInicial?.nombre ?? "");
   const [nit, setNit] = useState(itemInicial?.nit ?? "");
+  const [estado, setEstado] = useState<EstadoCopropiedad>(itemInicial?.estado ?? "activa");
   const [direccion, setDireccion] = useState(itemInicial?.direccion ?? "");
   const [ciudad, setCiudad] = useState(itemInicial?.ciudad ?? "");
   const [telefono, setTelefono] = useState(itemInicial?.telefono ?? "");
-  const [cuentaBancaria, setCuentaBancaria] = useState(itemInicial?.cuentaBancaria ?? "");
   const [correo, setCorreo] = useState(itemInicial?.correo ?? "");
-  const [estado, setEstado] = useState<EstadoCopropiedad>(itemInicial?.estado ?? "activa");
+  const [banco, setBanco] = useState(itemInicial?.banco ?? "");
+  const [tipoCuenta, setTipoCuenta] = useState<TipoCuenta | "">(itemInicial?.tipoCuenta ?? "");
+  const [numeroCuenta, setNumeroCuenta] = useState(itemInicial?.numeroCuenta ?? "");
   const [error, setError] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
 
@@ -30,12 +32,14 @@ export function CopropiedadForm({ itemInicial, onGuardar, onCancelar }: Props) {
         {
           nombre,
           nit: nit.trim() ? nit : null,
+          estado,
           direccion: direccion.trim() ? direccion : null,
           ciudad: ciudad.trim() ? ciudad : null,
           telefono: telefono.trim() ? telefono : null,
-          cuentaBancaria: cuentaBancaria.trim() ? cuentaBancaria : null,
           correo: correo.trim() ? correo : null,
-          estado,
+          banco: banco.trim() ? banco : null,
+          tipoCuenta: tipoCuenta || null,
+          numeroCuenta: numeroCuenta.trim() ? numeroCuenta : null,
         },
         itemInicial?.id
       );
@@ -47,70 +51,63 @@ export function CopropiedadForm({ itemInicial, onGuardar, onCancelar }: Props) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="card card-border bg-white flex flex-col gap-3.5 max-w-[560px]">
-      <div>
-        <label className="block text-sm font-bold mb-1">Nombre</label>
-        <input
-          required
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-3">
+    <form onSubmit={onSubmit} className="card card-border bg-white flex flex-col gap-6 max-w-[620px]">
+      <div className="flex flex-col gap-3.5">
+        <h3 className="text-sm font-extrabold uppercase tracking-[0.5px] text-teal">Información personal</h3>
         <div>
-          <label className="block text-sm font-bold mb-1">NIT</label>
+          <label className="block text-sm font-bold mb-1">Nombre</label>
           <input
-            value={nit}
-            onChange={(e) => setNit(e.target.value)}
+            required
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
             className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
           />
         </div>
-        <div className="flex items-end pb-2">
-          <label className="flex items-center gap-2 text-sm font-bold">
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-sm font-bold mb-1">NIT</label>
             <input
-              type="checkbox"
-              checked={estado === "activa"}
-              onChange={(e) => setEstado(e.target.checked ? "activa" : "inactiva")}
+              value={nit}
+              onChange={(e) => setNit(e.target.value)}
+              className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
             />
-            Activa
-          </label>
+          </div>
+          <div className="flex items-end pb-2">
+            <label className="flex items-center gap-2 text-sm font-bold">
+              <input
+                type="checkbox"
+                checked={estado === "activa"}
+                onChange={(e) => setEstado(e.target.checked ? "activa" : "inactiva")}
+              />
+              Activa
+            </label>
+          </div>
         </div>
-      </div>
-      <div>
-        <label className="block text-sm font-bold mb-1">Dirección</label>
-        <input
-          value={direccion}
-          onChange={(e) => setDireccion(e.target.value)}
-          className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-sm font-bold mb-1">Ciudad</label>
+          <label className="block text-sm font-bold mb-1">Dirección</label>
           <input
-            value={ciudad}
-            onChange={(e) => setCiudad(e.target.value)}
+            value={direccion}
+            onChange={(e) => setDireccion(e.target.value)}
             className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
           />
         </div>
-        <div>
-          <label className="block text-sm font-bold mb-1">Teléfono</label>
-          <input
-            value={telefono}
-            onChange={(e) => setTelefono(e.target.value)}
-            className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-sm font-bold mb-1">Cuenta bancaria</label>
-          <input
-            value={cuentaBancaria}
-            onChange={(e) => setCuentaBancaria(e.target.value)}
-            className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
-          />
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-sm font-bold mb-1">Ciudad</label>
+            <input
+              value={ciudad}
+              onChange={(e) => setCiudad(e.target.value)}
+              className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold mb-1">Teléfono</label>
+            <input
+              value={telefono}
+              onChange={(e) => setTelefono(e.target.value)}
+              className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
+            />
+          </div>
         </div>
         <div>
           <label className="block text-sm font-bold mb-1">Correo</label>
@@ -122,6 +119,41 @@ export function CopropiedadForm({ itemInicial, onGuardar, onCancelar }: Props) {
           />
         </div>
       </div>
+
+      <div className="flex flex-col gap-3.5 pt-4 border-t border-[#eef2f1]">
+        <h3 className="text-sm font-extrabold uppercase tracking-[0.5px] text-teal">Información bancaria</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-sm font-bold mb-1">Banco</label>
+            <input
+              value={banco}
+              onChange={(e) => setBanco(e.target.value)}
+              className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold mb-1">Tipo de cuenta</label>
+            <select
+              value={tipoCuenta}
+              onChange={(e) => setTipoCuenta(e.target.value as TipoCuenta | "")}
+              className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
+            >
+              <option value="">Sin definir</option>
+              <option value="ahorros">Ahorros</option>
+              <option value="corriente">Corriente</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-bold mb-1">Número de cuenta</label>
+          <input
+            value={numeroCuenta}
+            onChange={(e) => setNumeroCuenta(e.target.value)}
+            className="w-full rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[15px]"
+          />
+        </div>
+      </div>
+
       {error && <p className="text-sm text-red-600">{error}</p>}
       <div className="flex gap-3">
         <button type="submit" disabled={guardando} className="btn-cta bg-gold disabled:opacity-60">
