@@ -43,12 +43,25 @@ solo difieren en cómo se obtiene el JWT que las políticas leen.
 
 ## Roles y permisos
 
-| Rol | Alcance | Puede |
-|---|---|---|
-| `super_admin` | Global (todas las copropiedades) | Todo — soporte y configuración de la plataforma |
-| `admin_copropiedad` | Una o varias copropiedades (`copropiedad_id` en `perfil`) | Gestionar unidades, propietarios, asambleas, votaciones y carrusel de su(s) copropiedad(es) |
-| `propietario` | Su(s) propia(s) unidad(es) | Consultar su información, ver histórico de asambleas/votos propios (a futuro: PQRS, cartera) |
-| `asistente_asamblea` | Una asamblea puntual (no es un rol persistente, es el alcance del token descrito arriba) | Registrarse, ver quórum en vivo, votar |
+Un perfil puede tener **varios roles a la vez** — los roles viven en una
+tabla aparte (`perfil_rol`: `perfil_id` + `rol`), no en una columna única de
+`perfil`. Un mismo usuario puede ser, por ejemplo, `site_owner` y
+`super_admin` simultáneamente; las políticas RLS de cada tabla combinan los
+roles con OR (si cualquiera de sus roles le da acceso, lo tiene).
+
+| Rol | Alcance | Puede | Estado |
+|---|---|---|---|
+| `super_admin` | Global | Todo — soporte, configuración de la plataforma, gestión de perfiles y roles | Implementado (Fase 1) |
+| `site_owner` | Global (no hay tenants todavía) | Gestionar el contenido del sitio de BORCA (carrusel de novedades) | Implementado (Fase 1) |
+| `admin_copropiedad` | Una o varias copropiedades (`copropiedad_id` en `perfil_rol`) | Gestionar unidades, propietarios, asambleas, votaciones de su(s) copropiedad(es) | Futuro — requiere el portal de clientes (ver roadmap, Fase 2+) |
+| `propietario` | Su(s) propia(s) unidad(es) | Consultar su información, ver histórico de asambleas/votos propios (a futuro: PQRS, cartera) | Futuro |
+| `asistente_asamblea` | Una asamblea puntual (no es un rol persistente, es el alcance del token descrito arriba) | Registrarse, ver quórum en vivo, votar | Futuro |
+
+`admin_copropiedad` y `propietario` no existen todavía porque no hay portal
+de clientes: el sitio actual es 100% de BORCA como empresa, no de un tenant.
+Cuando se construya ese portal, `perfil_rol` gana una columna
+`copropiedad_id` (nullable — nula para roles globales como `super_admin`/
+`site_owner`, poblada para roles scoped como `admin_copropiedad`).
 
 Este listado crece según se agreguen módulos (ej. `contador`, `personal_pqrs`)
 sin cambiar el mecanismo — solo se agregan filas de rol y sus políticas RLS
@@ -56,9 +69,37 @@ correspondientes.
 
 ## Autorización: Row Level Security, no `if` en el código
 
-Cada tabla tenant-scoped tiene políticas RLS que filtran por
-`copropiedad_id` comparado contra la copropiedad del perfil autenticado. Ejemplo
-conceptual (sintaxis simplificada):
+**Hoy (Fase 1, sin tenants):** las políticas usan una función auxiliar
+`fn_tiene_rol(rol)` que revisa `perfil_rol` para el usuario autenticado.
+Así se implementó el carrusel del sitio:
+
+```sql
+create function fn_tiene_rol(rol_buscado text) returns boolean
+language sql security definer stable set search_path = public as $$
+  select exists (
+    select 1 from perfil_rol pr
+    join perfil p on p.id = pr.perfil_id
+    where p.auth_user_id = auth.uid() and pr.rol = rol_buscado
+  );
+$$;
+
+alter table carrusel_item enable row level security;
+
+create policy "público ve ítems activos y vigentes"
+on carrusel_item for select
+to anon, authenticated
+using (activo = true and (fecha_fin is null or fecha_fin >= current_date));
+
+create policy "site_owner gestiona el carrusel"
+on carrusel_item for all
+using (fn_tiene_rol('site_owner') or fn_tiene_rol('super_admin'))
+with check (fn_tiene_rol('site_owner') or fn_tiene_rol('super_admin'));
+```
+
+**A futuro (cuando exista el portal de clientes):** cada tabla tenant-scoped
+tendrá políticas RLS que filtran por `copropiedad_id` comparado contra la(s)
+copropiedad(es) del perfil autenticado (vía `perfil_rol.copropiedad_id`, una
+vez esa columna exista). Ejemplo conceptual (sintaxis simplificada):
 
 ```sql
 alter table unidad_privada enable row level security;
@@ -67,9 +108,11 @@ create policy "admins ven su copropiedad"
 on unidad_privada for select
 using (
   copropiedad_id in (
-    select copropiedad_id from perfil where auth_user_id = auth.uid()
+    select copropiedad_id from perfil_rol pr
+    join perfil p on p.id = pr.perfil_id
+    where p.auth_user_id = auth.uid() and pr.rol = 'admin_copropiedad'
   )
-  or exists (select 1 from perfil where auth_user_id = auth.uid() and rol = 'super_admin')
+  or fn_tiene_rol('super_admin')
 );
 ```
 
@@ -99,7 +142,8 @@ directo a Supabase.
 ## Auditoría
 
 Toda tabla sensible (`asamblea`, `votacion`, `voto`, `propietario`,
-`representacion`, `perfil`) tiene un **trigger de Postgres** que escribe en
+`representacion`, `perfil_rol`, `carrusel_item`) tiene un **trigger de
+Postgres** que escribe en
 `audit_log` en cada `INSERT`/`UPDATE`/`DELETE`, con el usuario autenticado
 (`auth.uid()`), la tabla, el registro, y los valores antes/después en JSON.
 Esto vive en la base de datos (no en el código de la aplicación) por la misma

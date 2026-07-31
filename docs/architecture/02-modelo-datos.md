@@ -46,10 +46,24 @@ copropiedades). `persona_id`, `unidad_privada_id`, `porcentaje_participacion`
 (nullable — nulo significa vigente).
 
 ### Perfil (usuario del sistema)
-Vincula un usuario autenticado (Supabase Auth) con una `Persona` y un rol.
-`auth_user_id` (FK a `auth.users` de Supabase), `persona_id`, `copropiedad_id`
-(nullable — nulo para roles globales tipo super-admin), `rol`. Detalle
-completo de roles en [03-autenticacion-autorizacion.md](03-autenticacion-autorizacion.md).
+Vincula un usuario autenticado (Supabase Auth) con una `Persona`, 1:1.
+`auth_user_id` (FK a `auth.users` de Supabase, único), `persona_id`.
+
+### PerfilRol (roles de un perfil — multi-rol)
+Un perfil puede tener **varios roles a la vez** (ej. `site_owner` y
+`super_admin` simultáneamente) — por eso los roles viven en una tabla
+aparte, no en una columna de `perfil`. `perfil_id`, `rol`. Hoy los roles
+existentes son `super_admin` y `site_owner` (gestión del sitio de BORCA,
+sin relación a ninguna copropiedad — ver nota de alcance abajo). Detalle
+completo en [03-autenticacion-autorizacion.md](03-autenticacion-autorizacion.md).
+
+> **Nota de alcance (2026-07-31):** hasta que exista el portal de clientes
+> (dueños/inquilinos de las copropiedades que administra BORCA), no hay
+> tabla `Copropiedad` ni `copropiedad_id` en `perfil_rol` ni en
+> `carrusel_item` — el sitio actual es 100% de BORCA como empresa, no de
+> un tenant. Los roles `admin_copropiedad` y `propietario`, y la columna
+> `copropiedad_id` en `perfil_rol`, se agregan en la fase que construya
+> ese portal (ver [07-roadmap-fases.md](07-roadmap-fases.md), Fase 2+).
 
 ### Asamblea
 `copropiedad_id`, `tipo` (ordinaria/extraordinaria), `fecha_hora`, `estado`
@@ -109,13 +123,13 @@ ningún camino de escritura se puede saltar la auditoría.
 erDiagram
     COPROPIEDAD ||--o{ UNIDAD_PRIVADA : contiene
     COPROPIEDAD ||--o{ ASAMBLEA : convoca
-    COPROPIEDAD ||--o{ PERFIL : tiene
 
     PERSONA ||--o{ PROPIETARIO : es
     UNIDAD_PRIVADA ||--o{ PROPIETARIO : tiene_duenos
 
     PERSONA ||--o{ PERFIL : autentica_como
     PERSONA ||--o{ ASISTENTE : participa_como
+    PERFIL ||--o{ PERFIL_ROL : tiene
 
     ASAMBLEA ||--o{ CONVOCATORIA : genera
     ASAMBLEA ||--o{ ASISTENTE : registra
@@ -164,7 +178,10 @@ erDiagram
         uuid id PK
         uuid auth_user_id FK
         uuid persona_id FK
-        uuid copropiedad_id FK
+    }
+    PERFIL_ROL {
+        uuid id PK
+        uuid perfil_id FK
         text rol
     }
     ASAMBLEA {

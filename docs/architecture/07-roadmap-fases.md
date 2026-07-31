@@ -52,36 +52,49 @@ todo el mecanismo de auth + roles + RLS con el caso más simple posible
 (el carrusel) antes de construir algo tan sensible como asambleas/votaciones
 sobre una base de auth no probada.
 
+**Nota de alcance (corregida el 2026-07-31):** en esta fase el sitio sigue
+siendo 100% de BORCA (la empresa) — todavía no existe portal de clientes.
+El carrusel es contenido del sitio de BORCA (global), no de una copropiedad
+cliente. La tabla `copropiedad` y cualquier modelo multi-tenant por
+`copropiedad_id` se posponen a la fase que construya el portal de clientes
+(dueños/inquilinos de las copropiedades que administra BORCA) — construirlo
+ahora habría sido diseñar para un tenant que no existe todavía.
+
 **Historias de usuario**
 - Como administrador, inicio sesión en `/admin` con email y contraseña.
 - Como administrador, si no he iniciado sesión, no puedo ver ninguna
   pantalla de `/admin` (se me redirige a login).
-- Como administrador, veo un listado de los ítems del carrusel, puedo
+- Como `site_owner`, veo un listado de los ítems del carrusel, puedo
   crear, editar, reordenar, desactivar y eliminar ítems.
 - Como visitante del sitio público, veo reflejados de inmediato los cambios
-  que el administrador hizo en el carrusel.
-- Como super-admin, puedo ver y gestionar administradores de cualquier
-  copropiedad (aunque solo exista una copropiedad real por ahora, el modelo
-  ya es multi-tenant desde esta fase).
+  que se hicieron en el carrusel.
+- Como `super_admin`, puedo ver y gestionar los perfiles y roles de
+  cualquier usuario del sistema.
+- Un usuario puede tener varios roles a la vez (ej. `site_owner` y
+  `super_admin` simultáneamente) — los roles no son mutuamente excluyentes.
 
 **Base de datos**
-- `copropiedad` (aunque solo haya una fila real por ahora — BORCA como
-  primera copropiedad/cliente piloto, o una copropiedad de ejemplo, a
-  definir con el negocio).
-- `persona`, `perfil` (con `rol`: `super_admin` | `admin_copropiedad`).
-- `carrusel_item` con `copropiedad_id` y políticas RLS reales.
-- Trigger de auditoría en `perfil` y `carrusel_item`.
+- `persona`, `perfil` (vincula `auth_user_id` ↔ `persona`, 1:1).
+- `perfil_rol`: tabla aparte de `perfil_id` + `rol` (por ahora `super_admin`
+  | `site_owner`) para soportar multi-rol — una persona puede tener varias
+  filas. Sin `copropiedad_id` todavía (se agrega cuando exista el portal de
+  clientes).
+- `carrusel_item` **sin** `copropiedad_id` — es contenido global del sitio,
+  con políticas RLS reales (lectura pública de ítems activos/vigentes,
+  gestión para `site_owner`/`super_admin`).
+- Trigger de auditoría en `perfil_rol` y `carrusel_item`.
 
 **API / Backend**
 - Sin Edge Functions todavía — el CRUD de carrusel se hace directo desde el
   cliente de Supabase respetando RLS (no hay lógica compleja que justifique
   una función).
-- Política RLS: un `admin_copropiedad` solo ve/edita el carrusel de su
-  `copropiedad_id`; `super_admin` ve todo.
+- Política RLS: cualquiera (incluso sin sesión) lee ítems activos y
+  vigentes del carrusel; solo `site_owner` o `super_admin` pueden
+  crear/editar/eliminar ítems (sin distinción por tenant, no aplica todavía).
 
 **Frontend**
 - `app/admin/layout.tsx`: guarda la sesión, redirige si no hay usuario
-  autenticado o si el rol no tiene acceso.
+  autenticado o si no tiene ningún rol con acceso.
 - `app/admin/page.tsx`: dashboard mínimo (bienvenida + accesos).
 - `app/admin/carrusel/page.tsx`: tabla + formulario de CRUD.
 - Módulo `src/modules/auth/` (login, guard, hook de sesión) y
@@ -95,12 +108,16 @@ sobre una base de auth no probada.
   pública.
 
 **Criterios de aceptación**
+- [x] No es posible ver ni escribir en `carrusel_item` sin el rol
+      `site_owner` o `super_admin` (verificado con RLS: un perfil sin rol
+      intentó insertar un ítem y Postgres lo rechazó).
+- [x] Un usuario puede tener múltiples roles simultáneos y las políticas
+      RLS los combinan correctamente (verificado con un perfil
+      `site_owner` + `super_admin` a la vez).
 - [ ] No es posible ver ninguna pantalla de `/admin` sin sesión válida.
-- [ ] Un `admin_copropiedad` no puede ver ni editar datos de otra
-      copropiedad (verificado con una prueba que lo intenta explícitamente).
 - [ ] Cambios en el carrusel desde `/admin` se reflejan en la home sin
       despliegue manual.
-- [ ] Todo cambio en `perfil` o `carrusel_item` queda en `audit_log`.
+- [ ] Todo cambio en `perfil_rol` o `carrusel_item` queda en `audit_log`.
 
 ---
 
