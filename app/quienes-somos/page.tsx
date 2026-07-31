@@ -58,36 +58,26 @@ export default function QuienesSomosPage() {
       {/* TEXTO QUIÉNES SOMOS */}
       <section className="bg-gray">
         <div className="section-wrap section-pad">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-start">
-            <div>
-              <p className="section-label">Nuestra trayectoria</p>
-              <h2 className="section-title">
-                Una empresa con <span>experiencia y vocación</span>
-              </h2>
-              <p className="section-lead border-l-[3px] border-gold pl-[18px] mb-6">
-                BORCA es una empresa especializada en la administración integral de propiedades
-                horizontales. Contamos con un equipo interdisciplinario y aliados estratégicos
-                que nos permiten brindar soluciones ágiles, efectivas y profesionales.
-              </p>
-              <p className="text-[15.5px] text-text-body leading-[1.8] mb-5">
-                Nuestro enfoque está orientado a la optimización de recursos, la sana
-                convivencia y la valorización del patrimonio de cada copropiedad. Trabajamos con
-                cada comunidad como si fuera la nuestra, comprometidos con su transformación y
-                bienestar.
-              </p>
-              <p className="text-[15.5px] text-text-body leading-[1.8]">
-                Con más de 10 años de experiencia en el sector, hemos aprendido que administrar
-                una copropiedad no es solo manejar números y procesos. Es cuidar comunidades,
-                proteger patrimonios y crear espacios donde las personas quieren vivir.
-              </p>
-            </div>
-            <div>
-              <img
-                src="/images/team.jpg"
-                alt="Equipo BORCA"
-                className="w-full rounded-card shadow-soft object-cover h-[380px] object-[center_top]"
-              />
-            </div>
+          <div className="max-w-[720px]">
+            <p className="section-label">Nuestra trayectoria</p>
+            <h2 className="section-title">
+              Experiencia que genera <span>confianza</span>
+            </h2>
+            <p className="section-lead border-l-[3px] border-gold pl-[18px] mb-6">
+              Con más de 10 años de experiencia en el sector, hemos acompañado la gestión de copropiedades
+              residenciales, comerciales y mixtas, consolidando procesos eficientes y soluciones adaptadas
+              a las necesidades de cada cliente.
+            </p>
+            <p className="text-[15.5px] text-text-body leading-[1.8] mb-5">
+              Nuestro equipo interdisciplinario y nuestra red de aliados estratégicos nos permiten brindar
+              un acompañamiento integral en las áreas administrativas, financieras, jurídicas, operativas
+              y técnicas, ofreciendo respuestas oportunas y un servicio de alta calidad.
+            </p>
+            <p className="text-[15.5px] text-text-body leading-[1.8]">
+              Más que administrar, asumimos cada copropiedad con responsabilidad, compromiso y visión de
+              futuro, convencidos de que una buena gestión fortalece la convivencia, protege el patrimonio
+              y contribuye a la valorización de los inmuebles.
+            </p>
           </div>
         </div>
       </section>
