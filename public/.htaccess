@@ -1,3 +1,7 @@
+# Página 404 personalizada (generada por Next.js en 404.html) — sin esto,
+# Apache muestra su propio "404 Not Found" genérico en vez de la nuestra.
+ErrorDocument 404 /404.html
+
 # Redirige las URLs .html que el sitio anterior servía (y que pueden estar
 # indexadas o guardadas como marcadores) hacia las nuevas rutas limpias.
 # Las rutas limpias (ej. /servicios/) las resuelve Apache de forma nativa,

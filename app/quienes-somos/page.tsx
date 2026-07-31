@@ -171,7 +171,7 @@ export default function QuienesSomosPage() {
               </div>
               <h4 className="text-[15.5px] font-extrabold mb-1">Especialistas jurídicos</h4>
               <p className="text-sm text-text-body leading-[1.65]">
-                Asesoría en Ley 675 y normativa de Propiedad Horizontal aplicable.
+                Asesoría en la Ley 675 de 2001 y normativa de Propiedad Horizontal aplicable.
               </p>
             </div>
             <div className="card card-gray text-center">
