@@ -1,5 +1,9 @@
 import Link from "next/link";
 
+// Pendiente: aún no existen las cuentas de redes sociales de BORCA. Se
+// ocultan los íconos hasta crearlas. Reactivar cambiando esto a true.
+const REDES_SOCIALES_HABILITADAS = false;
+
 export function Footer() {
   return (
     <footer className="page-footer">
@@ -77,20 +81,22 @@ export function Footer() {
       </div>
       <div className="footer-bottom">
         <p>© 2026 BORCA. Todos los derechos reservados.</p>
-        <div className="footer-social">
-          <a href="#" aria-label="Instagram">
-            <i className="fa-brands fa-instagram"></i>
-          </a>
-          <a href="#" aria-label="Facebook">
-            <i className="fa-brands fa-facebook-f"></i>
-          </a>
-          <a href="#" aria-label="LinkedIn">
-            <i className="fa-brands fa-linkedin-in"></i>
-          </a>
-          <a href="#" aria-label="TikTok">
-            <i className="fa-brands fa-tiktok"></i>
-          </a>
-        </div>
+        {REDES_SOCIALES_HABILITADAS && (
+          <div className="footer-social">
+            <a href="#" aria-label="Instagram">
+              <i className="fa-brands fa-instagram"></i>
+            </a>
+            <a href="#" aria-label="Facebook">
+              <i className="fa-brands fa-facebook-f"></i>
+            </a>
+            <a href="#" aria-label="LinkedIn">
+              <i className="fa-brands fa-linkedin-in"></i>
+            </a>
+            <a href="#" aria-label="TikTok">
+              <i className="fa-brands fa-tiktok"></i>
+            </a>
+          </div>
+        )}
       </div>
     </footer>
   );
