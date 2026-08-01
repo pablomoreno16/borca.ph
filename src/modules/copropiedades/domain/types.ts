@@ -53,3 +53,22 @@ export interface PaginaUnidades {
   items: UnidadPrivada[];
   total: number;
 }
+
+export interface PropietarioUnidad {
+  id: string;
+  nombre: string;
+  porcentajeParticipacion: number | null;
+  fechaInicio: string;
+  fechaFin: string | null;
+}
+
+export interface Persona {
+  id: string;
+  tipoDocumento: string | null;
+  numeroDocumento: string | null;
+  nombre: string;
+  correo: string | null;
+  telefono: string | null;
+}
+
+export type PersonaInput = Omit<Persona, "id">;

@@ -40,11 +40,6 @@ export function UnidadForm({ unidad, onGuardar, onCancelar }: Props) {
 
   return (
     <form onSubmit={onSubmit} className="card card-border bg-white flex flex-col gap-3.5 max-w-[480px]">
-      {unidad.propietarioNombre && (
-        <p className="text-sm text-text-body">
-          <i className="fa-solid fa-user"></i> Propietario: <strong>{unidad.propietarioNombre}</strong>
-        </p>
-      )}
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block text-sm font-bold mb-1">Bloque</label>

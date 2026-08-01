@@ -5,6 +5,9 @@ import type {
   CopropiedadInput,
   FilaImportada,
   PaginaUnidades,
+  Persona,
+  PersonaInput,
+  PropietarioUnidad,
   UnidadPrivada,
   UnidadPrivadaInput,
 } from "../domain/types";
@@ -155,6 +158,98 @@ export async function obtenerSumaCoeficientes(copropiedadId: string): Promise<nu
   const { data, error } = await supabase.from("unidad_privada").select("coeficiente").eq("copropiedad_id", copropiedadId);
   if (error) throw error;
   return (data ?? []).reduce((acc, fila) => acc + fila.coeficiente, 0);
+}
+
+type FilaPropietarioConPersona = Tables<"propietario"> & { persona: { nombre: string } | null };
+
+// Una unidad puede tener varios propietarios (copropiedad entre varias
+// personas, o historial con fecha_fin). Se muestran todos, sin paginar:
+// en la práctica son pocos por unidad.
+export async function listarPropietariosDeUnidad(unidadId: string): Promise<PropietarioUnidad[]> {
+  const { data, error } = await supabase
+    .from("propietario")
+    .select("*, persona(nombre)")
+    .eq("unidad_privada_id", unidadId)
+    .order("fecha_fin", { ascending: true, nullsFirst: true })
+    .order("fecha_inicio", { ascending: false });
+  if (error) throw error;
+
+  return ((data ?? []) as FilaPropietarioConPersona[]).map((fila) => ({
+    id: fila.id,
+    nombre: fila.persona?.nombre ?? "—",
+    porcentajeParticipacion: fila.porcentaje_participacion,
+    fechaInicio: fila.fecha_inicio,
+    fechaFin: fila.fecha_fin,
+  }));
+}
+
+function personaADominio(fila: Tables<"persona">): Persona {
+  return {
+    id: fila.id,
+    tipoDocumento: fila.tipo_documento,
+    numeroDocumento: fila.numero_documento,
+    nombre: fila.nombre,
+    correo: fila.email,
+    telefono: fila.telefono,
+  };
+}
+
+function personaAFila(input: PersonaInput) {
+  return {
+    tipo_documento: input.tipoDocumento,
+    numero_documento: input.numeroDocumento,
+    nombre: input.nombre,
+    email: input.correo,
+    telefono: input.telefono,
+  };
+}
+
+// Busca por el par (tipo_documento, numero_documento), que es único en
+// persona. null si no existe nadie con ese documento.
+export async function buscarPersonaPorDocumento(tipoDocumento: string, numeroDocumento: string): Promise<Persona | null> {
+  const { data, error } = await supabase
+    .from("persona")
+    .select("*")
+    .eq("tipo_documento", tipoDocumento)
+    .eq("numero_documento", numeroDocumento)
+    .maybeSingle();
+  if (error) throw error;
+  return data ? personaADominio(data) : null;
+}
+
+export async function crearPersona(input: PersonaInput): Promise<Persona> {
+  const { data, error } = await supabase.from("persona").insert(personaAFila(input)).select().single();
+  if (error) throw error;
+  return personaADominio(data);
+}
+
+export async function actualizarPersona(id: string, input: PersonaInput): Promise<Persona> {
+  const { data, error } = await supabase.from("persona").update(personaAFila(input)).eq("id", id).select().single();
+  if (error) throw error;
+  return personaADominio(data);
+}
+
+export async function agregarPropietario(
+  unidadId: string,
+  personaId: string,
+  porcentajeParticipacion: number
+): Promise<void> {
+  const { error } = await supabase
+    .from("propietario")
+    .insert({ unidad_privada_id: unidadId, persona_id: personaId, porcentaje_participacion: porcentajeParticipacion });
+  if (error) throw error;
+}
+
+// Solo cuenta los propietarios activos (sin fecha_fin): es la base sobre la
+// que se calcula "% de participación total" al agregar uno nuevo.
+export async function obtenerSumaParticipacionActiva(unidadId: string): Promise<number> {
+  const { data, error } = await supabase
+    .from("propietario")
+    .select("porcentaje_participacion")
+    .eq("unidad_privada_id", unidadId)
+    .is("fecha_fin", null);
+  if (error) throw error;
+  return (data ?? []).reduce((acc, fila) => acc + (fila.porcentaje_participacion ?? 0), 0);
 }
 
 export async function obtenerUnidad(id: string): Promise<UnidadPrivada> {

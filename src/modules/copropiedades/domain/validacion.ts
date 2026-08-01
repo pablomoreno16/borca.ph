@@ -1,4 +1,4 @@
-import type { CopropiedadInput, FilaImportada, ResumenImportacion, UnidadPrivadaInput } from "./types";
+import type { CopropiedadInput, FilaImportada, PersonaInput, ResumenImportacion, UnidadPrivadaInput } from "./types";
 
 export function validarCopropiedad(input: CopropiedadInput): string[] {
   const errores: string[] = [];
@@ -10,6 +10,19 @@ export function validarUnidad(input: UnidadPrivadaInput): string[] {
   const errores: string[] = [];
   if (!input.identificador.trim()) errores.push("El número de la unidad es obligatorio.");
   if (!(input.coeficiente > 0)) errores.push("El coeficiente debe ser mayor a 0.");
+  return errores;
+}
+
+export function validarPersona(input: PersonaInput): string[] {
+  const errores: string[] = [];
+  if (!input.nombre.trim()) errores.push("El nombre es obligatorio.");
+  return errores;
+}
+
+export function validarPorcentajeParticipacion(valor: number): string[] {
+  const errores: string[] = [];
+  if (!(valor > 0)) errores.push("El % de participación debe ser mayor a 0.");
+  if (valor > 100) errores.push("El % de participación no puede ser mayor a 100.");
   return errores;
 }
 
