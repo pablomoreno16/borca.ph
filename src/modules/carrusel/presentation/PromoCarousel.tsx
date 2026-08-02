@@ -48,13 +48,6 @@ const TIPO_LABEL: Record<TipoCarrusel, string> = {
   anuncio: "Anuncio",
 };
 
-function formatearVigencia(fechaFin: string | null): string | null {
-  if (!fechaFin) return null;
-  const fecha = new Date(`${fechaFin}T00:00:00`);
-  const formato = new Intl.DateTimeFormat("es-CO", { day: "numeric", month: "long" }).format(fecha);
-  return `Válido hasta el ${formato}`;
-}
-
 // El destino del CTA puede ser una ruta interna ("/contacto") o una URL
 // externa (con o sin protocolo, ej. "www.google.com" o "https://...").
 function normalizarCtaHref(href: string): string {
@@ -228,11 +221,6 @@ export function PromoCarousel() {
                     </span>
                     <h3>{slide.titulo}</h3>
                     {slide.descripcion && <p>{slide.descripcion}</p>}
-                    {formatearVigencia(slide.fechaFin) && (
-                      <div className="promo-meta">
-                        <i className="fa-regular fa-calendar"></i> {formatearVigencia(slide.fechaFin)}
-                      </div>
-                    )}
                     {slide.ctaLabel && slide.ctaHref && (
                       <a
                         href={normalizarCtaHref(slide.ctaHref)}

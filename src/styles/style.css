@@ -394,13 +394,7 @@
   .promo-slide:not(.is-light) p {
     color: rgba(255, 255, 255, 0.88);
   }
-  .promo-slide:not(.is-light) .promo-meta {
-    color: rgba(255, 255, 255, 0.78);
-  }
   .promo-slide.is-light p {
-    @apply text-text-body;
-  }
-  .promo-slide.is-light .promo-meta {
     @apply text-text-body;
   }
   .promo-content {
@@ -429,9 +423,6 @@
   }
   .promo-slide p {
     @apply text-base leading-[1.75] max-w-[440px] mb-5 max-md:mx-auto max-md:mb-[18px];
-  }
-  .promo-meta {
-    @apply flex items-center gap-2 text-sm font-bold mb-6 max-md:mx-auto max-md:mb-5;
   }
   .promo-visual {
     @apply relative z-10 flex items-center justify-center max-md:order-[-1];
