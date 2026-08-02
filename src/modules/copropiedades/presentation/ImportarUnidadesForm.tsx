@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import type { FilaImportada, ResumenImportacion } from "../domain/types";
-import { analizarExcelUnidades, confirmarImportacion } from "../application/importarUnidadesDesdeExcel";
+import {
+  analizarExcelUnidades,
+  confirmarImportacion,
+  hayUnidadesQueSeReemplazaran,
+} from "../application/importarUnidadesDesdeExcel";
 
 interface Props {
   copropiedadId: string;
@@ -42,6 +46,17 @@ export function ImportarUnidadesForm({ copropiedadId, copropiedadNombre, onImpor
   async function onConfirmar() {
     if (!filas) return;
     setError(null);
+    try {
+      if (await hayUnidadesQueSeReemplazaran(copropiedadId)) {
+        const continuar = window.confirm(
+          "Este proceso eliminará las unidades actuales de esta copropiedad, ¿desea continuar?"
+        );
+        if (!continuar) return;
+      }
+    } catch {
+      setError("No se pudo verificar si ya hay unidades cargadas.");
+      return;
+    }
     setImportando(true);
     try {
       await confirmarImportacion(copropiedadId, filas);
@@ -58,8 +73,14 @@ export function ImportarUnidadesForm({ copropiedadId, copropiedadNombre, onImpor
       <div>
         <h3 className="font-bold">Importar unidades para {copropiedadNombre}</h3>
         <p className="text-sm text-text-body">
-          El archivo debe tener columnas: Bloque (opcional, se asume &quot;1&quot; si está vacío), Apartamento,
-          Nombre del propietario y Coeficiente (en fracción 0-1 o en porcentaje 1-100, se detecta automáticamente).
+          El archivo debe tener columnas: Torre (opcional, se asume &quot;1&quot; si está vacía), Apartamento, Tipo
+          (Apartamento, Parqueadero, Depósito, Local u Oficina), Coeficiente (en fracción 0-1 o en porcentaje 1-100,
+          se detecta automáticamente), Propietario 1, Propietario 2 y Propietario 3 (estos dos últimos opcionales,
+          para unidades con varios dueños). Los nombres de columnas no distinguen mayúsculas/minúsculas.
+        </p>
+        <p className="text-sm text-text-body">
+          <i className="fa-solid fa-triangle-exclamation"></i> Este proceso reemplaza todas las unidades actuales de
+          la copropiedad por las del archivo.
         </p>
       </div>
       <div className="flex items-center gap-3 flex-wrap">

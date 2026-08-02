@@ -19,11 +19,16 @@ export interface Copropiedad {
 
 export type CopropiedadInput = Omit<Copropiedad, "id">;
 
+export type TipoUnidad = "apartamento" | "cuarto_util" | "deposito" | "local" | "oficina" | "parqueadero";
+
+// Hasta 3 propietarios por fila (columnas "Propietario 1/2/3" del Excel);
+// el primero es obligatorio, los otros dos opcionales para co-propiedad.
 export interface FilaImportada {
   bloque: string;
   apartamento: string;
-  nombrePropietario: string;
+  tipo: TipoUnidad | null;
   coeficiente: number;
+  propietarios: string[];
 }
 
 export interface ResumenImportacion {
@@ -34,8 +39,6 @@ export interface ResumenImportacion {
   errores: string[];
   escalaConvertida: boolean;
 }
-
-export type TipoUnidad = "apartamento" | "parqueadero" | "deposito" | "local" | "oficina";
 
 export interface UnidadPrivada {
   id: string;
@@ -48,6 +51,13 @@ export interface UnidadPrivada {
 }
 
 export type UnidadPrivadaInput = Pick<UnidadPrivada, "bloque" | "identificador" | "tipo" | "coeficiente">;
+
+// Edición masiva: solo se aplican los campos presentes (undefined = no
+// tocar ese campo en las unidades seleccionadas).
+export interface CambiosUnidadEnLote {
+  tipo?: TipoUnidad;
+  coeficiente?: number;
+}
 
 export interface PaginaUnidades {
   items: UnidadPrivada[];

@@ -7,6 +7,7 @@ import { useSesion } from "@/modules/auth/application/useSesion";
 import { tieneAlgunRol } from "@/modules/auth/domain/types";
 import { obtenerCopropiedad } from "@/modules/copropiedades/infrastructure/copropiedadRepository";
 import { guardarCopropiedad } from "@/modules/copropiedades/application/guardarCopropiedad";
+import { exportarUnidadesExcel } from "@/modules/copropiedades/application/exportarUnidadesExcel";
 import { CopropiedadForm } from "@/modules/copropiedades/presentation/CopropiedadForm";
 import { ImportarUnidadesForm } from "@/modules/copropiedades/presentation/ImportarUnidadesForm";
 import { UnidadesTable } from "@/modules/copropiedades/presentation/UnidadesTable";
@@ -33,6 +34,7 @@ export default function AdminCopropiedadDetallePage() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [importando, setImportando] = useState(false);
+  const [exportando, setExportando] = useState(false);
   // Cambiar la key fuerza a UnidadesTable a remontarse y volver a
   // consultar — su propio hook solo refetch cuando cambian pagina/
   // porPagina/filtro, no cuando otro componente (el importador) crea
@@ -62,6 +64,24 @@ export default function AdminCopropiedadDetallePage() {
     setCopropiedad(actualizado);
   }
 
+  async function onExportar() {
+    if (!copropiedad) return;
+    setExportando(true);
+    try {
+      const blob = await exportarUnidadesExcel(copropiedad.id);
+      const url = URL.createObjectURL(blob);
+      const enlace = document.createElement("a");
+      enlace.href = url;
+      enlace.download = `unidades_${copropiedad.nombre.trim().replace(/\s+/g, "_")}.xlsx`;
+      enlace.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setError("No se pudo generar el archivo de exportación.");
+    } finally {
+      setExportando(false);
+    }
+  }
+
   if (cargandoSesion || !autorizado) {
     return <p className="text-text-body">Verificando acceso...</p>;
   }
@@ -83,9 +103,19 @@ export default function AdminCopropiedadDetallePage() {
         <>
           <div className="flex items-center justify-between flex-wrap gap-3">
             <h1 className="font-serif text-2xl font-bold text-teal">{copropiedad.nombre}</h1>
-            <button type="button" onClick={() => setImportando((v) => !v)} className="btn-cta bg-gold">
-              <i className="fa-solid fa-file-excel"></i> Importar unidades
-            </button>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={onExportar}
+                disabled={exportando}
+                className="text-sm font-semibold text-teal hover:underline disabled:opacity-60"
+              >
+                <i className="fa-solid fa-file-arrow-down"></i> {exportando ? "Exportando..." : "Exportar"}
+              </button>
+              <button type="button" onClick={() => setImportando((v) => !v)} className="btn-cta bg-gold">
+                <i className="fa-solid fa-file-excel"></i> Importar unidades
+              </button>
+            </div>
           </div>
 
           <CopropiedadForm

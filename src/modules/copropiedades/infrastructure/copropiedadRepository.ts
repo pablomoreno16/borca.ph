@@ -1,6 +1,7 @@
 import { supabase } from "@/shared/supabase/client";
 import type { Tables } from "@/shared/supabase/database.types";
 import type {
+  CambiosUnidadEnLote,
   Copropiedad,
   CopropiedadInput,
   FilaImportada,
@@ -217,6 +218,21 @@ export async function buscarPersonaPorDocumento(tipoDocumento: string, numeroDoc
   return data ? personaADominio(data) : null;
 }
 
+// El documento puede estar vacío (propietarios cargados por import masivo
+// sin cédula/NIT), así que también hay que poder buscar por nombre.
+// Coincidencia parcial e insensible a mayúsculas — puede haber varios
+// resultados si el nombre no es único.
+export async function buscarPersonasPorNombre(texto: string): Promise<Persona[]> {
+  const { data, error } = await supabase
+    .from("persona")
+    .select("*")
+    .ilike("nombre", `%${texto}%`)
+    .order("nombre", { ascending: true })
+    .limit(20);
+  if (error) throw error;
+  return (data ?? []).map(personaADominio);
+}
+
 export async function crearPersona(input: PersonaInput): Promise<Persona> {
   const { data, error } = await supabase.from("persona").insert(personaAFila(input)).select().single();
   if (error) throw error;
@@ -278,6 +294,15 @@ export async function actualizarUnidad(id: string, input: UnidadPrivadaInput): P
   return unidadADominio(data);
 }
 
+export async function actualizarUnidadesEnLote(ids: string[], cambios: CambiosUnidadEnLote): Promise<void> {
+  const cambiosFila: { tipo?: string; coeficiente?: number } = {};
+  if (cambios.tipo !== undefined) cambiosFila.tipo = cambios.tipo;
+  if (cambios.coeficiente !== undefined) cambiosFila.coeficiente = cambios.coeficiente;
+
+  const { error } = await supabase.from("unidad_privada").update(cambiosFila).in("id", ids);
+  if (error) throw error;
+}
+
 // Borra primero los propietario ligados a la unidad (la FK no tiene cascade)
 // y luego la unidad. No borra la persona: podría tener otras unidades.
 export async function eliminarUnidad(id: string): Promise<void> {
@@ -288,37 +313,120 @@ export async function eliminarUnidad(id: string): Promise<void> {
   if (error) throw error;
 }
 
-// Crea persona + unidad_privada + propietario para cada fila del Excel, en
-// tres inserts por lote (no uno por fila) para que importar decenas o
-// cientos de unidades sea rápido. Postgres devuelve las filas de un mismo
-// INSERT ... VALUES en el mismo orden en que se insertaron, así que los
-// índices se correlacionan entre los tres lotes.
-export async function importarUnidades(copropiedadId: string, filas: FilaImportada[]): Promise<void> {
-  const { data: personas, error: errorPersonas } = await supabase
-    .from("persona")
-    .insert(filas.map((f) => ({ nombre: f.nombrePropietario })))
-    .select("id");
-  if (errorPersonas) throw errorPersonas;
+export async function existenUnidadesEnCopropiedad(copropiedadId: string): Promise<boolean> {
+  const { count, error } = await supabase
+    .from("unidad_privada")
+    .select("id", { count: "exact", head: true })
+    .eq("copropiedad_id", copropiedadId);
+  if (error) throw error;
+  return (count ?? 0) > 0;
+}
 
-  const { data: unidades, error: errorUnidades } = await supabase
+// El import reemplaza TODAS las unidades de la copropiedad por las del
+// Excel (no las combina): borra propietario + unidad_privada existentes y
+// crea todo de nuevo. Los propietarios se resuelven por nombre sin
+// distinguir mayúsculas — si ya existe una persona con ese nombre se
+// reutiliza (puede ser dueña de varias unidades: un apartamento, un
+// parqueadero, un cuarto útil), si no se crea una persona nueva. Cuando una
+// fila trae varios propietarios (co-propiedad), el % de participación se
+// reparte en partes iguales entre ellos.
+export async function importarUnidades(copropiedadId: string, filas: FilaImportada[]): Promise<void> {
+  const { data: unidadesExistentes, error: errorExistentes } = await supabase
+    .from("unidad_privada")
+    .select("id")
+    .eq("copropiedad_id", copropiedadId);
+  if (errorExistentes) throw errorExistentes;
+
+  if (unidadesExistentes && unidadesExistentes.length > 0) {
+    const idsExistentes = unidadesExistentes.map((u) => u.id);
+    const { error: errorBorrarPropietarios } = await supabase
+      .from("propietario")
+      .delete()
+      .in("unidad_privada_id", idsExistentes);
+    if (errorBorrarPropietarios) throw errorBorrarPropietarios;
+
+    const { error: errorBorrarUnidades } = await supabase
+      .from("unidad_privada")
+      .delete()
+      .eq("copropiedad_id", copropiedadId);
+    if (errorBorrarUnidades) throw errorBorrarUnidades;
+  }
+
+  const { data: personasExistentes, error: errorPersonasExistentes } = await supabase
+    .from("persona")
+    .select("id, nombre");
+  if (errorPersonasExistentes) throw errorPersonasExistentes;
+
+  const idPorNombre = new Map<string, string>(
+    (personasExistentes ?? []).map((p) => [p.nombre.trim().toLowerCase(), p.id])
+  );
+
+  const nombresUnicos = new Set<string>();
+  filas.forEach((f) => f.propietarios.forEach((nombre) => nombresUnicos.add(nombre)));
+  const nombresNuevos = Array.from(nombresUnicos).filter((nombre) => !idPorNombre.has(nombre.trim().toLowerCase()));
+
+  if (nombresNuevos.length > 0) {
+    const { data: personasCreadas, error: errorCrearPersonas } = await supabase
+      .from("persona")
+      .insert(nombresNuevos.map((nombre) => ({ nombre })))
+      .select("id, nombre");
+    if (errorCrearPersonas) throw errorCrearPersonas;
+    (personasCreadas ?? []).forEach((p) => idPorNombre.set(p.nombre.trim().toLowerCase(), p.id));
+  }
+
+  const { data: unidadesCreadas, error: errorUnidades } = await supabase
     .from("unidad_privada")
     .insert(
       filas.map((f) => ({
         copropiedad_id: copropiedadId,
         bloque: f.bloque,
         identificador: f.apartamento,
+        tipo: f.tipo!,
         coeficiente: f.coeficiente,
       }))
     )
     .select("id");
   if (errorUnidades) throw errorUnidades;
 
-  const { error: errorPropietarios } = await supabase.from("propietario").insert(
-    filas.map((_, i) => ({
-      persona_id: personas![i].id,
-      unidad_privada_id: unidades![i].id,
-      porcentaje_participacion: 100,
-    }))
-  );
+  const filasPropietarios = filas.flatMap((f, i) => {
+    const unidadId = unidadesCreadas![i].id;
+    const porcentaje = 100 / f.propietarios.length;
+    return f.propietarios.map((nombre) => ({
+      persona_id: idPorNombre.get(nombre.trim().toLowerCase())!,
+      unidad_privada_id: unidadId,
+      porcentaje_participacion: porcentaje,
+    }));
+  });
+
+  const { error: errorPropietarios } = await supabase.from("propietario").insert(filasPropietarios);
   if (errorPropietarios) throw errorPropietarios;
+}
+
+// Para el botón "Exportar": misma forma de columnas que el import (Torre,
+// Apartamento, Tipo, Coeficiente, Propietario 1-3). Solo incluye
+// propietarios activos (sin fecha_fin); si hay más de 3 se truncan porque
+// el formato del archivo solo tiene 3 columnas de propietario.
+export async function listarUnidadesParaExportar(copropiedadId: string): Promise<
+  { bloque: string; identificador: string; tipo: UnidadPrivada["tipo"]; coeficiente: number; propietarios: string[] }[]
+> {
+  const { data, error } = await supabase
+    .from("unidad_privada")
+    .select(SELECT_UNIDAD_CON_PROPIETARIO)
+    .eq("copropiedad_id", copropiedadId)
+    .order("bloque", { ascending: true })
+    .order("identificador", { ascending: true });
+  if (error) throw error;
+
+  return ((data ?? []) as FilaUnidadConPropietario[]).map((fila) => ({
+    bloque: fila.bloque,
+    identificador: fila.identificador,
+    tipo: fila.tipo as UnidadPrivada["tipo"],
+    coeficiente: fila.coeficiente,
+    propietarios: (fila.propietario ?? [])
+      .filter((p) => p.fecha_fin === null)
+      .sort((a, b) => a.fecha_inicio.localeCompare(b.fecha_inicio))
+      .slice(0, 3)
+      .map((p) => p.persona?.nombre ?? "")
+      .filter(Boolean),
+  }));
 }

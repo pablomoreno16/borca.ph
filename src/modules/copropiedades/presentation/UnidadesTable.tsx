@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useUnidadesPaginadas } from "../application/useUnidadesPaginadas";
 import { useSumaCoeficientes } from "../application/useSumaCoeficientes";
 import { TIPO_UNIDAD_LABEL } from "../domain/etiquetas";
+import { Modal } from "@/shared/ui/Modal";
+import { EditarUnidadesLoteModal } from "./EditarUnidadesLoteModal";
 
 const OPCIONES_POR_PAGINA = [10, 20, 50, 100];
 
@@ -24,8 +27,53 @@ export function UnidadesTable({ copropiedadId }: Props) {
     setPagina,
     cambiarPorPagina,
     cambiarFiltro,
+    refrescar,
   } = useUnidadesPaginadas(copropiedadId);
   const sumaCoeficientes = useSumaCoeficientes(copropiedadId);
+
+  // Selección persistente: no depende de pagina/porPagina/filtro, así que
+  // se mantiene al cambiar de página y se acumula si se selecciona bajo
+  // un filtro distinto (no se limpia al filtrar).
+  const [seleccionados, setSeleccionados] = useState<Set<string>>(new Set());
+  const [loteAbierto, setLoteAbierto] = useState(false);
+
+  const idsPaginaActual = items.map((u) => u.id);
+  const todosSeleccionados = idsPaginaActual.length > 0 && idsPaginaActual.every((id) => seleccionados.has(id));
+  const algunoSeleccionado = idsPaginaActual.some((id) => seleccionados.has(id));
+
+  const checkboxHeaderRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (checkboxHeaderRef.current) {
+      checkboxHeaderRef.current.indeterminate = algunoSeleccionado && !todosSeleccionados;
+    }
+  }, [algunoSeleccionado, todosSeleccionados]);
+
+  function alternarTodos() {
+    setSeleccionados((prev) => {
+      const next = new Set(prev);
+      if (todosSeleccionados) {
+        idsPaginaActual.forEach((id) => next.delete(id));
+      } else {
+        idsPaginaActual.forEach((id) => next.add(id));
+      }
+      return next;
+    });
+  }
+
+  function alternarUno(id: string) {
+    setSeleccionados((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function onGuardadoLote() {
+    setLoteAbierto(false);
+    setSeleccionados(new Set());
+    refrescar();
+  }
 
   return (
     <div className="flex flex-col gap-3.5">
@@ -41,20 +89,33 @@ export function UnidadesTable({ copropiedadId }: Props) {
           placeholder="Filtrar por # o propietario"
           className="rounded-[8px] border border-[#d8dedd] px-3 py-2 text-[14px] w-[240px]"
         />
-        <div className="flex items-center gap-2 text-sm text-text-body">
-          <label htmlFor="por-pagina">Por página</label>
-          <select
-            id="por-pagina"
-            value={porPagina}
-            onChange={(e) => cambiarPorPagina(Number(e.target.value))}
-            className="rounded-[8px] border border-[#d8dedd] px-2 py-1.5 text-sm"
-          >
-            {OPCIONES_POR_PAGINA.map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
+        <div className="flex items-center gap-3 flex-wrap">
+          {seleccionados.size > 0 && (
+            <>
+              <span className="text-sm text-text-body">{seleccionados.size} seleccionada(s)</span>
+              <button type="button" onClick={() => setSeleccionados(new Set())} className="text-sm text-text-body hover:underline">
+                Limpiar selección
+              </button>
+              <button type="button" onClick={() => setLoteAbierto(true)} className="btn-cta bg-gold text-sm">
+                <i className="fa-solid fa-pen"></i> Editar seleccionadas ({seleccionados.size})
+              </button>
+            </>
+          )}
+          <div className="flex items-center gap-2 text-sm text-text-body">
+            <label htmlFor="por-pagina">Por página</label>
+            <select
+              id="por-pagina"
+              value={porPagina}
+              onChange={(e) => cambiarPorPagina(Number(e.target.value))}
+              className="rounded-[8px] border border-[#d8dedd] px-2 py-1.5 text-sm"
+            >
+              {OPCIONES_POR_PAGINA.map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
@@ -71,6 +132,9 @@ export function UnidadesTable({ copropiedadId }: Props) {
           <table className="w-full text-left text-sm border-collapse">
             <thead>
               <tr className="border-b border-[#e5e9e8] text-text-body">
+                <th className="py-2 pr-3 w-8">
+                  <input ref={checkboxHeaderRef} type="checkbox" checked={todosSeleccionados} onChange={alternarTodos} />
+                </th>
                 <th className="py-2 pr-3">Bloque</th>
                 <th className="py-2 pr-3">#</th>
                 <th className="py-2 pr-3">Propietario</th>
@@ -81,6 +145,13 @@ export function UnidadesTable({ copropiedadId }: Props) {
             <tbody>
               {items.map((unidad) => (
                 <tr key={unidad.id} className="border-b border-[#eef2f1]">
+                  <td className="py-2 pr-3">
+                    <input
+                      type="checkbox"
+                      checked={seleccionados.has(unidad.id)}
+                      onChange={() => alternarUno(unidad.id)}
+                    />
+                  </td>
                   <td className="py-2 pr-3">{unidad.bloque}</td>
                   <td className="py-2 pr-3 font-semibold">
                     <Link href={`/admin/copropiedades/unidad?id=${unidad.id}`} className="text-teal hover:underline">
@@ -124,6 +195,16 @@ export function UnidadesTable({ copropiedadId }: Props) {
             </button>
           </div>
         </div>
+      )}
+
+      {loteAbierto && (
+        <Modal onClose={() => setLoteAbierto(false)}>
+          <EditarUnidadesLoteModal
+            unidadIds={Array.from(seleccionados)}
+            onGuardado={onGuardadoLote}
+            onCancelar={() => setLoteAbierto(false)}
+          />
+        </Modal>
       )}
     </div>
   );

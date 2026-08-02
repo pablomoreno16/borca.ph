@@ -1,4 +1,11 @@
-import type { CopropiedadInput, FilaImportada, PersonaInput, ResumenImportacion, UnidadPrivadaInput } from "./types";
+import type {
+  CambiosUnidadEnLote,
+  CopropiedadInput,
+  FilaImportada,
+  PersonaInput,
+  ResumenImportacion,
+  UnidadPrivadaInput,
+} from "./types";
 
 export function validarCopropiedad(input: CopropiedadInput): string[] {
   const errores: string[] = [];
@@ -10,6 +17,18 @@ export function validarUnidad(input: UnidadPrivadaInput): string[] {
   const errores: string[] = [];
   if (!input.identificador.trim()) errores.push("El número de la unidad es obligatorio.");
   if (!(input.coeficiente > 0)) errores.push("El coeficiente debe ser mayor a 0.");
+  return errores;
+}
+
+export function validarEdicionLote(ids: string[], cambios: CambiosUnidadEnLote): string[] {
+  const errores: string[] = [];
+  if (ids.length === 0) errores.push("No hay unidades seleccionadas.");
+  if (cambios.tipo === undefined && cambios.coeficiente === undefined) {
+    errores.push("Selecciona al menos un campo para actualizar.");
+  }
+  if (cambios.coeficiente !== undefined && !(cambios.coeficiente > 0)) {
+    errores.push("El coeficiente debe ser mayor a 0.");
+  }
   return errores;
 }
 
@@ -50,19 +69,20 @@ export function normalizarEscalaCoeficientes(filas: FilaImportada[]): {
 // (Ley 675 art. 3). Se acepta un margen pequeño por redondeo del Excel.
 const TOLERANCIA_COEFICIENTES = 0.01;
 
-export function validarFilasImportadas(filas: FilaImportada[], escalaConvertida = false): ResumenImportacion {
-  const errores: string[] = [];
+// erroresPrevios: errores por celda ya detectados al parsear el Excel
+// (infrastructure/excelParser.ts), que tiene el texto crudo de cada celda
+// para dar mensajes concretos ("Fila 5, columna Tipo: ..."). Esta función
+// solo agrega las reglas que dependen del archivo completo.
+export function validarFilasImportadas(
+  filas: FilaImportada[],
+  erroresPrevios: string[] = [],
+  escalaConvertida = false
+): ResumenImportacion {
+  const errores = [...erroresPrevios];
 
   if (filas.length === 0) {
     errores.push("El archivo no tiene filas de unidades.");
   }
-
-  filas.forEach((fila, i) => {
-    const numeroFila = i + 2; // +1 por encabezado, +1 por índice base 1
-    if (!fila.apartamento) errores.push(`Fila ${numeroFila}: falta el número de apartamento.`);
-    if (!fila.nombrePropietario) errores.push(`Fila ${numeroFila}: falta el nombre del propietario.`);
-    if (!(fila.coeficiente > 0)) errores.push(`Fila ${numeroFila}: el coeficiente debe ser mayor a 0.`);
-  });
 
   const sumaCoeficientes = filas.reduce((acc, fila) => acc + fila.coeficiente, 0);
   const diferencia = Math.abs(sumaCoeficientes - 1);

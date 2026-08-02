@@ -8,6 +8,7 @@ export function useUnidadesPaginadas(copropiedadId: string) {
   const [pagina, setPagina] = useState(1);
   const [porPagina, setPorPagina] = useState(10);
   const [filtro, setFiltro] = useState("");
+  const [version, setVersion] = useState(0);
   const [datos, setDatos] = useState<PaginaUnidades>({ items: [], total: 0 });
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +30,13 @@ export function useUnidadesPaginadas(copropiedadId: string) {
     return () => {
       activo = false;
     };
-  }, [copropiedadId, pagina, porPagina, filtro]);
+  }, [copropiedadId, pagina, porPagina, filtro, version]);
+
+  // No cambia pagina/porPagina/filtro, así que no dispara el efecto por sí
+  // solo: se usa tras una edición masiva para releer la página actual.
+  function refrescar() {
+    setVersion((v) => v + 1);
+  }
 
   function cambiarFiltro(valor: string) {
     setFiltro(valor);
@@ -55,5 +62,6 @@ export function useUnidadesPaginadas(copropiedadId: string) {
     setPagina,
     cambiarPorPagina,
     cambiarFiltro,
+    refrescar,
   };
 }
