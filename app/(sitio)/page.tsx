@@ -11,42 +11,49 @@ export default function HomePage() {
       <PromoCarousel />
 
       {/* HERO SECTION */}
-      <section
-        id="hero"
-        className="relative overflow-hidden p-0 min-h-[600px] grid grid-cols-1 md:grid-cols-2 items-center"
-        style={{ background: "linear-gradient(135deg,var(--color-teal) 0%,var(--color-teal-dark) 100%)" }}
-      >
-        <div className="relative z-10 py-11 px-5 md:py-14 md:px-9">
+      <section id="hero" className="relative overflow-hidden p-0 min-h-[600px] flex items-center">
+        <img
+          src="/images/hero-borca-2.jpg"
+          alt="Comunidad BORCA"
+          className="absolute inset-0 w-full h-full object-cover object-left md:object-center"
+        />
+        {/* Mobile: scrim parejo sobre toda la foto (el texto ocupa todo el
+            ancho). Desktop: degradado que solo oscurece el lado izquierdo
+            (donde va el texto) y deja el lado derecho de la foto intacto. */}
+        <div className="absolute inset-0 md:hidden" style={{ background: "rgba(6,59,58,0.5)" }}></div>
+        <div
+          className="absolute inset-0 hidden md:block"
+          style={{
+            background: "linear-gradient(90deg, rgba(6,59,58,0.85) 0%, rgba(6,59,58,0.5) 35%, rgba(6,59,58,0) 65%)",
+          }}
+        ></div>
+
+        <div className="relative z-10 py-11 px-5 md:py-14 md:px-9 max-w-[560px]">
           <h1 className="font-serif text-[32px] md:text-[50px] font-bold text-white leading-[1.15] mb-4">
             Transformamos
             <br />
             <span className="text-gold italic">copropiedades</span>
           </h1>
-          <p className="text-[16.5px] text-white/85 leading-[1.8] max-w-[480px] mb-8">
-            Creamos comunidades más organizadas, sostenibles y tranquilas mediante una
-            administración estratégica, humana y eficiente. Nuestro enfoque está orientado a la
-            optimización de recursos, la sana convivencia y la valorización del patrimonio.
-          </p>
-          <div className="flex gap-3.5 flex-wrap">
-            <a
-              href="https://wa.me/573053498787?text=Hola+BORCA%2C+me+interesa+el+servicio+de+Administraci%C3%B3n+de+PH"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-cta bg-gold"
-            >
-              <ButterflyIcon /> Contáctanos
-            </a>
-            <Link href="/servicios" className="btn-cta bg-white/15 border-[1.5px] border-white">
-              <i className="fa-solid fa-arrow-right"></i> Conoce nuestros servicios
-            </Link>
+          <div>
+            <p className="text-[16.5px] text-white leading-[1.8] mb-6">
+              Creamos comunidades más organizadas, sostenibles y tranquilas mediante una
+              administración estratégica, humana y eficiente. Nuestro enfoque está orientado a la
+              optimización de recursos, la sana convivencia y la valorización del patrimonio.
+            </p>
+            <div className="flex gap-3.5 flex-wrap">
+              <a
+                href="https://wa.me/573053498787?text=Hola+BORCA%2C+me+interesa+el+servicio+de+Administraci%C3%B3n+de+PH"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-cta bg-gold"
+              >
+                <ButterflyIcon /> Contáctanos
+              </a>
+              <Link href="/servicios" className="btn-cta bg-white/15 border-[1.5px] border-white">
+                <i className="fa-solid fa-arrow-right"></i> Conoce nuestros servicios
+              </Link>
+            </div>
           </div>
-        </div>
-        <div className="relative hidden md:flex items-center justify-center h-full">
-          <img
-            src="/images/hero-borca.jpg"
-            alt="Comunidad BORCA"
-            className="w-full h-full object-cover object-center"
-          />
         </div>
         <div className="absolute -top-[60px] -right-[60px] w-[280px] h-[280px] rounded-full bg-[rgba(200,169,107,0.12)] pointer-events-none z-0"></div>
       </section>
