@@ -13,7 +13,7 @@ export default function HomePage() {
       {/* HERO SECTION */}
       <section id="hero" className="relative overflow-hidden p-0 min-h-[600px] flex items-center">
         <img
-          src="/images/hero-borca-2.jpg"
+          src="/images/hero-borca.jpg"
           alt="Comunidad BORCA"
           className="absolute inset-0 w-full h-full object-cover object-left md:object-center"
         />
