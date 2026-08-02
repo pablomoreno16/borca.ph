@@ -7,6 +7,7 @@ import { listarPropietariosDeUnidad } from "../infrastructure/copropiedadReposit
 export function usePropietariosUnidad(unidadId: string) {
   const [propietarios, setPropietarios] = useState<PropietarioUnidad[]>([]);
   const [cargando, setCargando] = useState(true);
+  const [version, setVersion] = useState(0);
 
   useEffect(() => {
     let activo = true;
@@ -20,7 +21,11 @@ export function usePropietariosUnidad(unidadId: string) {
     return () => {
       activo = false;
     };
-  }, [unidadId]);
+  }, [unidadId, version]);
 
-  return { propietarios, cargando };
+  function refrescar() {
+    setVersion((v) => v + 1);
+  }
+
+  return { propietarios, cargando, refrescar };
 }

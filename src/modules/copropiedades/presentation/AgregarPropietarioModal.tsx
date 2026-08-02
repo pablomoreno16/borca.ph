@@ -192,6 +192,7 @@ export function AgregarPropietarioModal({ modo, unidadId, totalActualParticipaci
               <div className="flex-1">
                 <label className="block text-sm font-bold mb-1">Nombre</label>
                 <input
+                  autoFocus
                   value={nombreBusqueda}
                   onChange={(e) => setNombreBusqueda(e.target.value)}
                   placeholder="Ej. Juan Pérez"

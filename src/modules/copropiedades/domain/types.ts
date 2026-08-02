@@ -66,6 +66,7 @@ export interface PaginaUnidades {
 
 export interface PropietarioUnidad {
   id: string;
+  personaId: string;
   nombre: string;
   porcentajeParticipacion: number | null;
   fechaInicio: string;

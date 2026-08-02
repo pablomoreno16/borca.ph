@@ -177,11 +177,30 @@ export async function listarPropietariosDeUnidad(unidadId: string): Promise<Prop
 
   return ((data ?? []) as FilaPropietarioConPersona[]).map((fila) => ({
     id: fila.id,
+    personaId: fila.persona_id,
     nombre: fila.persona?.nombre ?? "—",
     porcentajeParticipacion: fila.porcentaje_participacion,
     fechaInicio: fila.fecha_inicio,
     fechaFin: fila.fecha_fin,
   }));
+}
+
+export async function actualizarParticipacionPropietario(
+  propietarioId: string,
+  porcentajeParticipacion: number
+): Promise<void> {
+  const { error } = await supabase
+    .from("propietario")
+    .update({ porcentaje_participacion: porcentajeParticipacion })
+    .eq("id", propietarioId);
+  if (error) throw error;
+}
+
+// Quita al propietario de la unidad (borra la fila propietario), pero no
+// borra la persona: puede seguir siendo dueña de otras unidades.
+export async function eliminarPropietario(propietarioId: string): Promise<void> {
+  const { error } = await supabase.from("propietario").delete().eq("id", propietarioId);
+  if (error) throw error;
 }
 
 function personaADominio(fila: Tables<"persona">): Persona {
@@ -231,6 +250,12 @@ export async function buscarPersonasPorNombre(texto: string): Promise<Persona[]>
     .limit(20);
   if (error) throw error;
   return (data ?? []).map(personaADominio);
+}
+
+export async function obtenerPersona(id: string): Promise<Persona> {
+  const { data, error } = await supabase.from("persona").select("*").eq("id", id).single();
+  if (error) throw error;
+  return personaADominio(data);
 }
 
 export async function crearPersona(input: PersonaInput): Promise<Persona> {

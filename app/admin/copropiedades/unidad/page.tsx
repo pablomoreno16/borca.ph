@@ -160,7 +160,14 @@ export default function AdminUnidadDetallePage() {
                 )}
               </div>
             </div>
-            <PropietariosTable key={refrescarPropietarios} unidadId={unidad.id} />
+            <p className="text-sm font-semibold text-text-body mb-3.5">
+              Total % de participación: {(sumaParticipacion ?? 0).toFixed(2)}%
+            </p>
+            <PropietariosTable
+              key={refrescarPropietarios}
+              unidadId={unidad.id}
+              onCambio={() => setRefrescarPropietarios((n) => n + 1)}
+            />
           </div>
 
           {modalPropietario && (
