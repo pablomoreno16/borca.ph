@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "¿Por qué elegirnos? – BORCA",
+  description:
+    "Descubre por qué BORCA es la opción confiable para administrar tu copropiedad: experiencia, transparencia y un enfoque humano orientado a resultados.",
 };
 
 // Pendiente: los testimonios son datos dummy. Se ocultan hasta tener

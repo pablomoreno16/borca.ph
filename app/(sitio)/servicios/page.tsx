@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Servicios – BORCA",
+  description:
+    "Portafolio de servicios de administración PH: gestión administrativa, financiera, operativa, legal y de mantenimiento para copropiedades residenciales, comerciales y mixtas.",
 };
 
 export default function ServiciosPage() {

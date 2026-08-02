@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Quiénes somos – BORCA",
+  description:
+    "Somos BORCA, una empresa especializada en administración integral de Propiedad Horizontal en Colombia, comprometida con la transparencia y la gestión estratégica de copropiedades.",
 };
 
 export default function QuienesSomosPage() {

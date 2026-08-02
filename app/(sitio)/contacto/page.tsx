@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Contacto – BORCA",
+  description:
+    "Contáctanos y cuéntanos las necesidades de tu copropiedad. El equipo de BORCA está listo para brindarte acompañamiento y soluciones de administración PH.",
 };
 
 export default function ContactoPage() {

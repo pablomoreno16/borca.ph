@@ -3,7 +3,10 @@ import "@/styles/style.css";
 import { cormorantGaramond, montserrat, nunitoSans, playfairDisplay } from "@/shared/ui/fonts";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://borca.ph"),
   title: "Inicio – BORCA",
+  description:
+    "BORCA transforma copropiedades en Colombia con administración de Propiedad Horizontal estratégica, humana y eficiente. Conoce nuestros servicios de administración PH.",
 };
 
 export default function RootLayout({
