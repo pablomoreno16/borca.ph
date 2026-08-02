@@ -47,7 +47,7 @@ export interface UnidadPrivada {
   identificador: string;
   tipo: TipoUnidad;
   coeficiente: number;
-  propietarioNombre: string | null;
+  propietariosNombres: string | null;
 }
 
 export type UnidadPrivadaInput = Pick<UnidadPrivada, "bloque" | "identificador" | "tipo" | "coeficiente">;

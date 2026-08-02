@@ -16,8 +16,8 @@ import type {
 type Fila = Tables<"copropiedad">;
 type FilaUnidad = Tables<"unidad_privada">;
 
-// Selección con el propietario actual embebido (join a través de la FK
-// propietario.unidad_privada_id) para mostrar su nombre sin una consulta
+// Selección con los propietarios embebidos (join a través de la FK
+// propietario.unidad_privada_id) para mostrar sus nombres sin una consulta
 // aparte por unidad.
 const SELECT_UNIDAD_CON_PROPIETARIO = "*, propietario(fecha_fin, fecha_inicio, persona(nombre))";
 
@@ -58,13 +58,12 @@ function aFila(input: CopropiedadInput) {
   };
 }
 
-// El propietario "actual" es el que no tiene fecha_fin; si por algún motivo
-// hay más de uno sin cerrar, se toma el de fecha_inicio más reciente.
 function unidadADominio(fila: FilaUnidadConPropietario): UnidadPrivada {
   const propietarios = fila.propietario ?? [];
-  const actual =
-    propietarios.find((p) => p.fecha_fin === null) ??
-    [...propietarios].sort((a, b) => b.fecha_inicio.localeCompare(a.fecha_inicio))[0];
+  const nombresActivos = propietarios
+    .filter((p) => p.fecha_fin === null)
+    .map((p) => p.persona?.nombre)
+    .filter((nombre): nombre is string => Boolean(nombre));
   return {
     id: fila.id,
     copropiedadId: fila.copropiedad_id,
@@ -72,7 +71,7 @@ function unidadADominio(fila: FilaUnidadConPropietario): UnidadPrivada {
     identificador: fila.identificador,
     tipo: fila.tipo as UnidadPrivada["tipo"],
     coeficiente: fila.coeficiente,
-    propietarioNombre: actual?.persona?.nombre ?? null,
+    propietariosNombres: nombresActivos.length > 0 ? nombresActivos.join(" | ") : null,
   };
 }
 
@@ -115,7 +114,7 @@ function unidadVistaADominio(fila: FilaUnidadVista): UnidadPrivada {
     identificador: fila.identificador!,
     tipo: fila.tipo as UnidadPrivada["tipo"],
     coeficiente: fila.coeficiente!,
-    propietarioNombre: fila.nombre_propietario,
+    propietariosNombres: fila.propietarios_nombres,
   };
 }
 
@@ -143,11 +142,15 @@ export async function listarUnidadesPaginadas(
 
   const termino = filtro?.trim().replace(/[,()]/g, "");
   if (termino) {
-    consulta = consulta.or(`identificador.ilike.%${termino}%,nombre_propietario.ilike.%${termino}%`);
+    consulta = consulta.or(`identificador.ilike.%${termino}%,propietarios_nombres.ilike.%${termino}%`);
   }
 
+  // Por tipo y luego por # como número (identificador_numero), no
+  // alfanumérico — así "201" queda antes que "1001". Las unidades sin
+  // dígitos en el # (identificador_numero nulo) quedan al final.
   const { data, error, count } = await consulta
-    .order("bloque", { ascending: true })
+    .order("tipo", { ascending: true })
+    .order("identificador_numero", { ascending: true, nullsFirst: false })
     .order("identificador", { ascending: true })
     .range(desde, hasta);
   if (error) throw error;

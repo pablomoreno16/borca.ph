@@ -362,7 +362,8 @@ export type Database = {
           copropiedad_id: string | null
           id: string | null
           identificador: string | null
-          nombre_propietario: string | null
+          identificador_numero: number | null
+          propietarios_nombres: string | null
           tipo: string | null
         }
         Relationships: [

@@ -137,8 +137,8 @@ export function UnidadesTable({ copropiedadId }: Props) {
                 </th>
                 <th className="py-2 pr-3">Bloque</th>
                 <th className="py-2 pr-3">#</th>
-                <th className="py-2 pr-3">Propietario</th>
                 <th className="py-2 pr-3">Tipo</th>
+                <th className="py-2 pr-3">Propietario(s)</th>
                 <th className="py-2 pr-3">Coeficiente</th>
               </tr>
             </thead>
@@ -158,8 +158,8 @@ export function UnidadesTable({ copropiedadId }: Props) {
                       {unidad.identificador}
                     </Link>
                   </td>
-                  <td className="py-2 pr-3 text-text-body">{unidad.propietarioNombre ?? "—"}</td>
                   <td className="py-2 pr-3 text-text-body">{TIPO_UNIDAD_LABEL[unidad.tipo] ?? unidad.tipo}</td>
+                  <td className="py-2 pr-3 text-text-body">{unidad.propietariosNombres ?? "—"}</td>
                   <td className="py-2 pr-3 text-text-body">{(unidad.coeficiente * 100).toFixed(2)}%</td>
                 </tr>
               ))}
