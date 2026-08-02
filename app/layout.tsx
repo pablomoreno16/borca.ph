@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: "Inicio – BORCA",
   description:
     "BORCA transforma copropiedades en Colombia con administración de Propiedad Horizontal estratégica, humana y eficiente. Conoce nuestros servicios de administración PH.",
+  verification: {
+    google: "CncaLMef0HsrrzwbxqyZc-PPuE89pCckjmoiBcXZh3Q",
+  },
 };
 
 export default function RootLayout({
