@@ -21,8 +21,8 @@
   --radius-card: 22px;
   --radius-icon: 12px;
 
-  --font-serif: "Playfair Display", serif;
-  --font-sans: "Nunito Sans", sans-serif;
+  --font-serif: var(--font-playfair-display), serif;
+  --font-sans: var(--font-nunito-sans), sans-serif;
 }
 
 @keyframes ripple {

@@ -39,10 +39,10 @@ export function Header() {
           <img src="/images/logo-borca.png" alt="BORCA" className="logo-img" />
         </Link>
         <div className="leading-[1.1] text-teal">
-          <p className="font-['Montserrat'] font-medium uppercase text-[13px] tracking-[0.5px] md:text-[15px] md:tracking-[1px]">
+          <p className="font-[family-name:var(--font-montserrat)] font-medium uppercase text-[13px] tracking-[0.5px] md:text-[15px] md:tracking-[1px]">
             Transformamos
           </p>
-          <p className="font-['Cormorant_Garamond'] italic text-[18px] md:text-[22px]">
+          <p className="font-[family-name:var(--font-cormorant-garamond)] italic text-[18px] md:text-[22px]">
             copropiedades
           </p>
         </div>
