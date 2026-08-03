@@ -1,14 +1,14 @@
 # Autenticación, autorización y auditoría
 
-## Dos flujos de autenticación distintos — no uno solo
+## Tres flujos de autenticación distintos — no uno solo
 
-El sistema tiene dos poblaciones de usuarios con necesidades muy diferentes.
+El sistema tiene poblaciones de usuarios con necesidades muy diferentes.
 Tratarlas como el mismo mecanismo de auth sería un error de diseño.
 
 ### 1. Usuarios del panel (`/admin`)
 
-Personal administrativo, administradores de copropiedad, y a futuro
-propietarios que consultan su información. Son cuentas persistentes.
+Personal administrativo y administradores de copropiedad. Son cuentas
+persistentes.
 
 - **Mecanismo:** Supabase Auth, email + contraseña para empezar (magic link u
   OAuth quedan como extensión futura, no bloquean el arranque).
@@ -16,11 +16,37 @@ propietarios que consultan su información. Son cuentas persistentes.
   SDK de Supabase en el navegador (persistidos de forma segura, renovación
   automática).
 - **Vínculo con el dominio:** cada usuario autenticado tiene una fila en
-  `perfil` que lo conecta con una `Persona` y un `rol`, y opcionalmente con
-  una `copropiedad_id` (ver modelo en
+  `perfil` que lo conecta con una `Persona` y uno o varios `rol` (vía
+  `perfil_rol`), opcionalmente con una `copropiedad_id` (ver modelo en
   [02-modelo-datos.md](02-modelo-datos.md)).
 
-### 2. Votantes en una asamblea (`/votaciones`)
+### 2. Propietarios (`/login`, portal de clientes — Fase 2.2)
+
+También cuentas persistentes de Supabase Auth, pero con un ingreso distinto
+al de personal administrativo: **passwordless por email, con autoregistro
+verificado**, reutilizando el mismo `/login` (nunca `/admin/login` — se
+pensó desde la reorganización de rutas de Fase 1 para que copropietarios
+entraran por el mismo punto, redirigiendo según rol).
+
+- El propietario ingresa tipo + número de documento (no email ni
+  contraseña de entrada) — el sistema busca una `persona` con relación
+  `propietario` activa que coincida.
+- El código de un solo uso se envía **al correo ya guardado en esa
+  persona**, nunca a uno que el usuario escriba libremente — así nadie
+  puede autoregistrarse suplantando a otro propietario. Sin correo
+  registrado, no hay autoregistro por este medio (hay que agregarlo
+  manualmente desde `/admin` primero).
+- Al verificar el código se crea `perfil` (si no existía) y se asignan
+  automáticamente la(s) fila(s) `perfil_rol` con `rol='propietario'` — una
+  por cada `copropiedad_id` donde la persona tenga una unidad activa. Roles
+  adicionales (`consejero`, `admin_copropiedad`) se asignan manualmente
+  después desde la administración de usuarios (Fase 2.2.1), nunca por este
+  flujo.
+- A diferencia del asistente de asamblea (punto 3 abajo), esto **sí** es
+  una cuenta persistente — el propietario vuelve a consultar información
+  repetidamente, así que necesita sesión real, no un token de un solo uso.
+
+### 3. Votantes en una asamblea (`/votaciones`)
 
 Personas que solo necesitan probar "soy quien digo ser, para esta asamblea
 puntual" — no son cuentas del sistema.
@@ -38,8 +64,8 @@ puntual" — no son cuentas del sistema.
   el control importante es que el token esté ligado a una asamblea y un
   asistente específicos, no que exista una cuenta permanente.
 
-**Ambos flujos conviven en la misma base de datos y las mismas políticas RLS**,
-solo difieren en cómo se obtiene el JWT que las políticas leen.
+**Los tres flujos conviven en la misma base de datos y las mismas políticas
+RLS**, solo difieren en cómo se obtiene el JWT que las políticas leen.
 
 ## Roles y permisos
 
@@ -51,17 +77,20 @@ roles con OR (si cualquiera de sus roles le da acceso, lo tiene).
 
 | Rol | Alcance | Puede | Estado |
 |---|---|---|---|
-| `super_admin` | Global | Todo — soporte, configuración de la plataforma, gestión de perfiles y roles | Implementado (Fase 1) |
+| `super_admin` | Global | Todo — soporte, configuración de la plataforma, gestión de perfiles y roles, catálogo global de categorías de documento | Implementado (Fase 1) |
 | `site_owner` | Global (no hay tenants todavía) | Gestionar el contenido del sitio de BORCA (carrusel de novedades) | Implementado (Fase 1) |
-| `admin_copropiedad` | Una o varias copropiedades (`copropiedad_id` en `perfil_rol`) | Gestionar unidades, propietarios, asambleas, votaciones de su(s) copropiedad(es) | Futuro — requiere el portal de clientes (ver roadmap, Fase 2+) |
-| `propietario` | Su(s) propia(s) unidad(es) | Consultar su información, ver histórico de asambleas/votos propios (a futuro: PQRS, cartera) | Futuro |
-| `asistente_asamblea` | Una asamblea puntual (no es un rol persistente, es el alcance del token descrito arriba) | Registrarse, ver quórum en vivo, votar | Futuro |
+| `admin_copropiedad` | Una o varias copropiedades (`copropiedad_id` en `perfil_rol`) | Gestionar unidades, propietarios, documentos, usuarios, asambleas y votaciones de su(s) copropiedad(es) | Futuro — Fase 2.2.1 |
+| `consejero` | Su(s) propia(s) copropiedad(es), además de lo que ve como `propietario` | Ver categorías de documento marcadas para consejo (ej. `acta_consejo`) | Futuro — Fase 2.2.1 |
+| `propietario` | Su(s) propia(s) unidad(es) | Consultar su información, sus unidades y % de participación, y los documentos según categoría permitida (a futuro: histórico de asambleas/votos, PQRS, cartera) | Futuro — Fase 2.2 |
+| `asistente_asamblea` | Una asamblea puntual (no es un rol persistente, es el alcance del token descrito arriba) | Registrarse, ver quórum en vivo, votar | Futuro — Fase 4 |
 
-`admin_copropiedad` y `propietario` no existen todavía porque no hay portal
-de clientes: el sitio actual es 100% de BORCA como empresa, no de un tenant.
-Cuando se construya ese portal, `perfil_rol` gana una columna
-`copropiedad_id` (nullable — nula para roles globales como `super_admin`/
-`site_owner`, poblada para roles scoped como `admin_copropiedad`).
+`admin_copropiedad`, `consejero` y `propietario` no existen todavía porque
+no hay portal de clientes: el sitio actual es 100% de BORCA como empresa,
+no de un tenant. Cuando se construya ese portal (Fase 2.2.1), `perfil_rol`
+gana una columna `copropiedad_id` (nullable — nula para roles globales
+como `super_admin`/`site_owner`, poblada para roles scoped). Un mismo
+perfil puede tener varias filas para la misma copropiedad (ej.
+`propietario` + `consejero` a la vez) — ganar un rol nunca quita el otro.
 
 Este listado crece según se agreguen módulos (ej. `contador`, `personal_pqrs`)
 sin cambiar el mecanismo — solo se agregan filas de rol y sus políticas RLS
@@ -116,6 +145,29 @@ using (
 );
 ```
 
+**Documentos (Fase 2.1/2.2):** la lectura combina dos condiciones — el
+perfil tiene un rol para esa copropiedad, **y** ese rol tiene permiso sobre
+la categoría del documento:
+
+```sql
+alter table documento enable row level security;
+
+create policy "roles con permiso ven los documentos de su categoría"
+on documento for select
+using (
+  fn_tiene_rol('super_admin')
+  or exists (
+    select 1
+    from perfil_rol pr
+    join perfil p on p.id = pr.perfil_id
+    join categoria_documento_rol cdr on cdr.rol = pr.rol
+    where p.auth_user_id = auth.uid()
+      and pr.copropiedad_id = documento.copropiedad_id
+      and cdr.categoria_documento_id = documento.categoria_documento_id
+  )
+);
+```
+
 Para la tabla `voto`, la política de inserción valida el claim del JWT de
 asistente en vez de `auth.uid()`:
 
@@ -142,8 +194,8 @@ directo a Supabase.
 ## Auditoría
 
 Toda tabla sensible (`asamblea`, `votacion`, `voto`, `propietario`,
-`representacion`, `perfil_rol`, `carrusel_item`) tiene un **trigger de
-Postgres** que escribe en
+`representacion`, `perfil_rol`, `carrusel_item`, `documento`) tiene un
+**trigger de Postgres** que escribe en
 `audit_log` en cada `INSERT`/`UPDATE`/`DELETE`, con el usuario autenticado
 (`auth.uid()`), la tabla, el registro, y los valores antes/después en JSON.
 Esto vive en la base de datos (no en el código de la aplicación) por la misma
@@ -170,5 +222,6 @@ puede saltarse la auditoría.
 | XSS | React escapa por defecto todo el contenido renderizado; nunca se usa `dangerouslySetInnerHTML` con contenido de usuario sin sanitizar |
 | SQL Injection | No se escribe SQL concatenado a mano; Drizzle (en Edge Functions) y el cliente de Supabase (en el navegador) parametrizan todas las consultas |
 | Fuerza bruta en login/OTP | Supabase Auth ya limita intentos de login; el OTP de asistentes tiene expiración corta (minutos) y límite de reintentos por Edge Function |
+| Suplantación en autoregistro de propietarios | El OTP siempre se envía al correo ya guardado en la `persona` encontrada por documento — nunca a uno ingresado libremente en el formulario, para que nadie pueda registrarse como otro propietario |
 | Rate limiting de la API | Se implementa a nivel de Edge Function (límite por IP/token) para los endpoints públicos de `/votaciones`, que son el punto de mayor concurrencia esperada |
 | Fuga de secretos | Las claves con privilegio elevado (`service_role` de Supabase) **nunca** se exponen al navegador — solo existen dentro de Edge Functions, configuradas como variables de entorno de Supabase |

@@ -146,6 +146,172 @@ todavía más allá de lo mínimo para cargar datos de prueba reales.
 - Carga masiva (import desde CSV/Excel) es una necesidad realista para este
   módulo — se define en detalle al iniciar esta fase, no antes.
 
+**Fase 2: completa (2026-08-03).** Sin pendientes conocidos del alcance
+técnico descrito arriba (ver `pendientes_proyecto.md` en memoria para el
+detalle de lo construido). "Eliminar copropiedades" se resolvió como
+borrado lógico (`estado` activa/inactiva) por decisión explícita del
+usuario, sin borrado físico.
+
+---
+
+## Fase 2.1 — Gestión de documentos por copropiedad
+
+Antes de que exista un portal de clientes (Fase 2.2) hace falta algo que
+mostrarles: cada copropiedad necesita un repositorio de documentos
+categorizado, con acceso controlado por tipo de documento — comunicados y
+actas no son todos igual de sensibles ni le interesan a todo el mundo por
+igual.
+
+**Historias de usuario**
+- Como `super_admin`, creo y edito el catálogo de categorías de documentos
+  y defino qué roles pueden ver cada categoría.
+- Como `admin_copropiedad`, subo, edito y elimino documentos de mi
+  copropiedad, categorizados, con su fecha de elaboración.
+- Como `propietario`/`consejero`, veo solo los documentos de las
+  categorías que mi rol tiene permitido, de mi(s) copropiedad(es).
+
+**Base de datos**
+- `categoria_documento`: catálogo **global** (compartido entre todas las
+  copropiedades, no por tenant) — `nombre`, `activo`. Categorías iniciales:
+  `comunicado`, `acta_asamblea`, `acta_consejo`, `general` (reglamentos,
+  manuales, informes de gestión).
+- `categoria_documento_rol` (tabla intermedia, many-to-many):
+  `categoria_documento_id`, `rol` — qué rol(es) pueden ver cada categoría.
+  `super_admin` ve todo siempre, sin necesitar fila aquí.
+- `documento`: `copropiedad_id`, `categoria_documento_id`, `titulo`,
+  `fecha_elaboracion`, `archivo_path` (ruta en Supabase Storage),
+  `subido_por` (perfil).
+- Sin versionado: reemplazar un documento sobrescribe `archivo_path` y
+  `fecha_elaboracion` en la misma fila (decisión explícita — no hay caso
+  de uso real hoy que justifique conservar versiones anteriores).
+
+**Almacenamiento:** Supabase Storage (bucket privado) — ya estaba previsto
+en [01-stack-y-decisiones.md](01-stack-y-decisiones.md) y evita sumar un
+proveedor nuevo. Acceso vía URLs firmadas de corta duración, nunca
+públicas; la autorización real la sigue haciendo RLS sobre `documento`,
+igual que el resto de la base de datos.
+
+**API / RLS**
+- Política de lectura en `documento`: el perfil tiene una fila en
+  `perfil_rol` para esa `copropiedad_id`, y ese rol aparece en
+  `categoria_documento_rol` para la categoría del documento (o es
+  `super_admin`).
+
+**Pruebas**
+- Unitarias: validación de documento (categoría y fecha de elaboración
+  obligatorias).
+- E2E: un propietario sin el rol correcto no ve una categoría restringida;
+  un consejero sí ve `acta_consejo` si está marcada para su rol; subir/
+  editar/eliminar un documento respeta las categorías del catálogo.
+
+**Criterios de aceptación**
+- [ ] `super_admin` puede crear/editar categorías y su mapeo de roles sin
+      necesitar un deploy.
+- [ ] Un documento solo es visible para los roles permitidos de su
+      categoría, verificado con RLS (no solo escondido en el frontend).
+- [ ] El catálogo de categorías es el mismo para todas las copropiedades.
+
+---
+
+## Fase 2.2 — Portal de clientes: acceso de propietarios
+
+Construye lo que [02-modelo-datos.md](02-modelo-datos.md) y
+[03-autenticacion-autorizacion.md](03-autenticacion-autorizacion.md) dejaron
+anotado como "futuro — requiere el portal de clientes": los roles
+`admin_copropiedad` y `propietario` dejan de ser teóricos. Se divide en dos
+subfases porque son dos preguntas distintas: quién gestiona los accesos
+(2.2.1) y cómo entra un propietario por su cuenta (2.2.2).
+
+### Fase 2.2.1 — Administración de usuarios y roles
+
+**Historias de usuario**
+- Como `super_admin`, veo y edito el rol de cualquier usuario del sistema
+  desde un listado global en `/admin`.
+- Como usuario que entra al detalle de una copropiedad, puedo llegar a la
+  lista de sus propietarios y editar el rol de uno puntual sin salir del
+  contexto de esa copropiedad (segunda entrada a la misma data).
+- Un propietario que además es consejero mantiene ambos roles
+  simultáneamente — ganar `consejero` nunca le quita el acceso de
+  `propietario`.
+
+**Base de datos**
+- `perfil_rol` gana columna `copropiedad_id` (nullable — nula para roles
+  globales `super_admin`/`site_owner`, poblada para roles scoped).
+- Roles nuevos, todos scoped a una copropiedad: `admin_copropiedad`,
+  `consejero`, `propietario`.
+- Asignación automática: cuando un propietario se autoregistra (Fase
+  2.2.2) y su `persona` tiene relación `propietario` activa en una o más
+  unidades, se le crea automáticamente una fila `perfil_rol` con
+  `rol='propietario'` por cada `copropiedad_id` donde tenga unidad — sin
+  intervención manual. Roles adicionales (`consejero`, `admin_copropiedad`)
+  se asignan manualmente desde esta pantalla.
+
+**Pruebas**
+- Unitarias: combinaciones de rol válidas (un perfil puede tener varias
+  filas de rol para la misma copropiedad).
+- E2E: asignar/quitar un rol y verificar que el acceso a documentos
+  cambia en consecuencia de inmediato.
+
+**Criterios de aceptación**
+- [ ] Un usuario puede tener múltiples roles scoped a la misma
+      copropiedad a la vez (propietario + consejero).
+- [ ] Editar el rol de un propietario es posible tanto desde un listado
+      global como desde el detalle de su copropiedad.
+
+### Fase 2.2.2 — Login e ingreso de propietarios
+
+**Historias de usuario**
+- Como propietario, entro a `/login` con mi tipo y número de documento,
+  recibo un código de un solo uso a mi correo ya registrado, y accedo a
+  mi portal.
+- Como propietario, veo mi información personal, mis unidades y % de
+  participación, y los documentos que me corresponden según mi rol.
+- Como propietario con unidades en más de una copropiedad, puedo cambiar
+  entre ellas desde un selector.
+
+**Mecanismo de login — cuenta persistente, no un token de un solo uso**
+
+A diferencia del asistente de asamblea (Fase 4, que es un JWT de alcance
+limitado sin cuenta), el propietario vuelve a consultar información
+repetidamente — necesita una sesión real de Supabase Auth.
+
+- **Canal: solo email** (passwordless, reutilizando el mismo mecanismo de
+  Supabase Auth que ya usa `/admin`) — gratis, sin proveedor externo ni
+  costo por mensaje. SMS/WhatsApp quedan fuera de esta fase.
+- **Autoregistro verificado:** el propietario ingresa tipo + número de
+  documento; el sistema busca una `persona` con relación `propietario`
+  activa que coincida y envía el código **al correo ya guardado en esa
+  persona** — nunca a uno que el usuario escriba libremente, para que
+  nadie pueda autoregistrarse suplantando a otro propietario. Si la
+  persona no tiene correo registrado, no puede autoregistrarse por este
+  medio (hay que agregárselo manualmente desde el admin primero).
+- Al verificar el código, se crea `perfil` + el/los rol(es) `propietario`
+  automáticos descritos en 2.2.1.
+
+**Frontend**
+- Reutiliza `/login` (ya se dejó preparado para esto — ver nota en
+  `pendientes_proyecto.md`: "login vive en `app/(sitio)/login/`... se
+  pensó para que a futuro copropietarios/residentes también entren por
+  ahí, redirigiendo según rol").
+- Portal del propietario (alcance de esta fase, sin asambleas/votaciones
+  todavía — eso es Fase 3/4): "Mi información" (datos personales,
+  unidades, % de participación) + "Documentos" (filtrados por las
+  categorías permitidas para su rol).
+
+**Pruebas**
+- E2E: autoregistro + login + ver solo los documentos correctos según
+  rol; persona sin correo registrado recibe un mensaje claro (no un error
+  genérico); documento/persona inexistente no revela si existe o no.
+
+**Criterios de aceptación**
+- [ ] Un propietario solo puede autoregistrarse si su documento coincide
+      con una persona con relación `propietario` activa y correo
+      registrado.
+- [ ] El OTP siempre se envía al correo guardado en la base de datos, no
+      a uno ingresado libremente en el formulario.
+- [ ] Un propietario con unidades en varias copropiedades puede cambiar
+      entre ellas sin cerrar sesión.
+
 ---
 
 ## Fase 3 — Asambleas

@@ -51,19 +51,38 @@ Vincula un usuario autenticado (Supabase Auth) con una `Persona`, 1:1.
 
 ### PerfilRol (roles de un perfil — multi-rol)
 Un perfil puede tener **varios roles a la vez** (ej. `site_owner` y
-`super_admin` simultáneamente) — por eso los roles viven en una tabla
-aparte, no en una columna de `perfil`. `perfil_id`, `rol`. Hoy los roles
-existentes son `super_admin` y `site_owner` (gestión del sitio de BORCA,
-sin relación a ninguna copropiedad — ver nota de alcance abajo). Detalle
-completo en [03-autenticacion-autorizacion.md](03-autenticacion-autorizacion.md).
+`super_admin` simultáneamente, o `propietario` y `consejero` en la misma
+copropiedad) — por eso los roles viven en una tabla aparte, no en una
+columna de `perfil`. `perfil_id`, `rol`, `copropiedad_id` (nullable — nula
+para roles globales `super_admin`/`site_owner`, poblada para roles scoped
+`admin_copropiedad`/`consejero`/`propietario`, agregada en Fase 2.2.1).
+Detalle completo en
+[03-autenticacion-autorizacion.md](03-autenticacion-autorizacion.md).
 
-> **Nota de alcance (2026-07-31):** hasta que exista el portal de clientes
-> (dueños/inquilinos de las copropiedades que administra BORCA), no hay
-> tabla `Copropiedad` ni `copropiedad_id` en `perfil_rol` ni en
-> `carrusel_item` — el sitio actual es 100% de BORCA como empresa, no de
-> un tenant. Los roles `admin_copropiedad` y `propietario`, y la columna
-> `copropiedad_id` en `perfil_rol`, se agregan en la fase que construya
-> ese portal (ver [07-roadmap-fases.md](07-roadmap-fases.md), Fase 2+).
+> **Nota de alcance (actualizada en Fase 2.2.1):** la columna
+> `copropiedad_id` en `perfil_rol` y los roles `admin_copropiedad`/
+> `consejero`/`propietario` se agregan cuando se construye el portal de
+> clientes (ver [07-roadmap-fases.md](07-roadmap-fases.md), Fase 2.2). La
+> asignación de `propietario` es automática al autoregistrarse (Fase
+> 2.2.2), nunca manual como default.
+
+### CategoriaDocumento (catálogo de categorías, Fase 2.1)
+Catálogo **global**, compartido por todas las copropiedades (no lleva
+`copropiedad_id`) — editable por `super_admin` sin necesitar un deploy.
+`nombre`, `activo`. Categorías iniciales: `comunicado`, `acta_asamblea`,
+`acta_consejo`, `general` (reglamentos, manuales, informes de gestión).
+
+### CategoriaDocumentoRol (tabla intermedia CategoriaDocumento ↔ rol)
+Many-to-many: qué rol(es) pueden ver cada categoría. `categoria_documento_id`,
+`rol` (texto: `admin_copropiedad`/`consejero`/`propietario`). `super_admin`
+ve todas las categorías siempre, sin necesitar fila aquí.
+
+### Documento (Fase 2.1)
+`copropiedad_id`, `categoria_documento_id`, `titulo`, `fecha_elaboracion`,
+`archivo_path` (ruta dentro de un bucket privado de Supabase Storage,
+acceso vía URLs firmadas de corta duración — nunca públicas), `subido_por`
+(FK a `perfil`). Sin versionado: reemplazar un documento sobrescribe
+`archivo_path`/`fecha_elaboracion` en la misma fila.
 
 ### Asamblea
 `copropiedad_id`, `tipo` (ordinaria/extraordinaria), `fecha_hora`, `estado`
@@ -131,6 +150,10 @@ erDiagram
     PERSONA ||--o{ ASISTENTE : participa_como
     PERFIL ||--o{ PERFIL_ROL : tiene
 
+    COPROPIEDAD ||--o{ DOCUMENTO : archiva
+    CATEGORIA_DOCUMENTO ||--o{ DOCUMENTO : clasifica
+    CATEGORIA_DOCUMENTO ||--o{ CATEGORIA_DOCUMENTO_ROL : permite
+
     ASAMBLEA ||--o{ CONVOCATORIA : genera
     ASAMBLEA ||--o{ ASISTENTE : registra
     ASAMBLEA ||--o{ VOTACION : contiene
@@ -183,6 +206,26 @@ erDiagram
         uuid id PK
         uuid perfil_id FK
         text rol
+        uuid copropiedad_id FK
+    }
+    CATEGORIA_DOCUMENTO {
+        uuid id PK
+        text nombre
+        boolean activo
+    }
+    CATEGORIA_DOCUMENTO_ROL {
+        uuid id PK
+        uuid categoria_documento_id FK
+        text rol
+    }
+    DOCUMENTO {
+        uuid id PK
+        uuid copropiedad_id FK
+        uuid categoria_documento_id FK
+        text titulo
+        date fecha_elaboracion
+        text archivo_path
+        uuid subido_por FK
     }
     ASAMBLEA {
         uuid id PK
@@ -284,6 +327,10 @@ en [04-api-y-tiempo-real.md](04-api-y-tiempo-real.md)).
   indexada siempre.
 - Índice en `voto(pregunta_id)` y `asistente(asamblea_id)` — son las
   consultas más frecuentes durante una votación en vivo.
+- `UNIQUE(categoria_documento_id, rol)` en `categoria_documento_rol` — no
+  tiene sentido marcar el mismo rol dos veces para la misma categoría.
+- Índice en `documento(copropiedad_id, categoria_documento_id)` — es lo
+  que filtra la política RLS de lectura en cada consulta del portal.
 
 ## Pendiente de validar con el negocio antes de implementar
 
