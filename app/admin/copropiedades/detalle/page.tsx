@@ -8,11 +8,18 @@ import { tieneAlgunRol } from "@/modules/auth/domain/types";
 import { obtenerCopropiedad } from "@/modules/copropiedades/infrastructure/copropiedadRepository";
 import { guardarCopropiedad } from "@/modules/copropiedades/application/guardarCopropiedad";
 import { exportarUnidadesExcel } from "@/modules/copropiedades/application/exportarUnidadesExcel";
+import { useExistenUnidades } from "@/modules/copropiedades/application/useExistenUnidades";
 import { CopropiedadForm } from "@/modules/copropiedades/presentation/CopropiedadForm";
 import { ImportarUnidadesForm } from "@/modules/copropiedades/presentation/ImportarUnidadesForm";
 import { UnidadesTable } from "@/modules/copropiedades/presentation/UnidadesTable";
 import { Modal } from "@/shared/ui/Modal";
 import type { Copropiedad, CopropiedadInput } from "@/modules/copropiedades/domain/types";
+
+type Tab = "informacion" | "unidades";
+
+function tabDesdeParam(valor: string | null): Tab {
+  return valor === "unidades" ? "unidades" : "informacion";
+}
 
 // Ruta estática con el id como query param (no un segmento dinámico [id]):
 // output: 'export' exige generateStaticParams() para segmentos dinámicos,
@@ -30,6 +37,16 @@ export default function AdminCopropiedadDetallePage() {
     if (!autorizado) router.replace("/admin/carrusel");
   }, [cargandoSesion, autorizado, router]);
 
+  // La pestaña activa vive también en la URL (?tab=) para que "Volver a la
+  // copropiedad" desde el detalle de una unidad regrese a la pestaña
+  // "Unidades privadas" de la que salió, en vez de reiniciar en
+  // "Información" (esta página se remonta por completo al navegar).
+  const [tab, setTab] = useState<Tab>(() => tabDesdeParam(searchParams.get("tab")));
+
+  function cambiarTab(nuevoTab: Tab) {
+    setTab(nuevoTab);
+    router.replace(`/admin/copropiedades/detalle?id=${id}&tab=${nuevoTab}`);
+  }
   const [copropiedad, setCopropiedad] = useState<Copropiedad | null>(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +57,7 @@ export default function AdminCopropiedadDetallePage() {
   // porPagina/filtro, no cuando otro componente (el importador) crea
   // unidades nuevas.
   const [refrescarUnidades, setRefrescarUnidades] = useState(0);
+  const existenUnidades = useExistenUnidades(copropiedad?.id ?? "", refrescarUnidades);
 
   useEffect(() => {
     if (!autorizado || !id) return;
@@ -101,28 +119,57 @@ export default function AdminCopropiedadDetallePage() {
 
       {copropiedad && (
         <>
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <h1 className="font-serif text-2xl font-bold text-teal">{copropiedad.nombre}</h1>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={onExportar}
-                disabled={exportando}
-                className="text-sm font-semibold text-teal hover:underline disabled:opacity-60"
-              >
-                <i className="fa-solid fa-file-arrow-down"></i> {exportando ? "Exportando..." : "Exportar"}
-              </button>
-              <button type="button" onClick={() => setImportando((v) => !v)} className="btn-cta bg-gold">
-                <i className="fa-solid fa-file-excel"></i> Importar unidades
-              </button>
-            </div>
+          <h1 className="font-serif text-2xl font-bold text-teal">{copropiedad.nombre}</h1>
+
+          <div className="border-b border-[#e5e9e8] flex gap-6">
+            <button
+              type="button"
+              onClick={() => cambiarTab("informacion")}
+              className={`pb-3 text-sm font-semibold border-b-2 -mb-px ${
+                tab === "informacion" ? "text-teal border-teal" : "text-text-body border-transparent hover:text-teal"
+              }`}
+            >
+              Información
+            </button>
+            <button
+              type="button"
+              onClick={() => cambiarTab("unidades")}
+              className={`pb-3 text-sm font-semibold border-b-2 -mb-px ${
+                tab === "unidades" ? "text-teal border-teal" : "text-text-body border-transparent hover:text-teal"
+              }`}
+            >
+              Unidades privadas
+            </button>
           </div>
 
-          <CopropiedadForm
-            itemInicial={copropiedad}
-            onGuardar={onGuardar}
-            onCancelar={() => router.push("/admin/copropiedades")}
-          />
+          {tab === "informacion" && (
+            <CopropiedadForm
+              itemInicial={copropiedad}
+              onGuardar={onGuardar}
+              onCancelar={() => router.push("/admin/copropiedades")}
+            />
+          )}
+
+          {tab === "unidades" && (
+            <div className="flex flex-col gap-3.5">
+              <div className="flex gap-3">
+                <button type="button" onClick={() => setImportando((v) => !v)} className="btn-cta bg-gold">
+                  <i className="fa-solid fa-file-excel"></i> Importar unidades
+                </button>
+                {existenUnidades && (
+                  <button
+                    type="button"
+                    onClick={onExportar}
+                    disabled={exportando}
+                    className="text-sm font-semibold text-teal hover:underline disabled:opacity-60"
+                  >
+                    <i className="fa-solid fa-file-arrow-down"></i> {exportando ? "Exportando..." : "Exportar"}
+                  </button>
+                )}
+              </div>
+              <UnidadesTable key={refrescarUnidades} copropiedadId={copropiedad.id} />
+            </div>
+          )}
 
           {importando && (
             <Modal onClose={() => setImportando(false)}>
@@ -137,11 +184,6 @@ export default function AdminCopropiedadDetallePage() {
               />
             </Modal>
           )}
-
-          <div>
-            <h2 className="font-serif text-xl font-bold text-teal mb-3.5">Unidades privadas</h2>
-            <UnidadesTable key={refrescarUnidades} copropiedadId={copropiedad.id} />
-          </div>
         </>
       )}
     </div>

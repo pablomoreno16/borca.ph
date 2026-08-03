@@ -4,11 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useUnidadesPaginadas } from "../application/useUnidadesPaginadas";
 import { useSumaCoeficientes } from "../application/useSumaCoeficientes";
+import { OPCIONES_POR_PAGINA } from "../application/preferenciaPorPagina";
 import { TIPO_UNIDAD_LABEL } from "../domain/etiquetas";
 import { Modal } from "@/shared/ui/Modal";
 import { EditarUnidadesLoteModal } from "./EditarUnidadesLoteModal";
-
-const OPCIONES_POR_PAGINA = [10, 20, 50, 100];
 
 interface Props {
   copropiedadId: string;

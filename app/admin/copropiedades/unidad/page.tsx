@@ -14,6 +14,14 @@ import { AgregarPropietarioModal } from "@/modules/copropiedades/presentation/Ag
 import { Modal } from "@/shared/ui/Modal";
 import type { UnidadPrivada, UnidadPrivadaInput } from "@/modules/copropiedades/domain/types";
 
+// Solo se llega acá desde la pestaña "Unidades privadas" del detalle de la
+// copropiedad, así que siempre se vuelve a esa misma pestaña (ver el bug
+// que esto corrige: sin el ?tab=, el detalle se remonta y reinicia en la
+// pestaña "Información").
+function hrefDetalleCopropiedad(copropiedadId: string): string {
+  return `/admin/copropiedades/detalle?id=${copropiedadId}&tab=unidades`;
+}
+
 // Ruta estática con el id como query param (ver detalle/page.tsx: output:
 // 'export' no permite segmentos dinámicos [id] para ids creados en runtime).
 export default function AdminUnidadDetallePage() {
@@ -70,7 +78,7 @@ export default function AdminUnidadDetallePage() {
     setEliminando(true);
     try {
       await eliminarUnidad(id);
-      router.push(`/admin/copropiedades/detalle?id=${unidad.copropiedadId}`);
+      router.push(hrefDetalleCopropiedad(unidad.copropiedadId));
     } catch {
       setError("No se pudo eliminar la unidad.");
       setEliminando(false);
@@ -89,7 +97,7 @@ export default function AdminUnidadDetallePage() {
     <div className="flex flex-col gap-8">
       {unidad && (
         <Link
-          href={`/admin/copropiedades/detalle?id=${unidad.copropiedadId}`}
+          href={hrefDetalleCopropiedad(unidad.copropiedadId)}
           className="text-sm text-teal font-semibold hover:underline w-fit"
         >
           <i className="fa-solid fa-arrow-left"></i> Volver a la copropiedad
@@ -102,7 +110,7 @@ export default function AdminUnidadDetallePage() {
       {unidad && (
         <>
           <div className="flex items-center justify-between flex-wrap gap-3">
-            <h1 className="font-serif text-2xl font-bold text-teal">Unidad {unidad.identificador}</h1>
+            <h1 className="font-serif text-2xl font-bold text-teal">Unidad privada {unidad.identificador}</h1>
             <button
               type="button"
               onClick={onEliminar}
@@ -116,7 +124,7 @@ export default function AdminUnidadDetallePage() {
           <UnidadForm
             unidad={unidad}
             onGuardar={onGuardar}
-            onCancelar={() => router.push(`/admin/copropiedades/detalle?id=${unidad.copropiedadId}`)}
+            onCancelar={() => router.push(hrefDetalleCopropiedad(unidad.copropiedadId))}
           />
 
           <div>

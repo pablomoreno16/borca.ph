@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import type { PaginaUnidades } from "../domain/types";
 import { listarUnidadesPaginadas } from "../infrastructure/copropiedadRepository";
+import { guardarPorPagina, leerPorPaginaGuardada } from "./preferenciaPorPagina";
 
 export function useUnidadesPaginadas(copropiedadId: string) {
   const [pagina, setPagina] = useState(1);
-  const [porPagina, setPorPagina] = useState(10);
+  const [porPagina, setPorPagina] = useState(leerPorPaginaGuardada);
   const [filtro, setFiltro] = useState("");
   const [version, setVersion] = useState(0);
   const [datos, setDatos] = useState<PaginaUnidades>({ items: [], total: 0 });
@@ -46,6 +47,7 @@ export function useUnidadesPaginadas(copropiedadId: string) {
   function cambiarPorPagina(valor: number) {
     setPorPagina(valor);
     setPagina(1);
+    guardarPorPagina(valor);
   }
 
   const totalPaginas = Math.max(1, Math.ceil(datos.total / porPagina));
