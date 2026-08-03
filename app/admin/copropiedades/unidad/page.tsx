@@ -121,11 +121,7 @@ export default function AdminUnidadDetallePage() {
             </button>
           </div>
 
-          <UnidadForm
-            unidad={unidad}
-            onGuardar={onGuardar}
-            onCancelar={() => router.push(hrefDetalleCopropiedad(unidad.copropiedadId))}
-          />
+          <UnidadForm unidad={unidad} onGuardar={onGuardar} />
 
           <div>
             <div className="flex items-center justify-between flex-wrap gap-3 mb-3.5">
