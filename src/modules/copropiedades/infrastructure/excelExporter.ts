@@ -19,24 +19,24 @@ export async function generarExcelUnidades(filas: FilaExportable[]): Promise<Blo
   const hoja = workbook.addWorksheet("Unidades");
 
   hoja.columns = [
+    { header: "Tipo", key: "tipo", width: 14 },
     { header: "Torre", key: "torre", width: 10 },
     { header: "Apartamento", key: "apartamento", width: 14 },
-    { header: "Tipo", key: "tipo", width: 14 },
-    { header: "Coeficiente", key: "coeficiente", width: 14 },
     { header: "Propietario 1", key: "propietario1", width: 28 },
     { header: "Propietario 2", key: "propietario2", width: 28 },
     { header: "Propietario 3", key: "propietario3", width: 28 },
+    { header: "Coeficiente", key: "coeficiente", width: 14 },
   ];
 
   filas.forEach((fila) => {
     hoja.addRow({
+      tipo: TIPO_UNIDAD_LABEL[fila.tipo],
       torre: fila.bloque,
       apartamento: fila.identificador,
-      tipo: TIPO_UNIDAD_LABEL[fila.tipo],
-      coeficiente: Number((fila.coeficiente * 100).toFixed(6)),
       propietario1: fila.propietarios[0] ?? "",
       propietario2: fila.propietarios[1] ?? "",
       propietario3: fila.propietarios[2] ?? "",
+      coeficiente: Number((fila.coeficiente * 100).toFixed(6)),
     });
   });
 

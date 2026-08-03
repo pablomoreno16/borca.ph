@@ -134,9 +134,9 @@ export function UnidadesTable({ copropiedadId }: Props) {
                 <th className="py-2 pr-3 w-8">
                   <input ref={checkboxHeaderRef} type="checkbox" checked={todosSeleccionados} onChange={alternarTodos} />
                 </th>
+                <th className="py-2 pr-3">Tipo</th>
                 <th className="py-2 pr-3">Bloque</th>
                 <th className="py-2 pr-3">#</th>
-                <th className="py-2 pr-3">Tipo</th>
                 <th className="py-2 pr-3">Propietario(s)</th>
                 <th className="py-2 pr-3">Coeficiente</th>
               </tr>
@@ -151,13 +151,13 @@ export function UnidadesTable({ copropiedadId }: Props) {
                       onChange={() => alternarUno(unidad.id)}
                     />
                   </td>
+                  <td className="py-2 pr-3 text-text-body">{TIPO_UNIDAD_LABEL[unidad.tipo] ?? unidad.tipo}</td>
                   <td className="py-2 pr-3">{unidad.bloque}</td>
                   <td className="py-2 pr-3 font-semibold">
                     <Link href={`/admin/copropiedades/unidad?id=${unidad.id}`} className="text-teal hover:underline">
                       {unidad.identificador}
                     </Link>
                   </td>
-                  <td className="py-2 pr-3 text-text-body">{TIPO_UNIDAD_LABEL[unidad.tipo] ?? unidad.tipo}</td>
                   <td className="py-2 pr-3 text-text-body">{unidad.propietariosNombres ?? "—"}</td>
                   <td className="py-2 pr-3 text-text-body">{(unidad.coeficiente * 100).toFixed(2)}%</td>
                 </tr>

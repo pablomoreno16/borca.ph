@@ -434,27 +434,47 @@ export async function importarUnidades(copropiedadId: string, filas: FilaImporta
 // Apartamento, Tipo, Coeficiente, Propietario 1-3). Solo incluye
 // propietarios activos (sin fecha_fin); si hay más de 3 se truncan porque
 // el formato del archivo solo tiene 3 columnas de propietario.
+// Extrae el # como número (igual que identificador_numero en la vista
+// unidad_privada_detalle) para poder ordenar el export con el mismo
+// criterio que la tabla: por tipo y luego por # numérico, no alfanumérico.
+function identificadorComoNumero(identificador: string): number | null {
+  const digitos = identificador.replace(/\D/g, "");
+  return digitos ? Number(digitos) : null;
+}
+
 export async function listarUnidadesParaExportar(copropiedadId: string): Promise<
   { bloque: string; identificador: string; tipo: UnidadPrivada["tipo"]; coeficiente: number; propietarios: string[] }[]
 > {
   const { data, error } = await supabase
     .from("unidad_privada")
     .select(SELECT_UNIDAD_CON_PROPIETARIO)
-    .eq("copropiedad_id", copropiedadId)
-    .order("bloque", { ascending: true })
-    .order("identificador", { ascending: true });
+    .eq("copropiedad_id", copropiedadId);
   if (error) throw error;
 
-  return ((data ?? []) as FilaUnidadConPropietario[]).map((fila) => ({
-    bloque: fila.bloque,
-    identificador: fila.identificador,
-    tipo: fila.tipo as UnidadPrivada["tipo"],
-    coeficiente: fila.coeficiente,
-    propietarios: (fila.propietario ?? [])
-      .filter((p) => p.fecha_fin === null)
-      .sort((a, b) => a.fecha_inicio.localeCompare(b.fecha_inicio))
-      .slice(0, 3)
-      .map((p) => p.persona?.nombre ?? "")
-      .filter(Boolean),
-  }));
+  const filas = ((data ?? []) as FilaUnidadConPropietario[])
+    .map((fila) => ({
+      bloque: fila.bloque,
+      identificador: fila.identificador,
+      tipo: fila.tipo as UnidadPrivada["tipo"],
+      coeficiente: fila.coeficiente,
+      propietarios: (fila.propietario ?? [])
+        .filter((p) => p.fecha_fin === null)
+        .sort((a, b) => a.fecha_inicio.localeCompare(b.fecha_inicio))
+        .slice(0, 3)
+        .map((p) => p.persona?.nombre ?? "")
+        .filter(Boolean),
+    }))
+    .sort((a, b) => {
+      if (a.tipo !== b.tipo) return a.tipo.localeCompare(b.tipo);
+      const numA = identificadorComoNumero(a.identificador);
+      const numB = identificadorComoNumero(b.identificador);
+      if (numA !== numB) {
+        if (numA === null) return 1;
+        if (numB === null) return -1;
+        return numA - numB;
+      }
+      return a.identificador.localeCompare(b.identificador);
+    });
+
+  return filas;
 }
