@@ -112,6 +112,56 @@ export type Database = {
         }
         Relationships: []
       }
+      categoria_documento: {
+        Row: {
+          activo: boolean
+          created_at: string
+          id: string
+          nombre: string
+          updated_at: string
+        }
+        Insert: {
+          activo?: boolean
+          created_at?: string
+          id?: string
+          nombre: string
+          updated_at?: string
+        }
+        Update: {
+          activo?: boolean
+          created_at?: string
+          id?: string
+          nombre?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      categoria_documento_rol: {
+        Row: {
+          categoria_documento_id: string
+          id: string
+          rol: string
+        }
+        Insert: {
+          categoria_documento_id: string
+          id?: string
+          rol: string
+        }
+        Update: {
+          categoria_documento_id?: string
+          id?: string
+          rol?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categoria_documento_rol_categoria_documento_id_fkey"
+            columns: ["categoria_documento_id"]
+            isOneToOne: false
+            referencedRelation: "categoria_documento"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       copropiedad: {
         Row: {
           banco: string | null
@@ -162,6 +212,64 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      documento: {
+        Row: {
+          archivo_path: string
+          categoria_documento_id: string
+          copropiedad_id: string
+          created_at: string
+          fecha_elaboracion: string
+          id: string
+          subido_por: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          archivo_path: string
+          categoria_documento_id: string
+          copropiedad_id: string
+          created_at?: string
+          fecha_elaboracion: string
+          id?: string
+          subido_por?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          archivo_path?: string
+          categoria_documento_id?: string
+          copropiedad_id?: string
+          created_at?: string
+          fecha_elaboracion?: string
+          id?: string
+          subido_por?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documento_categoria_documento_id_fkey"
+            columns: ["categoria_documento_id"]
+            isOneToOne: false
+            referencedRelation: "categoria_documento"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documento_copropiedad_id_fkey"
+            columns: ["copropiedad_id"]
+            isOneToOne: false
+            referencedRelation: "copropiedad"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documento_subido_por_fkey"
+            columns: ["subido_por"]
+            isOneToOne: false
+            referencedRelation: "perfil"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       perfil: {
         Row: {

@@ -22,6 +22,12 @@ const ADMIN_NAV_ITEMS = [
     icon: "fa-solid fa-building",
     roles: ["super_admin"],
   },
+  {
+    href: "/admin/documentos",
+    label: "Documentos",
+    icon: "fa-solid fa-folder-open",
+    roles: ["super_admin"],
+  },
 ] as const;
 
 const stripTrailingSlash = (path: string) => (path.length > 1 ? path.replace(/\/$/, "") : path);

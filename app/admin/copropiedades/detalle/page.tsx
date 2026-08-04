@@ -12,13 +12,15 @@ import { useExistenUnidades } from "@/modules/copropiedades/application/useExist
 import { CopropiedadForm } from "@/modules/copropiedades/presentation/CopropiedadForm";
 import { ImportarUnidadesForm } from "@/modules/copropiedades/presentation/ImportarUnidadesForm";
 import { UnidadesTable } from "@/modules/copropiedades/presentation/UnidadesTable";
+import { DocumentosPanel } from "@/modules/documentos/presentation/DocumentosPanel";
 import { Modal } from "@/shared/ui/Modal";
 import type { Copropiedad, CopropiedadInput } from "@/modules/copropiedades/domain/types";
 
-type Tab = "informacion" | "unidades";
+type Tab = "informacion" | "unidades" | "documentos";
 
 function tabDesdeParam(valor: string | null): Tab {
-  return valor === "unidades" ? "unidades" : "informacion";
+  if (valor === "unidades" || valor === "documentos") return valor;
+  return "informacion";
 }
 
 // Ruta estática con el id como query param (no un segmento dinámico [id]):
@@ -140,6 +142,15 @@ export default function AdminCopropiedadDetallePage() {
             >
               Unidades privadas
             </button>
+            <button
+              type="button"
+              onClick={() => cambiarTab("documentos")}
+              className={`pb-3 text-sm font-semibold border-b-2 -mb-px ${
+                tab === "documentos" ? "text-teal border-teal" : "text-text-body border-transparent hover:text-teal"
+              }`}
+            >
+              Documentos
+            </button>
           </div>
 
           {tab === "informacion" && (
@@ -170,6 +181,8 @@ export default function AdminCopropiedadDetallePage() {
               <UnidadesTable key={refrescarUnidades} copropiedadId={copropiedad.id} />
             </div>
           )}
+
+          {tab === "documentos" && <DocumentosPanel copropiedadId={copropiedad.id} />}
 
           {importando && (
             <Modal onClose={() => setImportando(false)}>
