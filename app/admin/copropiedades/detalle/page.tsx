@@ -13,13 +13,14 @@ import { CopropiedadForm } from "@/modules/copropiedades/presentation/Copropieda
 import { ImportarUnidadesForm } from "@/modules/copropiedades/presentation/ImportarUnidadesForm";
 import { UnidadesTable } from "@/modules/copropiedades/presentation/UnidadesTable";
 import { DocumentosPanel } from "@/modules/documentos/presentation/DocumentosPanel";
+import { UsuariosDeCopropiedadPanel } from "@/modules/usuarios/presentation/UsuariosDeCopropiedadPanel";
 import { Modal } from "@/shared/ui/Modal";
 import type { Copropiedad, CopropiedadInput } from "@/modules/copropiedades/domain/types";
 
-type Tab = "informacion" | "unidades" | "documentos";
+type Tab = "informacion" | "unidades" | "documentos" | "usuarios";
 
 function tabDesdeParam(valor: string | null): Tab {
-  if (valor === "unidades" || valor === "documentos") return valor;
+  if (valor === "unidades" || valor === "documentos" || valor === "usuarios") return valor;
   return "informacion";
 }
 
@@ -151,6 +152,15 @@ export default function AdminCopropiedadDetallePage() {
             >
               Documentos
             </button>
+            <button
+              type="button"
+              onClick={() => cambiarTab("usuarios")}
+              className={`pb-3 text-sm font-semibold border-b-2 -mb-px ${
+                tab === "usuarios" ? "text-teal border-teal" : "text-text-body border-transparent hover:text-teal"
+              }`}
+            >
+              Usuarios
+            </button>
           </div>
 
           {tab === "informacion" && (
@@ -183,6 +193,8 @@ export default function AdminCopropiedadDetallePage() {
           )}
 
           {tab === "documentos" && <DocumentosPanel copropiedadId={copropiedad.id} />}
+
+          {tab === "usuarios" && <UsuariosDeCopropiedadPanel copropiedadId={copropiedad.id} />}
 
           {importando && (
             <Modal onClose={() => setImportando(false)}>

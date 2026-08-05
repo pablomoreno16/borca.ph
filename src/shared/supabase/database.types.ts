@@ -305,24 +305,34 @@ export type Database = {
       }
       perfil_rol: {
         Row: {
+          copropiedad_id: string | null
           created_at: string
           id: string
           perfil_id: string
           rol: string
         }
         Insert: {
+          copropiedad_id?: string | null
           created_at?: string
           id?: string
           perfil_id: string
           rol: string
         }
         Update: {
+          copropiedad_id?: string | null
           created_at?: string
           id?: string
           perfil_id?: string
           rol?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "perfil_rol_copropiedad_id_fkey"
+            columns: ["copropiedad_id"]
+            isOneToOne: false
+            referencedRelation: "copropiedad"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "perfil_rol_perfil_id_fkey"
             columns: ["perfil_id"]
@@ -487,6 +497,10 @@ export type Database = {
     }
     Functions: {
       fn_tiene_rol: { Args: { rol_buscado: string }; Returns: boolean }
+      fn_tiene_rol_en_copropiedad: {
+        Args: { cop_id: string; rol_buscado: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

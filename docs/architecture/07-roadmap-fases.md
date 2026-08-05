@@ -226,10 +226,14 @@ subfases porque son dos preguntas distintas: quién gestiona los accesos
 
 **Historias de usuario**
 - Como `super_admin`, veo y edito el rol de cualquier usuario del sistema
-  desde un listado global en `/admin`.
-- Como usuario que entra al detalle de una copropiedad, puedo llegar a la
-  lista de sus propietarios y editar el rol de uno puntual sin salir del
-  contexto de esa copropiedad (segunda entrada a la misma data).
+  desde un listado global en `/admin/usuarios`.
+- Como usuario que entra al detalle de una copropiedad (pestaña
+  "Usuarios"), veo de un vistazo a todos sus propietarios — tengan o no
+  cuenta todavía — con documento, unidad, % de participación y estado de
+  su perfil (sin cuenta / con cuenta sin rol / roles asignados). Es una
+  vista de solo lectura: para editar el rol de alguien voy a
+  `/admin/usuarios` (decisión tomada al construirlo — mantener la edición
+  centralizada en un solo lugar en vez de duplicarla en dos pantallas).
 - Un propietario que además es consejero mantiene ambos roles
   simultáneamente — ganar `consejero` nunca le quita el acceso de
   `propietario`.
@@ -253,10 +257,18 @@ subfases porque son dos preguntas distintas: quién gestiona los accesos
   cambia en consecuencia de inmediato.
 
 **Criterios de aceptación**
-- [ ] Un usuario puede tener múltiples roles scoped a la misma
+- [x] Un usuario puede tener múltiples roles scoped a la misma
       copropiedad a la vez (propietario + consejero).
-- [ ] Editar el rol de un propietario es posible tanto desde un listado
-      global como desde el detalle de su copropiedad.
+- [x] La edición de roles funciona desde el listado global
+      (`/admin/usuarios`). La pestaña "Usuarios" del detalle de
+      copropiedad muestra a todos los propietarios (con o sin cuenta) en
+      modo solo lectura, con un enlace al listado global para editar —
+      no duplica el editor de roles en dos pantallas.
+
+**Fase 2.2.1: completa.** Verificado con una cuenta de prueba real: RLS de
+`documento` concede/revoca acceso de inmediato al asignar/quitar el rol
+`propietario`, y la tabla de usuarios de una copropiedad muestra
+correctamente el estado de cuenta de cada propietario.
 
 ### Fase 2.2.2 — Login e ingreso de propietarios
 
